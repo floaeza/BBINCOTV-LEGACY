@@ -4,7 +4,7 @@
  * @Tipo: Funciones para controlar la guia
  */
 
-var EpgContainer            = document.createElement('div'),
+var EpgContainer = document.createElement('div'),
     EpgDay,
     EpgDate,
     EpgChannelLogo,
@@ -61,12 +61,6 @@ var EpgTime                 = '',
     SecondsToCloseEpg       = 300,
     TimeoutEpg              = SecondsToCloseEpg * 1000,
     xhr;
-
-
-
-
-//setTimeout(OpenEpg,2000, '');
-
 var NextChannelsJson        = [],
     ChannelsJsonToday       = [],
     NextEpgDataActive       = false,
@@ -76,7 +70,6 @@ function GetNextJsonEpg(Direction){
     NextEpgDataActive = false;
 
     (Direction === 'RIGHT') ? EpgDayNumber++: EpgDayNumber--;
-
 
     var NewEpgDateFormat = AddDays(EpgDayNumber),
         NewEpgDate = NewEpgDateFormat.yyyymmdd(),
@@ -89,31 +82,22 @@ function GetNextJsonEpg(Direction){
         success: function (response){
             NextChannelsJson = [];
             NextChannelsJson = response;
-
             NextEpgDataActive = true;
-
             if(EpgDayNumber === 1){
                 ChannelsJsonToday = ChannelsJson;
             }
-
-            // Debug('------- GetNextJsonEpg -> ChannelsLength: '+ChannelsLength);
         },
         error: function (response){
-            // El archivo no se encuentra o viene vacio, consulta a la base de datos
             NextEpgDataActive = false;
         }
     });
     xhr = null;
 }
 
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function OpenEpg(){
     EpgContainer = document.getElementById('EpgContainer');
     EpgContainer.innerHTML = "<!-- Contiene informacion del programa y el canal, fecha y hora -->    <div id='EpgHeader'>        <div id='EpgWeather'>            <div id='TemperatureGroup'>                <span id='WeatherFarenheit'></span><span>&deg; F/</span>                <span id='WeatherCelsius'></span><span>&deg; C</span>            </div>            <canvas id='WeatherIcon' width='40' height='40'></canvas>            <div id='WeatherSummary'></div>        </div>        <div id='EpgDate'></div>    </div>    <!-- -->    <div id='EpgNowAiring'></div>    <div id='EpgDays'>        <div id='EpgDay'></div>    </div>    <!-- Lista de canales -->    <div id='EpgChannels'>        <div id='ChannelRow1'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow2'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow3'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow4'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow5'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow6'><div class='ChannelImage'></div><p class='ChannelName'></p></div>        <div id='ChannelRow7'><div class='ChannelImage'></div><p class='ChannelName'></p></div>    </div>    <!-- Contiene las horas en la guia  -->    <div id='EpgHours'>        <div class='HourRow'></div>        <div class='HourRow'></div>        <div class='HourRow'></div>        <div class='HourRow'></div>    </div>    <!-- Contiene la lista de programas, muestra hora inicio y titulo -->    <div id='EpgPrograms'>        <div id='ProgramRow1'></div>        <div id='ProgramRow2'></div>        <div id='ProgramRow3'></div>        <div id='ProgramRow4'></div>        <div id='ProgramRow5'></div>        <div id='ProgramRow6'></div>        <div id='ProgramRow7'></div>    </div>    <!-- Contiene las horas en la guia  -->    <div id='ProgramFocus'></div>    <div id='Extras'></div>    <div id='EpgChannelLogo' class='EpgLogo'></div>    <div id='EpgProgramInfo'>        <div id='EpgTitle'></div>        <div id='EpgDescription'></div>        <div id='EpgTime'></div>        <div id='EpgDuration'></div>        <div id='EpgRating'></div>        <div id='EpgStars'></div>        <div id='EpgEpisode'></div>        <div id='EpgRecording'></div>        <div id='EpgSerie'></div>    </div>    <div id='EpgMainLogo'></div>    <div id='Message'></div>";
-    EpgDay              = document.getElementById('EpgDay');
+    EpgDay                  = document.getElementById('EpgDay');
     EpgDate                 = document.getElementById('EpgDate');
     EpgChannelLogo          = document.getElementById('EpgChannelLogo');
     EpgNowAiring            = document.getElementById('EpgNowAiring');
@@ -122,11 +106,7 @@ function OpenEpg(){
     EpgInfoContainerNodes   = document.getElementById('EpgProgramInfo').childNodes;
     
     GetFocusStyle();
-    
-    
     if(ActiveEpgContainer === false && EpgDataActive === true){
-        // Actualiza el estatus del disco duro
-        
         if(Device['Type'] === 'WHP_HDDY' || Device['Type'] === 'WHP_HDDN' || Device['Type'] === 'PVR_ONLY') {
             
             Debug(ActiveEpgContainer +"   "+ EpgDataActive);
@@ -136,19 +116,12 @@ function OpenEpg(){
             Debug(ActiveEpgContainer +"   "+ EpgDataActive);
 
         }
-        //Debug('------- OpenEpg 1 -> EpgDataActive: '+EpgDataActive);
-
-        
-
-        /* Activa bandera, muestra contenedor y asigna la informacion de la cabecera */
         EpgContainer.style.visibility = 'visible';
     
         EpgNowAiring.innerHTML = 'Now: ' + ChannelsJson[ChannelPosition].CHNL + ' - ' + ChannelsJson[ChannelPosition].INDC.toUpperCase();
         EpgDate.textContent = FormatDateAndHour;
         EpgDay.textContent = 'Today';
         ActiveEpgContainer = true;
-
-
 
         if(NextEpgActive === true){
             OnLoadHourPosition      = 0;
@@ -163,35 +136,20 @@ function OpenEpg(){
             EpgDay.textContent = 'Today';
             OnLoadHourPosition      = FindCurrentHour(GetCurrentHour());
             CurrentHourPosition     = OnLoadHourPosition;
-
-            /*Contruye los renglones de la programacion actual */
             CurrentChannelPosition  = ChannelPosition;
         }
-
         BuildProgramsRow(CurrentHourPosition, CurrentChannelPosition);
-
         BuildChannelsRow(CurrentChannelPosition);
-
         FocusEpgProgram(RowSelected,ProgramSelected);
-
         GetWeather();
-
         MinimizeTV();
-
         EpgTimer = setTimeout(CloseEpg,TimeoutEpg);
 
         SetChannelLogo();
-        //Debug('------- OpenEpg 2 (Modern) -> EpgDataActive: '+EpgDataActive);
     } else if(ActiveEpgContainer === true){
-        //Debug('------- OpenEpg 3 (Modern) -> EpgDataActive: '+EpgDataActive);
         CloseEpg();
     }
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function CloseEpg(){
     if(ActiveEpgContainer === true){
         var elem = document.getElementById("EpgContainer");
@@ -234,11 +192,6 @@ function CloseEpg(){
         clearTimeout(EpgTimer);
     }
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function ClearEpg(){
     ActiveEpgContainer      = false;
     OnloadProgramsPositions = { 1:-1, 2:-1, 3:-1, 4:-1, 5:-1, 6:-1, 7:-1 };
@@ -259,14 +212,7 @@ function ClearEpg(){
     ProgramsToLeft          = false;
     ProgramsToChange          = false;
 }
-
-/*******************************************************************************
- * Construye los renglones con la programacion
- *******************************************************************************/
-
-
 function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
-    //console.log('__________ [1][BuildProgramsRow]: ('+SetCurrentHourPosition+','+ CurrentChannelPosition+')');
 
     var HourPosition        = -1,
         ExtraHourPosition   = -1,
@@ -276,20 +222,7 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
     for (HourRows = 1; HourRows <= MaxHourRows; HourRows++) {
 
         if(BuildHoursPositions <= (Hours.length-1)){
-            
-            //console.log('__________ [1.1][BuildProgramsRow]:  BuildHoursPositions '+ BuildHoursPositions + ' HourPosition: '+Hours[BuildHoursPositions][1]);
-//                if(BuildHoursPositions >= 0 && BuildHoursPositions <= 12){
-//                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
-//                } else if(BuildHoursPositions > 12 && BuildHoursPositions <= 25){
-//                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
-//                } else if(BuildHoursPositions > 25 && BuildHoursPositions <= 29){
-//                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
-//                } else if(BuildHoursPositions > 29 && BuildHoursPositions <= 37){
-//                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
-//                } else if(BuildHoursPositions > 37 && BuildHoursPositions <= 47){
-//                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
-//                }
-
+        
             HourPosition += 2;
             EpgHoursNodes[HourPosition].textContent = Hours[BuildHoursPositions][1];
             EpgHoursNodes[HourPosition].title = BuildHoursPositions;
@@ -304,17 +237,16 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
 
         }
     }
-
-
+    
     var CurrentProgramPosition  = 0;
     CurrentHourPosition = SetCurrentHourPosition;
-    //console.log('_________ [1.4][BuildProgramsRow]: ('+BuildHourPosition+','+ CurrentChannelPosition+')');
     for (Rows = 1; Rows <= MaxRows; Rows++) {
         CurrentProgramPosition = LoadCurrentDataPosition(BuildHourPosition, CurrentChannelPosition);
-
-        //console.log('_________ [1.5][BuildProgramsRow]: CurrentProgramPosition= '+CurrentProgramPosition);
-
-        //console.log('_________ [1.6][BuildProgramsRow]: -> WriteProgramsRow(CurrentProgramPosition: '+CurrentProgramPosition +' CurrentChannelPosition: '+CurrentChannelPosition + ' Row: '+Rows+')');
+        if(ChannelsJson[CurrentChannelPosition].NAME =='MenuInteractivo'){
+            ++CurrentChannelPosition;
+            Rows--;
+            continue;
+        }
         WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Rows);
         CurrentChannelPosition++;
 
@@ -322,24 +254,8 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
             CurrentChannelPosition = 0;
         }
     }
-
-    //console.log('______________________________________');
-    //console.log('OnloadProgramsPositions: ');
-    //console.log(OnloadProgramsPositions);
-    //console.log('FirstProgramsPositions: ');
-    //console.log(FirstProgramsPositions);
-    //console.log('LastProgramsPositions: ');
-    //console.log(LastProgramsPositions);
-    //console.log('______________________________________');
-
     GetRowsPrograms();
-    //console.log('_________ [1.7][BuildProgramsRow]: -> GetRowsPrograms');
 }
-
-/*******************************************************************************
- * Obtiene la posicion actual del programa del canal en contruccion
- *******************************************************************************/
-
 function LoadCurrentDataPosition(HourPosition, CurrentChannelPosition){
     if(HourPosition>47){
         HourPosition = 47;
@@ -352,58 +268,28 @@ function LoadCurrentDataPosition(HourPosition, CurrentChannelPosition){
         IndexProgram    = 0;
 
     for(IndexProgram = 0; IndexProgram < ChannelsJson[CurrentChannelPosition].P_Length; IndexProgram++){
-        /*Obtiene las horas inicio y fin de cada programa*/
-        //console.log(ChannelsJson[0].PROGRAMS[0].STRH);
+        
         StartHour = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].STRH;
         EndHour   = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].FNLH;
-
-        //console.log('######## StartHour: '+ StartHour+ ' EndHour: '+EndHour);
-        //console.log('######## CompareStartHour: '+ CompareHours(StartHour, CurrentHour) + ' CurrentHour '+CurrentHour);
-        //console.log('######## CompareEndHour: '+ CompareHours(EndHour, CurrentHour) + ' CurrentHour '+CurrentHour);
-
-        ////Debug('StartHour: '+StartHour + ' CurrentHour: '+CurrentHour + ' CompareHours: ' + CompareHours(StartHour, CurrentHour));
         if(CompareHours(StartHour, CurrentHour) === '='){
-            /* Asigna la posicion correcta */
             NewProgramPosition = IndexProgram;
-
-            /* Iguala IndexPrograma para terminar el ciclo FOR */
             IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
-            //console.log('///////// '+CompareHours(StartHour, CurrentHour) + ' = '+NewProgramPosition);
         } else if(CompareHours(StartHour, CurrentHour) === '>'){
-            /* Asigna la posicion correcta */
             NewProgramPosition = IndexProgram;
-
-            /* Iguala IndexPrograma para terminar el ciclo FOR */
             IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
-            //console.log('///////// '+CompareHours(StartHour, CurrentHour) + ' > '+NewProgramPosition);
         } else if(CompareHours(StartHour, CurrentHour) === '<' && CompareHours(EndHour, CurrentHour) === '>'){
-            /* Asigna la posicion correcta */
             NewProgramPosition = IndexProgram;
 
-            /* Iguala IndexPrograma para terminar el ciclo FOR */
             IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
-            //console.log('///////// '+CompareHours(StartHour, CurrentHour) + ' < > '+NewProgramPosition);
         }
         else if(CompareHours(StartHour, CurrentHour) === '<' && CompareHours(StartHour, '23:00') === '='){
-            /* Asigna la posicion correcta */
             NewProgramPosition = IndexProgram;
-
-            /* Iguala IndexPrograma para terminar el ciclo FOR */
             IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
-            //console.log('///////// '+CompareHours(StartHour, CurrentHour) + ' < = '+NewProgramPosition);
         }
     }
-
-    ////Debug('%% NewProgramPosition '+NewProgramPosition);
     return NewProgramPosition;
 }
-
-/*******************************************************************************
- * Contuye y agrega los datos a mostrar de cada renglon con la programacion
- *******************************************************************************/
-
 function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
-    //console.log('::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: WriteProgramsRow('+CurrentProgramPosition+','+ CurrentChannelPosition+','+ Row+')');
     var ProgramRow          = document.getElementById('ProgramRow'+Row),
         ProgramNode         = '',
         DivElement          = '',
@@ -420,15 +306,11 @@ function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
     if(FirstProgramsPositions[Row] === -1){
         FirstProgramsPositions[Row] = CurrentProgramPosition;
         OnloadProgramsPositions[Row] = CurrentProgramPosition;
-        //console.log('................. 1.0) FirstProgramsPositions[Row] === -1: '+FirstProgramsPositions[Row]);
     } else {
         FirstProgramsPositions[Row] = CurrentProgramPosition;
-        //console.log('................. 1.1) FirstProgramsPositions[Row]: '+FirstProgramsPositions[Row]);
     }
 
     for (RowProgramPosition = CurrentProgramPosition; RowProgramPosition < TotalPrograms; RowProgramPosition++) {
-        /* Obtiene la hora inicial del programa */
-        //console.log('................. FOR ('+CurrentProgramPosition+','+ CurrentChannelPosition+','+ Row+')');
         var ProgramStart    = ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].STRH,
             ProgramFinal    = ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].FNLH,
             NextStartHour   = EpgHoursNodes[7].title;
@@ -438,18 +320,10 @@ function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
         var CurrentStartEpgHour  = Time12to24(EpgHoursNodes[1].textContent),
             CurrentFinalEpgHour  = Time12to24(Hours[(++NextStartHour)][1]),
             
-            // if(CurrentFinalEpgHour == '00:00'){
-            //     CurrentFinalEpgHour = '23:59';
-            // }
-            
             CompareStartEpgHours = CompareHours(ProgramStart, CurrentStartEpgHour),
             CompareFinalEpgHours = CompareHours(ProgramFinal, CurrentFinalEpgHour),
             Overflow = 0;
-        //console.log('ProgramStart: ' +ProgramStart + ' ProgramFinal: '+ProgramFinal);
-        //console.log('CurrentStart: ' +CurrentStartEpgHour + ' CurrentFinal: '+CurrentFinalEpgHour);
-        //console.log('CompareStartEpgHours: ' +CompareStartEpgHours);
-        //console.log('CompareFinalEpgHours: ' +CompareFinalEpgHours);
-
+        
         if(CompareStartEpgHours === '<'){
             /* Obtiene la hora inicio del programa para sacar la diferencia */
             if(ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].FNLH === '00:00'){
@@ -459,48 +333,28 @@ function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
             }
             NewFormatCurrent = moment(CurrentStartEpgHour, 'HH:mm');
             SubstractLenght = Math.abs(NewFormatFinal.diff(NewFormatCurrent, 'hours', true));
-            //console.log('................. < 1.1.1) SubstractLenght: '+SubstractLenght);
-
             ProgramWidth = (SubstractLenght * 50);
-            //console.log('................. < 1.1.2) ProgramWidth: '+ProgramWidth);
             TotalWidth = 0;
             TotalWidth += ProgramWidth;
-            //console.log('................. < 1.1.3) TotalWidth: '+TotalWidth);
-
+            
         } else if(CompareFinalEpgHours === '>'){
             /* Obtiene la hora final del programa para sacar la diferencia */
             NewFormatFinal = moment(ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].STRH, 'HH:mm');
-            //(CurrentFinalEpgHour == '00:00')? NewFormatCurrent = moment('23:59', 'HH:mm'): NewFormatCurrent = moment(CurrentFinalEpgHour, 'HH:mm');
             NewFormatCurrent = moment(CurrentFinalEpgHour, 'HH:mm')
             SubstractLenght = Math.abs(NewFormatFinal.diff(NewFormatCurrent, 'hours', true));
-            //console.log('................. > 1.1.1) SubstractLenght: '+SubstractLenght);
             ProgramWidth = (SubstractLenght * 50);
-            //console.log('................. > 1.1.2) ProgramWidth: '+ProgramWidth);
             TotalWidth += ProgramWidth;
-            //console.log('................. > 1.1.3) TotalWidth: '+TotalWidth);
         } else {
-            /* Obtiene la longitud del programa */
             ProgramWidth = (parseFloat(ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].DRTN, 10) * 50);
-            //alert(ProgramWidth);
-            //console.log('................. 1.1.4) ProgramWidth: '+ProgramWidth);
-
-            /* Suma la longitud contruida */
             TotalWidth += ProgramWidth;
-            //console.log('................. 1.1.5) TotalWidth: '+TotalWidth);
         }
-
         if(TotalWidth > 100){
             Overflow = TotalWidth - 100;
             ProgramWidth = ProgramWidth - Overflow;
         }
-
         if(ChannelsJson[CurrentChannelPosition].P_Length === 1){
             ProgramWidth = 100;
         }
-
-
-        //console.log('................. 1.2.0) Width: '+ProgramWidth + ' C: '+CurrentChannelPosition+' P: '+RowProgramPosition);
-        //console.log('................. 1.2.2) Start: '+ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].STRH +' Final: '+ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].FNLH+' Title: '+ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].TTLE);
         DivElement  = document.createElement('div');
         ProgramNode = document.createTextNode('\u00A0'+ChannelsJson[CurrentChannelPosition].PROGRAMS[RowProgramPosition].TTLE);
         DivElement.appendChild(ProgramNode);
@@ -508,7 +362,6 @@ function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
         DivElement.setAttribute('accessKey', 'no');
         DivElement.setAttribute('title', CurrentChannelPosition+','+RowProgramPosition);
         DivElement.setAttribute('style', 'width:'+ProgramWidth+'%');
-
         var IndexRec = 0;
         if(RecordingsToCheck !== ''){
             for(IndexRec = 0; IndexRec < RecordingsToCheck.length; IndexRec++){
@@ -520,67 +373,38 @@ function WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Row){
             }
         }
         IndexRec = null;
-
         ProgramRow.appendChild(DivElement);
-
-
         if(TotalWidth > 99){
-            /* Valida si la longitud contruida es mayor a 100 */
             LastProgramsPositions[Row] = RowProgramPosition;
-            //console.log('................. 1.3.2) LastProgramsPositions[Row]: '+Row + ' - ' +LastProgramsPositions[Row]);
-
             RowProgramPosition = TotalPrograms;
-            //console.log('................. 1.3.3) RowProgramPosition: '+RowProgramPosition);
         }
         else if(RowProgramPosition === (ChannelsJson[CurrentChannelPosition].P_Length -1)){
-            //alert('Ultimo');
-            /* Valida si la longitud contruida es mayor a 100 */
             LastProgramsPositions[Row] = RowProgramPosition;
-            //console.log('................. 1.3.2) LastProgramsPositions[Row]: '+Row + ' - ' +LastProgramsPositions[Row]);
-
             RowProgramPosition = TotalPrograms;
-            //console.log('................. 1.3.3) RowProgramPosition: '+RowProgramPosition);
         }
-
-        //console.log('_._._._._._._._._._._._._._._._._._._.');
     }
-    //console.log(':::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-    //console.log(' ');
 }
-
-/*******************************************************************************
- * Construye los renglones con los canales
- *******************************************************************************/
-
 function BuildChannelsRow(CurrentChannelPosition){
     FirstChannelPosition = CurrentChannelPosition;
-
     for (Rows = 1; Rows <= MaxRows; Rows++) {
+        if(ChannelsJson[CurrentChannelPosition].NAME =='MenuInteractivo'){
+            ++CurrentChannelPosition;
+            Rows--;
+            continue;
+        }
         WriteChannelsRow(CurrentChannelPosition, Rows);
         LastChannelPosition = CurrentChannelPosition;
         ++CurrentChannelPosition;
-
         if(CurrentChannelPosition > ChannelsLength){
             CurrentChannelPosition = 0;
         }
     }
 }
-
-/*******************************************************************************
- * Contuye y agrega los datos a mostrar de cada renglon con la programacion
- *******************************************************************************/
-
 function WriteChannelsRow(CurrentChannelPosition, Row){
-
     var ChannelRowNodes = document.getElementById('ChannelRow'+Row).childNodes;
     ChannelRowNodes[0].style.backgroundImage =  'url("'+Libraries['ChannelsPath'] + ChannelsJson[CurrentChannelPosition].LOGO+'")';
     ChannelRowNodes[1].textContent = ChannelsJson[CurrentChannelPosition].CHNL+' - '+ChannelsJson[CurrentChannelPosition].INDC;
-
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
 var NodesRowPrograms1 = '',
     NodesRowPrograms2 = '',
     NodesRowPrograms3 = '',
@@ -588,8 +412,6 @@ var NodesRowPrograms1 = '',
     NodesRowPrograms5 = '',
     NodesRowPrograms6 = '',
     NodesRowPrograms7 = '';
-
-
 function GetRowsPrograms(){
     NodesRowPrograms1 = document.getElementById('ProgramRow1').childNodes;
     NodesRowPrograms2 = document.getElementById('ProgramRow2').childNodes;
@@ -599,7 +421,6 @@ function GetRowsPrograms(){
     NodesRowPrograms6 = document.getElementById('ProgramRow6').childNodes;
     NodesRowPrograms7 = document.getElementById('ProgramRow7').childNodes;
 }
-
 function GetFocusStyle(){
     var ProgramFocus        = document.getElementById('ProgramFocus'),
         ProgramFocusStyle   = window.getComputedStyle(ProgramFocus);
@@ -626,7 +447,6 @@ function GetFocusStyle(){
 
 
 function FocusEpgProgram(RowSelected,ProgramSelect){
-    //console.log('================= 1) FocusEpgProgram('+RowSelected+','+ProgramSelect+')');
     if(ProgramsToLeft === true){
         switch (RowSelected) {
             case 1:
@@ -730,9 +550,6 @@ function FocusEpgProgram(RowSelected,ProgramSelect){
         ProgramSelected = ProgramSelect;
         ProgramsToChange = false;
     }
-
-    //console.log('================= 2) FocusEpgProgram('+RowSelected+','+ProgramSelect+')');
-
     switch (RowSelected) {
         case 1:
             NodesRowPrograms1[ProgramSelect].style.backgroundColor = BackgroundFocus;
@@ -788,7 +605,6 @@ function FocusEpgProgram(RowSelected,ProgramSelect){
             FocusProgramPosition = Positions.split(',')[1];
             break;
     }
-    //console.log('================= 3) FocusEpgProgram('+RowSelected+','+ProgramSelect+')');
     ShowInfoEpg();
 }
 
@@ -860,7 +676,6 @@ function UnfocusEpgProgram(RowSelected,ProgramSelected){
             break;
     }
 }
-
 function ShowInfoEpg(){
     EpgInfoContainerNodes[1].innerHTML  = ChannelsJson[FocusChannelPosition].PROGRAMS[FocusProgramPosition].TTLE;
     if(RecordingsToCheck !== ''){
@@ -878,290 +693,164 @@ function ShowInfoEpg(){
     EpgInfoContainerNodes[11].innerHTML   = ShowStars(ChannelsJson[FocusChannelPosition].PROGRAMS[FocusProgramPosition].STRS);
     EpgInfoContainerNodes[13].textContent = ChannelsJson[FocusChannelPosition].PROGRAMS[FocusProgramPosition].EPSD;
 }
-
-
 function SetChannelLogo(){
     EpgChannelLogo.style.backgroundImage = 'url("'+ Libraries['ChannelsPath'] + ChannelsJson[CurrentChannelPosition].LOGO+'")';
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function ProgramRight(){
     if(ChannelsJson[FocusChannelPosition].P_Length === 1){
         /* Mueve por posicion de hora*/
         if(LastHourPosition < 47){
             UnfocusEpgProgram(RowSelected,ProgramSelected);
-
             BuildProgramsRow(LastHourPosition, FirstChannelPosition);
-
             ProgramSelected = 0;
-
             FocusEpgProgram(RowSelected,ProgramSelected);
         }
     } else if(parseInt(FocusProgramPosition,10) === LastProgramsPositions[RowSelected]){
-        /* Mientras no llegue al final de la programacion */
         if(parseInt(FocusProgramPosition,10) < (ChannelsJson[FocusChannelPosition].P_Length - 1)){
-            /* Mueve por posicion de hora*/
             UnfocusEpgProgram(RowSelected,ProgramSelected);
-
             BuildProgramsRow(LastHourPosition, FirstChannelPosition);
-
             ProgramSelected = 0;
-
             FocusEpgProgram(RowSelected,ProgramSelected);
         } else if(parseInt(FocusProgramPosition,10) === (ChannelsJson[FocusChannelPosition].P_Length - 1)){
-
             GetNextJsonEpg('RIGHT');
-
             if(NextEpgDataActive === true){
-
                 NextEpgActive = true;
-
                 ClearEpg();
-
                 ChannelsJson = NextChannelsJson;
-
                 OpenEpg();
             }
         }
     } else {
-        /* Cambia foco del programa */
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         ++ProgramSelected;
-
         FocusEpgProgram(RowSelected,ProgramSelected);
     }
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function ProgramLeft(){
-
     if(ChannelsJson[FocusChannelPosition].P_Length === 1){
-
         if(CurrentHourPosition > OnLoadHourPosition){
-
             UnfocusEpgProgram(RowSelected,ProgramSelected);
-
             var NewCurrentHourPosition = CurrentHourPosition;
-
             NewCurrentHourPosition -= 4;
-
             BuildProgramsRow(NewCurrentHourPosition, FirstChannelPosition);
-
             ProgramsToLeft = true;
-
             FocusEpgProgram(RowSelected,ProgramSelected);
         }
     } else if(parseInt(FocusProgramPosition,10) === OnloadProgramsPositions[RowSelected]){
-        // Do nothing
         if(NextEpgDataActive === true && NextEpgActive === true){
             if(EpgDayNumber === 1){
                 CloseEpg();
-
                 OpenEpg();
             } else {
                 GetNextJsonEpg('LEFT');
-
                 ClearEpg();
-
                 ChannelsJson = NextChannelsJson;
-
                 OpenEpg();
             }
         }
     }  else if(parseInt(FocusProgramPosition,10) === FirstProgramsPositions[RowSelected]){
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         var NewCurrentHourPosition = CurrentHourPosition;
-
         NewCurrentHourPosition -= 4;
-
         BuildProgramsRow(NewCurrentHourPosition, FirstChannelPosition);
-
         ProgramsToLeft = true;
-
         FocusEpgProgram(RowSelected,ProgramSelected);
-
     } else if(parseInt(FocusProgramPosition,10) !== OnloadProgramsPositions[RowSelected]){
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         --ProgramSelected;
-
         FocusEpgProgram(RowSelected,ProgramSelected);
     }
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function ProgramDown(){
     if(RowSelected === 7){
-
         ++LastChannelPosition;
-
         if(LastChannelPosition > ChannelsLength){
             LastChannelPosition = 0;
         }
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         var TmpCurrentHourPosition = CurrentHourPosition;
-
         FirstProgramsPositions = { 1:-1, 2:-1, 3:-1, 4:-1, 5:-1, 6:-1, 7:-1 };
-
         BuildProgramsRow(OnLoadHourPosition, LastChannelPosition);
-
         BuildProgramsRow(TmpCurrentHourPosition, LastChannelPosition);
-
         RowSelected = 1;
-
         CurrentChannelPosition = LastChannelPosition;
-
         SetChannelLogo();
-
         ProgramsToChange = true;
-
         FocusEpgProgram(RowSelected,ProgramSelected);
-
         BuildChannelsRow(LastChannelPosition);
     } else {
         ProgramsToChange = true;
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         ++CurrentChannelPosition;
         ++RowSelected;
-
         if(CurrentChannelPosition > ChannelsLength){
             CurrentChannelPosition = 0;
         }
-
         SetChannelLogo();
-
         FocusEpgProgram(RowSelected,ProgramSelected);
     }
 }
-
 function PageDown(){
     ++LastChannelPosition;
-
     if(LastChannelPosition > ChannelsLength){
         LastChannelPosition = 0;
     }
-
     UnfocusEpgProgram(RowSelected,ProgramSelected);
-
     var TmpCurrentHourPosition = CurrentHourPosition;
-
     FirstProgramsPositions = { 1:-1, 2:-1, 3:-1, 4:-1, 5:-1, 6:-1, 7:-1 };
-
     BuildProgramsRow(OnLoadHourPosition, LastChannelPosition);
-
     BuildProgramsRow(TmpCurrentHourPosition, LastChannelPosition);
-
     CurrentChannelPosition = LastChannelPosition;
-
     SetChannelLogo();
-
     ProgramsToChange = true;
-
     FocusEpgProgram(RowSelected,ProgramSelected);
-
     BuildChannelsRow(LastChannelPosition);
-
 }
-
-/*******************************************************************************
- *
- *******************************************************************************/
-
 function ProgramUp(){
     if(RowSelected === 1){
-
         FirstChannelPosition -= 7;
-
         if(FirstChannelPosition < 0){
             FirstChannelPosition = ChannelsLength - 6;
         }
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         var TmpCurrentHourPosition = CurrentHourPosition;
-
         FirstProgramsPositions = { 1:-1, 2:-1, 3:-1, 4:-1, 5:-1, 6:-1, 7:-1 };
-
         BuildProgramsRow(OnLoadHourPosition, FirstChannelPosition);
-
         BuildProgramsRow(TmpCurrentHourPosition, FirstChannelPosition);
-
         RowSelected = 7;
-
         ProgramsToChange = true;
-
         FocusEpgProgram(RowSelected,ProgramSelected);
-
         BuildChannelsRow(FirstChannelPosition);
-
         CurrentChannelPosition = LastChannelPosition;
-
         SetChannelLogo();
     } else {
         ProgramsToChange = true;
-
         UnfocusEpgProgram(RowSelected,ProgramSelected);
-
         --CurrentChannelPosition;
         --RowSelected;
-
         if(CurrentChannelPosition < 0){
             CurrentChannelPosition = ChannelsLength;
         }
-
         SetChannelLogo();
-
         FocusEpgProgram(RowSelected,ProgramSelected);
     }
 }
-
-
 function PageUp(){
-
     FirstChannelPosition -= 7;
-
     if(FirstChannelPosition < 0){
         FirstChannelPosition = ChannelsLength - 6;
     }
-
     UnfocusEpgProgram(RowSelected,ProgramSelected);
-
     var TmpCurrentHourPosition = CurrentHourPosition;
-
     FirstProgramsPositions = { 1:-1, 2:-1, 3:-1, 4:-1, 5:-1, 6:-1, 7:-1 };
-
     BuildProgramsRow(OnLoadHourPosition, FirstChannelPosition);
-
     BuildProgramsRow(TmpCurrentHourPosition, FirstChannelPosition);
-
     ProgramsToChange = true;
-
     FocusEpgProgram(RowSelected,ProgramSelected);
-
     BuildChannelsRow(FirstChannelPosition);
-
     CurrentChannelPosition = LastChannelPosition;
-
     SetChannelLogo();
 }
-
 function showInfoDevice(){
     var div = document.createElement('div');
     div.id = 'infoDevice';
@@ -1171,12 +860,13 @@ function showInfoDevice(){
         div.innerHTML = '<p><b>MAC ADDRESS:</b><br>'+ENTONE.stb.getMacAddress()+'<br><br><b>IP ADDRESS:</b><br>'+ENTONE.stb.getIPAddress()+'</p>';
     }else if(typeof(gSTB) !== 'undefined'){
         div.innerHTML = '<p><b>MAC ADDRESS:</b><br>'+gSTB.GetDeviceMacAddress()+'<br><br><b>IP ADDRESS:</b><br>'+gSTB.RDir('IPAddress')+'</p>';
+    }else{
+        div.innerHTML = '<p><b>MAC ADDRESS:</b><br>'+MacAddress+'<br><br><b>IP ADDRESS:</b><br>IPAddress</p>';
     }
     var generalB = document.getElementsByClassName('GeneralBox');
     generalB[0].appendChild(div);
 }
 function removeInfoDevice(){
-    var div = document.getElementById('infoDevice');
     var generalB = document.getElementsByClassName('GeneralBox')[0];
     Debug('REMOVIENDO');
     generalB.removeChild(generalB.lastChild);

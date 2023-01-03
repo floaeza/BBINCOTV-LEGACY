@@ -9,6 +9,7 @@
         PlayingVod          = false,
         PlayDigita          = false,
         PauseLive           = false,
+        pltActive           = false,
         PIDS                = [],
         numberOfLanguages   = 0,
         chapters = [],
@@ -194,11 +195,16 @@ Debug('########################### Channelinfo: '+ProgramIdChannnel);
         PauseLive = false;
         PlayingRecording = false;
         PlayDigita = false;
+        pltActive = false;
+        if(PauseLive === true){
+            HideBarStatus();
+        }
     }
     
     function PauseVideo(){
         //AVMedia.SetSpeed(0);
         AVMedia.Pause();
+        pltActive = true;
     }
     
     function ResumeVideo(){

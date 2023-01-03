@@ -16,16 +16,20 @@
         <div class='ButtonPlaying'><i class='fa fa-play'></i><i class='fa fa-pause'></i></div>
         <div class='ButtonPlaying'><i class='fa fa-forward'></i></div>
     </div>
-</div>
 
+    
+</div>
+<div id="video">
+
+</div>
 <div id='ListPanel'>
     <div id='PanelHeader'>
         <div id='MenuHour'></div>
         <div id='MenuDate'></div>
         <div id='MenuOptions'>
+            <div class='MenuOptions'><img id='menuSeries' src="Media/Movies/movies.png"></div>
+            <div class='MenuOptions'><img id='menuSeries' src="Media/Movies/series.png"></div>
             <div class='MenuOptions'><i class='fa fa-sign-out-alt'></i></div>
-            <div class='MenuOptions'></div>
-            <div class='MenuOptions'></div>
             <div class='MenuOptions'></div>
         </div>
         <div id='Banner'></div>
@@ -55,9 +59,13 @@
         </div>
     </div>
 
-    <div id='PanelRight'>
+    <div id='PanelRightMovies'>
         <div class='MoviesRow'></div>
         <div class='MoviesRow'></div>
+    </div>
+    <div id='PanelRightSeries'>
+        <div class='SeriesRow'></div>
+        <div class='SeriesRow'></div>
     </div>
 </div>
 

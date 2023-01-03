@@ -57,7 +57,7 @@ class Packages extends Database {
                                       "modulos ON paquete_canal.id_modulo = modulos.id_modulo",
                                       "",
                                       "",
-                                      "","paquete_canal.id_paquete = '$PackageId'  ","","","");
+                                      "","paquete_canal.id_paquete = '$PackageId'  ","","","paquete_canal.numero_canal ASC");
         $this->PackageListById = $this->getResult();
 
         $this->disconnect();

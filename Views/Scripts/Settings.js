@@ -10,23 +10,17 @@ if (window.tizen !== undefined) {
     var now = new tizen.TZDate(),
         TvHour = now.getHours();
 
-    console.log('------------------------- NOW:::: '+now);
 
     $.ajax({
         cache: false,
         type: 'POST',
-        url: 'http://'+ServerIp+'BBINCO/TV/Core/Models/Time.php',
+        url: 'http://'+ServerIp+'BBINCO/TV1/Core/Models/Time.php',
         //async : false,
         success: function (response) {
             var Today = $.parseJSON(response),
                 ServerHour   = Today.Hours;
 
-            console.log('****************************************** > '+TvHour);
-            console.log('****************************************** > '+ServerHour);
-
             Offset = parseInt(TvHour) - parseInt(ServerHour);
-
-            console.log(':::::::::::::::::::::::::::::OFFSET:: '+Offset);
 
             Today = null;
             ServerHour = null;
@@ -137,28 +131,12 @@ if (window.tizen !== undefined) {
         }
     }
 
-// Obtiene los datos de los dispositivos por marca en el siguiente orden:
-// 1 - Amino 
-// 2 - Kamai
-// 3 - Infomir
-// 4 - Samsung
-// 5 - Lg
-
     function SetData() {
         AminoDevice();
-
-        // console.log(CurrentStbDate);
-
-
         //CurrentStbDate = moment().subtract('hours', Offset).format('Y-MM-DD h:mm:ss');
         CurrentStbDate = 'UPDATED';
-
-        //Debug('CurrentStbDate = '+CurrentStbDate);
     }
 
-    //Debug(ServerSource + 'Core/Controllers/Device.php');
-
-    // Device
     $.ajax({
         cache: false,
         type: 'POST',
@@ -169,20 +147,14 @@ if (window.tizen !== undefined) {
             EventString : 'BOOT_SUCCESSFUL',
             CurrentDateStb : CurrentStbDate
         },
-        success: function (response){
-            //Debug(CurrentStbDate);
-            
+        success: function (response){     
             Device = $.parseJSON(response);
-            //alert(Device['Type']);
-            //Debug('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DEVICE:'+JSON.stringify(Device));
-
               if(Device['Debug'] === '1'){
                   DivDebug.style.display = 'inline';
                   Debug = DebugOnScreen;
               }
         }
     });
-    //Libraries
     $.ajax({
         type: 'POST',
         async: false,
@@ -197,12 +169,6 @@ if (window.tizen !== undefined) {
     });
     
     function UpdateInfoDevice(){
-        //Debug('----------------> UpdateInfoDevice');
-
-        //Debug('----------------> MacAddress '+MacAddress);
-        //Debug('----------------> EventString '+EventString);
-        //Debug('----------------> EventHdmi '+EventHdmi);
-        //Debug('----------------> Date '+CurrentStbDate);
         $.ajax({
             cache: false,
             type: 'POST',
@@ -211,7 +177,6 @@ if (window.tizen !== undefined) {
                 MacAddress: MacAddress,
                 EventString: EventString,
                 EventHdmi: EventHdmi,
-                //EventNetman: EventNetman,
                 CurrentDate: CurrentStbDate,
                 Grabador: InfomirUSB
             },
@@ -221,29 +186,19 @@ if (window.tizen !== undefined) {
             success: function (response) {
                 Device = $.parseJSON(response);
 
-                //Debug('----------------> Device'+Device);
-
                 if (Device['Services']['Reboot'] === true) {
                     RebootDevice();
                 } else {
-                    //Debug('----------------> CurrentModule '+CurrentModule);
-                    // Busca actualizacion si lleva mas de un dia funcionando el amino
                     if (CurrentModule === 'Tv') {
                         if (Device['EpgModificationTime'] !== '03' && LastUpdatedTime !== Device['EpgModificationTime']) {
-                            // Actualiza si la hora del archivo es diferente de la hora programada de actualizacion
-                            // Y si no se ha actualizado a la hora
                             if (ActiveEpgContainer !== true && ActiveInfoContainer !== true) {
-                                // Solo actualiza si no esta activa la guia o la info
                                 LastUpdatedTime = Device['EpgModificationTime'];
-
                                 BackUpChannelsJson = ChannelsJson;
-
                                 SetEpgFile();
-
                                 CheckUpdatedJson();
                             }
                         }
-                    } else if (CurrentModule === 'Menu' || CurrentModule === 'Movies') {
+                    } else if (CurrentModule === 'Menu' || CurrentModule === 'Movies' || CurrentModule === 'Interactivo') {
                         // do nothing
                     } else {
                         UpdateMultimedia();
@@ -266,16 +221,6 @@ function UpdateQuickInfoDevice(){
         OnScreen =  CurrentModule;
     }
 
-    //Debug('----------------------------# CurrentModule:: '+CurrentModule);
-    //Debug('----------------------------# OnScreen:: '+OnScreen);
-
-    //Debug('----------------------------# Device.DeviceId:: '+Device.DeviceId);
-    //Debug('----------------------------# EventString:: '+EventString);
-    //Debug('----------------------------# EventHdmi:: '+EventHdmi);
-    //Debug('----------------------------# CurrentStbDate:: '+CurrentStbDate);
-    //Debug('----------------------------# LastChannel:: '+OnScreen);
-    //Debug('----------------------------# Channelpos:: '+ChannelPosition);
-
     $.ajax({
         cache: false,
         type: 'POST',
@@ -297,8 +242,6 @@ function UpdateQuickInfoDevice(){
         success: function (response) {
             var RebootResponse = $.parseJSON(response);
 
-            //Debug('RebootResponse:: '+RebootResponse);
-
             if(RebootResponse === '1'){
                 RebootDevice();
             }
@@ -307,8 +250,6 @@ function UpdateQuickInfoDevice(){
         },
         complete: function (data){
             Executing = false;
-            //Debug('CT > Executing:: '+Executing);
         }
     });
-    //Debug('_______________________________________________________________________________________ UpdateQuickInfoDevice 2');
 }

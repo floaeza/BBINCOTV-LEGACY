@@ -23,17 +23,26 @@
         case 'Channels':
             $ChannelName     = !empty($_POST['ChannelName']) ? $_POST['ChannelName'] : '';
             $StationNumber   = !empty($_POST['StationNumber']) ? $_POST['StationNumber'] : '';
-    
+            $idUser         = !empty($_POST['idUser']) ? $_POST['idUser'] : ''; 
+            
+            $ChannelNum   = !empty($_POST['ChannelNum']) ? $_POST['ChannelNum'] : '';
+
             $StatisticsArray = array('id_locacion'     => $LocationId,
+                                     'id_user'         => $idUser,
                                      'mac_address'     => $MacAddress,
                                      'nombre_canal'    => $ChannelName,
                                      'numero_estacion' => $StationNumber,
+                                     'numero_canal' => $ChannelNum,
                                      'fecha_inicio'    => $StartTime,
                                      'fecha_fin'       => $EndTime);
             
             $NewStatistics = $StatisticsData->setStatisticChannel($StatisticsArray);
         break;
-    
+        case 'getPopularChannelsByUser':
+            // $idUser     = !empty($_POST['idUser']) ? $_POST['idUser'] : '';
+            $NewStatistics = $StatisticsData->getPupularChannels($LocationId);
+            echo json_encode($NewStatistics);
+        break;
         case 'Modules':
             $CurrentModule   = !empty($_POST['CurrentModule']) ? $_POST['CurrentModule'] : '';
     

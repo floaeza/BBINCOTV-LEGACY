@@ -153,13 +153,13 @@ switch ($Option){
                 'valor_parametro' => $RebootStatus,   
                 ); 
             $PackagesData->updateParameterReboot($NewPackage);
-             //$resultado = shell_exec('cd /var/www/html/BBINCO/TV/Core/Controllers && python3 DebugTr.py');  
-            // $command = escapeshellcmd('/var/www/html/BBINCO/TV/Core/Controllers/RebootTelnet.py');
+             //$resultado = shell_exec('cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 DebugTr.py');  
+            // $command = escapeshellcmd('/var/www/html/BBINCO/TV1/Core/Controllers/RebootTelnet.py');
             // $output = shell_exec($command);
             // $Result = $output;
             // $Response = $Result;
 
-            // $gestor = popen('cd /var/www/html/BBINCO/TV/Core/Controllers && python3 RebootTelnet.py', 'r');
+            // $gestor = popen('cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 RebootTelnet.py', 'r');
             // $leer = fread($gestor, 2096);
             // $Response = $leer;
             // pclose($gestor);

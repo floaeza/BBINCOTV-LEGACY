@@ -14,7 +14,7 @@
         URLLog          = '',
         skipCommerialrest = 0;
 
-
+    var updatingMoviePosition = null;
     var banderaDePrueba = false;
     
     var numberFilesGlobal = 0,
@@ -22,7 +22,7 @@
         RecordsPlaylist,
         SecondsOfRecord = 0,
         durationFull,
-        firstPause = true,
+        pltActive = false,
         UpdateSecondsRecord = null,
         chapters = [],
         positionChapter = 0;
@@ -32,13 +32,17 @@
         WindowMinWidth  = 0,
         WindowMinHeight = 0;
 
+    var deviceModer = gSTB.GetDeviceModel(),
+        macDevice = gSTB.GetDeviceMacAddress();
+
+
     var player = stbPlayerManager.list[0];
     //gSTB.SetTopWin(0);
 
     player.videoWindowMode = 1;
     player.aspectConversion = 0;
 
-    if(gSTB.GetDeviceModel() !== 'MAG520' && gSTB.GetDeviceModel() !=='MAG524' && gSTB.GetDeviceModel() !=='MAG522v2'){
+    if(deviceModer !== 'MAG520' && deviceModer !=='MAG524' && deviceModer !=='MAG522v2'){
         var player2 = stbPlayerManager.list[1];
         player2.videoWindowMode = 0;
         player2.aspectConversion = 5;    
@@ -67,7 +71,7 @@
 
     var storageInfo = JSON.parse(gSTB.GetStorageInfo('{}'));
     var USB = storageInfo.result || [];
-    if((gSTB.GetDeviceModel() == 'MAG424' || gSTB.GetDeviceModel() =='MAG524' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1') && (USB.length !== 0)){
+    if((deviceModer == 'MAG424' || deviceModer =='MAG524') && (USB.length !== 0)){
         // set folder for saving TimeShift buffer data
         timeShift.SetTimeShiftFolder(USB[0].mountPath+"/records");
         timeShift.SetMaxDuration(7500);
@@ -82,11 +86,12 @@
     * ****************************************************************************/
 
     function PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition){
-        Debug("Source: asdasd   "+Source);
-        var CheckPort = '';
         
-        if((gSTB.GetDeviceModel() == 'MAG424' || gSTB.GetDeviceModel() =='MAG524' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1') && (USB.length !== 0)){
-            timeShift.ExitTimeShift();
+        var CheckPort = '';
+        StopVideo();
+        
+        if((deviceModer == 'MAG424' || deviceModer =='MAG524') && (USB.length !== 0)){
+            
             //Establece de forma manual la posicion en la que se encuentra el reproductor de video
             if(idPosition !== null){
                 clearInterval(idPosition);
@@ -137,13 +142,12 @@
         
         Debug("Source "+ Source +" Port "+CheckPort);
         
-        StopVideo();
-        
         //gSTB.Play(Source + CheckPort);
-        if((gSTB.GetDeviceModel() == 'MAG424' || gSTB.GetDeviceModel() =='MAG524' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1') && (USB.length !== 0)){
+        if((deviceModer == 'MAG424' || deviceModer =='MAG524') && (USB.length !== 0)){
+
             player.play({
                 uri: Source + CheckPort,
-                solution: 'rtp',
+                solution: 'extTimeShift',
                 //program: ProgramIdPosition
             });
         }else{
@@ -170,8 +174,10 @@
         // Actualiza la fecha inicio de la reproduccion del canal */
         StartDateChannel = new Date();
     }
+
+
     function PlayChannel2(url){
-        if((gSTB.GetDeviceModel() == 'MAG424' || gSTB.GetDeviceModel() =='MAG524' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1') && (USB.length !== 0)){
+        if((deviceModer == 'MAG424' || deviceModer =='MAG524' || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:6d:d1:03' || macDevice == '00:1a:79:6d:d1:a3' || macDevice == '00:1a:79:6d:c6:ff' || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:72:cb:f7' || macDevice == '00:1a:79:72:4a:9d' || macDevice == '00:1a:79:72:cb:99' || macDevice == '00:1a:79:74:b7:66' || macDevice == '00:1a:79:72:c7:13' || macDevice == '00:1a:79:72:cc:79' || macDevice == '00:1a:79:72:cb:de' || macDevice == '00:1a:79:72:cb:e7' || macDevice == '00:1a:79:70:06:f1' || MacAddress == '00:1a:79:6d:c7:c1') && (USB.length !== 0)){
             player.play({
                 uri: url,
                 solution: 'extTimeShift'
@@ -189,54 +195,25 @@
     * ****************************************************************************/
 
     function PlayDigitalChannel(Source){
-        // Detiene el proceso de la reproduccion anterior
         StopVideo();
-        // Reproduce el video
         player.play({
             uri: Source,
             solution: 'ffrt3'
-        });
-        //player.onPlayStart = function () {
-            //ImageDigital.src = '';
-            //ImageDigital.style.display = 'none';
-        //};
-
-        //player.onPlayEnd = function () {
-        //   GetDigitalChannel();
-        //};
-        // Maximiza el video en caso de que no este en pantalla completa
+        });    
         MaximizeTV();
-        // Activamos la bandera
         PlayingChannel = true;
-
-        // Si tiene una fecha ya registrada guarda estadisticas en la BD
         if(StartDateChannel !== ''){
             SetChannelStatistics();
         }
-        // Actualiza la fecha inicio de la reproduccion del canal */
         StartDateChannel = new Date();
     }
-
-    /* *****************************************************************************
-    * Reproduce videos
-    * ****************************************************************************/
-
     var Playlist = '',
         IndexPlaylist = 0;
         LengthPlaylist = 0;
 
     function PlayVideo(Source){
-        // Detiene el proceso de la reproduccion anterior
-        
-        //Source = 'http://10.0.3.10/Recordings/prueba.m3u8';
-        //Source = 'http://10.30.11.217:80/USB-E0D55EA57493F560A93E1A6B-1/Final_edit.mp4'
-        //Source = 'https://youtu.be/wB_i1DL5SPc';
+       
         chapters = [];
-        if((gSTB.GetDeviceModel() != 'MAG424' && gSTB.GetDeviceModel() !='MAG524') && (gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d0:7a' && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() != '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() != '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() != '00:1a:79:70:06:f1')){
-            var source2 = Source.split('/');
-            Source = "http://10.0.3.9/INFOMIR_RECORDINGS/" + source2[4]; 
-        }
-
         var conti = false;
         if(PlayingRecording===true){
             conti = true;
@@ -245,54 +222,117 @@
         if(conti == true){
             PlayingRecording = true;
         }
-        
-        //Debug(Source);
+        Debug('---------------> 1');
         if(CurrentModule === 'Tv'){
+            Debug('---------------> 1.1');
             if(Source.indexOf('pvr') !== -1 || Source.indexOf('rtsp') !== -1){
-                GetRaws(Source);
             
-                LengthPlaylist = Playlist.length;
-                Debug('--------------->>> '+Playlist[IndexPlaylist]);
-                //Reproduce el video
                 player.play({
-                    uri: Playlist[IndexPlaylist],
-                    solution: 'auto'
+                    uri: Source+"/",
+                    solution: 'rtsp'
                 });
             }else{
-                //alert(Source);
                 Source = Source.replace(/\s+/g, '');
                 Debug('--------------->>> '+Source);
-                //Reproduce el video
-                //alert(Source);
                 player.play({
                     uri: Source,
                     solution: 'auto'
                 });
                 
-                //stbPlayerManager.setBufferSize(200000, 15000000);
             }
-        } else {
-            //Reproduce el video
-            //alert(Source);
+        }else {
             player.play({
                 uri: Source,
                 solution: 'ffrt3'
             });
         }
-
-        // player.onPlayEnd = function () {
-        //     if(CurrentModule === 'Tv' && PlayingRecording === true){
-        //         // segmente de la grabacion termino
-        //         //SetPlaylist('forward');
-        //     } else if(CurrentModule === 'Movies'){
-        //         // Termino pelicula
-        //         EndOfMovie();
-        //     }
-        // };
-
-        // Maximiza el video en caso de que no este en pantalla completa
         MaximizeTV();
+    }
+    function PlayMovie(Source, pos){
+        player.play({
+            uri: Source,
+            solution: 'auto',
+            position: pos
+        });
+        if(updatingMoviePosition !== null){
+            clearInterval(updatingMoviePosition);
+            updatingMoviePosition = null;
+        }
+        setTimeout(function() {
+            Debug("=================== Audio Pids"+ JSON.stringify(player.subtitlesTracks));
+        }, 10);
+        updatingMoviePosition = setInterval(updateMoviePosition, 1000);
+    }
+    function setSubtitles(option, sour){
+        if(option){
+            var actualPosition = player.position;
+            StopVideo();
+            PlayMovie(actualSources + "_sub.mp4", actualPosition)
+        }else{
+            var actualPosition = player.position;
+            StopVideo();
+            PlayMovie(actualSources + ".mp4", actualPosition)
+        }
+    }
+    function getMovieLanguage(Option){
+        if(Option == "Audio"){
+            return player.audioTracks;
+        }else if(Option == "Subtitles"){
+            return player.subtitlesTracks;
+        }else if(Option == "currentAudio"){
+            return player.audioPID;
+        }else if(Option == "currentSubtitle"){
+            return player.subtitlesPID;
+        }
+    }
 
+    function updateMoviePosition(){
+        var percentage = ( player.position / player.duration ) * 100;
+        $("#custom-seekbar span").css("width", percentage+"%");
+    
+        var hour = Math.floor(player.position / 3600);
+        hour = (hour < 10)? '0' + hour : hour;
+        var minute = Math.floor((player.position / 60) % 60);
+        minute = (minute < 10)? '0' + minute : minute;
+        var second = Math.floor(player.position % 60);
+        second = (second < 10)? '0' + second : second;
+        var actual = hour + ':' + minute+ ':' + second;
+
+        hour = Math.floor(player.duration / 3600);
+        hour = (hour < 10)? '0' + hour : hour;
+        minute = Math.floor((player.duration / 60) % 60);
+        minute = (minute < 10)? '0' + minute : minute;
+        second = Math.floor(player.duration % 60);
+        second = (second < 10)? '0' + second : second;
+        var total = hour + ':' + minute + ':' + second;
+
+        document.getElementById("timeProgress").innerText =actual+" / "+total;
+    }
+
+    function speedMovie(Option){
+        if(Option == "forward"){
+            if(player.duration > player.position+10){
+                player.position = player.position + 10;
+                // player.position = player.duration - 20;
+            
+            }
+        }else if(Option == "backward"){
+            var actual = player.position-11;
+            if(actual >= 0){
+                player.position = actual;
+            }
+        }else if(Option == "fastForward"){
+            if(player.duration > player.position+10){
+                player.position = player.position + 600;
+                // player.position = player.duration - 20;
+            
+            }
+        }else if(Option == "fastBackward"){
+            var actual = player.position-600;
+            if(actual >= 0){
+                player.position = actual;
+            }
+        }
     }
 
     function PlayRecordsPlaylist(filename, numberFiles, durationParts){
@@ -302,7 +342,7 @@
         positionFile = 0;
         numberFilesGlobal = 0;
         
-        // if((gSTB.GetDeviceModel() !== "MAG424" && gSTB.GetDeviceModel() !=="MAG524") && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d0:7a' && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d1:03' && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d1:a3' && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:c6:ff' && gSTB.GetDeviceMacAddress() != '00:1a:79:6d:d0:7a' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:f7' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:4a:9d' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:99' && gSTB.GetDeviceMacAddress() != '00:1a:79:74:b7:66' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:c7:13' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:cc:79' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:de' && gSTB.GetDeviceMacAddress() != '00:1a:79:72:cb:e7' && gSTB.GetDeviceMacAddress() != '00:1a:79:70:06:f1'){
+        // if((deviceModer !== "MAG424" && deviceModer !=="MAG524") && macDevice != '00:1a:79:6d:d0:7a' && macDevice != '00:1a:79:6d:d1:03' && macDevice != '00:1a:79:6d:d1:a3' && macDevice != '00:1a:79:6d:c6:ff' && macDevice != '00:1a:79:6d:d0:7a' && macDevice != '00:1a:79:72:cb:f7' && macDevice != '00:1a:79:72:4a:9d' && macDevice != '00:1a:79:72:cb:99' && macDevice != '00:1a:79:74:b7:66' && macDevice != '00:1a:79:72:c7:13' && macDevice != '00:1a:79:72:cc:79' && macDevice != '00:1a:79:72:cb:de' && macDevice != '00:1a:79:72:cb:e7' && macDevice != '00:1a:79:70:06:f1'){
         //     var source2 = filename.split('/');
         //     filename = "http://10.0.3.9/INFOMIR_RECORDINGS/" + source2[4]; 
         // }
@@ -463,8 +503,12 @@
             clearInterval(UpdateSecondsRecord);
             UpdateSecondsRecord = null;
         }
+        if(updatingMoviePosition !== null){
+            clearInterval(updatingMoviePosition);
+            updatingMoviePosition = null;
+        }
         player.stop();
-        if(gSTB.GetDeviceModel() !== 'MAG520' && gSTB.GetDeviceModel() !=='MAG524'  && gSTB.GetDeviceModel() !=='MAG522v2'){
+        if(deviceModer !== 'MAG520' && deviceModer !=='MAG524'  && deviceModer !=='MAG522v2'){
             if(player2.state !== 0){
                 player2.stop();
             }
@@ -472,12 +516,14 @@
         PlayingRecording = false;
         PlayingRecordPlaylist = false;
         PlayingRecordPlaylist2 = false;
-        firstPause = true;
-        //PauseLive = false;
+        if(PauseLive === true){
+            HideBarStatus();
+        }
+        pltActive = false;
     }
 
     function PauseVideo(){
-        if((gSTB.GetDeviceModel() == 'MAG424' || gSTB.GetDeviceModel() =='MAG524' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1') && (USB.length !== 0)){
+        if((deviceModer == 'MAG424' || deviceModer =='MAG524' || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:6d:d1:03' || macDevice == '00:1a:79:6d:d1:a3' || macDevice == '00:1a:79:6d:c6:ff' || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:72:cb:f7' || macDevice == '00:1a:79:72:4a:9d' || macDevice == '00:1a:79:72:cb:99' || macDevice == '00:1a:79:74:b7:66' || macDevice == '00:1a:79:72:c7:13' || macDevice == '00:1a:79:72:cc:79' || macDevice == '00:1a:79:72:cb:de' || macDevice == '00:1a:79:72:cb:e7' || macDevice == '00:1a:79:70:06:f1' || MacAddress == '00:1a:79:6d:c7:c1') && (USB.length !== 0)){
             timeShift.EnterTimeShift();
             TimeShiftStart = Position;
         }
@@ -486,12 +532,11 @@
             RewFor = null;
             NewSpeed = 0;
         }
-        firstPause = false;
+        pltActive = true;
         if(UpdateSecondsRecord !== null){
             clearInterval(UpdateSecondsRecord);
             UpdateSecondsRecord = null;
         }
-
         player.pause();
     }
     function updateSeconds(){
@@ -515,13 +560,15 @@
     }
 
     function ResumeVideo(){
+        Debug("=======> ResumeVideo");
+
         if(RewFor !== null){
             clearInterval(RewFor);
             NewSpeed = 0;
             RewFor = null;
         }
         player.resume();
-        if(UpdateSecondsRecord === null && (PlayingRecordPlaylist == true || PlayingRecordPlaylist2 == true) && firstPause == false){
+        if(UpdateSecondsRecord === null && (PlayingRecordPlaylist == true || PlayingRecordPlaylist2 == true) && pltActive == true){
             clearInterval(UpdateSecondsRecord);
             UpdateSecondsRecord = null;
             UpdateSecondsRecord = setInterval(SecondsOfRecordFun,1000);
@@ -536,14 +583,10 @@
         if(Speed == (-2)){
             Speed = -4;
         }
-        //Debug(player.speed);
-        //Debug("############3    ID RewFor:"+RewFor + "   E############");
         if(RewFor === null){
             NewSpeed = Speed;
             RewFor = setInterval(updateRewFor,1000);
-            //Debug("############3    ID RewFor Es Null:"+RewFor + "   E############");
         }else{
-            //Debug("############3    ID RewFor No Es Null:"+RewFor + "   E############");
             NewSpeed = 0;
             clearInterval(RewFor);
             RewFor = null;
@@ -556,18 +599,18 @@
         Debug('PauseLive = '+PauseLive);
         if(PauseLive === true && PlayingRecording === false){
             if(parseInt(Position) + (parseInt(NewSpeed)-1) >=parseInt(seconds) || (parseInt(Position) + (parseInt(NewSpeed)-1) <=parseInt(TimeShiftStart)+2)){
-                Debug("############3    Se Pasa: "+parseInt(player.position) + "   E############");
+                Debug(' =====>>> Se pasa por alguna razón ');
+                
                 clearInterval(RewFor);
                 TvPlay();
             }else{
+                Debug(' =====>>> Si entra ' + player.duration);
                 if(NewSpeed<0){
-                    player.position += (parseInt(NewSpeed)-1);
+                    player.position = parseInt(player.position) + (parseInt(NewSpeed)-1);
                 }else{
-                    player.position += parseInt(NewSpeed);
-                }
-                
+                    player.position = parseInt(player.position) + parseInt(NewSpeed);
+                }    
                 Position = parseInt(Position) + parseInt(NewSpeed);
-                Debug("############3    player.position "+parseInt(player.position) + "############");
             }
         }else {
             if(PlayingRecordPlaylist == false && PlayingRecordPlaylist2 == false){
@@ -588,7 +631,7 @@
                     TvPlay();
                 }else{
                     if(parseInt(player.position) + parseInt(NewSpeed) <= parseInt(player.duration)-2){
-                        if(gSTB.GetDeviceModel() == "MAG424" || gSTB.GetDeviceModel() == "MAG524" || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:03' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d1:a3' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:c6:ff' || gSTB.GetDeviceMacAddress() == '00:1a:79:6d:d0:7a' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:f7' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:4a:9d' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:99' || gSTB.GetDeviceMacAddress() == '00:1a:79:74:b7:66' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:c7:13' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cc:79' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:de' || gSTB.GetDeviceMacAddress() == '00:1a:79:72:cb:e7' || gSTB.GetDeviceMacAddress() == '00:1a:79:70:06:f1'){
+                        if(deviceModer == "MAG424" || deviceModer == "MAG524" || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:6d:d1:03' || macDevice == '00:1a:79:6d:d1:a3' || macDevice == '00:1a:79:6d:c6:ff' || macDevice == '00:1a:79:6d:d0:7a' || macDevice == '00:1a:79:72:cb:f7' || macDevice == '00:1a:79:72:4a:9d' || macDevice == '00:1a:79:72:cb:99' || macDevice == '00:1a:79:74:b7:66' || macDevice == '00:1a:79:72:c7:13' || macDevice == '00:1a:79:72:cc:79' || macDevice == '00:1a:79:72:cb:de' || macDevice == '00:1a:79:72:cb:e7' || macDevice == '00:1a:79:70:06:f1' || MacAddress == '00:1a:79:6d:c7:c1'){
                             player.position += parseInt(NewSpeed);
                             SecondsOfRecord = SecondsOfRecord + parseInt(NewSpeed);
                             Position = parseInt(Position) + parseInt(NewSpeed);
@@ -834,12 +877,10 @@
             if(PlayingRecordPlaylist == true || PlayingRecordPlaylist2 == true){
                 PositionAsset = SecondsOfRecord;
                 DurationAsset = parseInt(Duration,10) * 60;
-                //ShowRecorderMessage(DurationAsset);
                 PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
             }else{
                 PositionAsset = player.position;
                 DurationAsset = parseInt(Duration,10) * 60;
-                //ShowRecorderMessage("ELSE "+DurationAsset);
                 PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
             }        
         }else{ if (PauseLive === true){
@@ -849,31 +890,34 @@
             PositionAsset = Math.round(Position);
             //Debug('>>>>>> PositionAsset: '+PositionAsset);
             // if(DurationAsset !== 0){
-                PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
-                if(PercentagePosition > 100){
-                    PercentagePosition = 100;
-                }
+            PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
+            if(PercentagePosition > 100){
+                PercentagePosition = 100;
+            }
                 //Debug('>>>>>> PercentagePosition: '+PercentagePosition);
                 //DurationAsset = DurationAsset * 2;
             // }
             
         }}
     }
-    function AssetStatusVod(Duration){
-        //alert(Duration);
-        if(PlayingRecording === true || PlayingVod === true){
-            PositionAsset = gSTB.GetPosTime();
-            DurationAsset = parseInt(Duration,10) * 60;
-            PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);     
-        }else if (PauseLive === true){
-            DurationAsset = Math.round(seconds);
-            PositionAsset = Math.round(Position);
-            PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
-            if(PercentagePosition > 100){
-                PercentagePosition = 100;
-            }
-        }
-    }
+    
     function rebootInHour(){
         
     }
+
+
+    // function AssetStatusVod(Duration){
+    //     //alert(Duration);
+    //     if(PlayingRecording === true || PlayingVod === true){
+    //         PositionAsset = gSTB.GetPosTime();
+    //         DurationAsset = parseInt(Duration,10) * 60;
+    //         PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);     
+    //     }else if (PauseLive === true){
+    //         DurationAsset = Math.round(seconds);
+    //         PositionAsset = Math.round(Position);
+    //         PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
+    //         if(PercentagePosition > 100){
+    //             PercentagePosition = 100;
+    //         }
+    //     }
+    // }

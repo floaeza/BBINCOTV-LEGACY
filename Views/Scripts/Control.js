@@ -21,71 +21,43 @@ var PressedKey      = 0,
     DelaySkip          = false;
 
     document.addEventListener('keydown',KeyHandler,false);
-    
     var SwapPausePlay = true;
-    
 var CheckInfo = 0;
-    
-
     function KeyHandler(e) {
         PressedKey = e.which;
         e.preventDefault();
-        //alert(PressedKey);
-        //Debug("BOTON:  "+PressedKey);
         if(typeof(gSTB) !== 'undefined' && PressedKey === 9){
             ShiftKey = e.shiftKey;
             if(ShiftKey === true){
                 PressedKey = 7;
             }
         }
-        
-        //Debug('>> PressedKey: '+PressedKey);
         if(Clicks <= MaxClicks) {
-            //alert(REMOTE_RED);
-            //ShowRecorderMessage(PressedKey);
             switch (PressedKey) {
                 case REMOTE_RED:
-                    //Debug("BOTON REMOTE_RED");
                     if(showInfoDevi == false){
                         Red();
                     }
                 break;
                 case REMOTE_BLUE:
-                    //Debug("BOTON REMOTE_BLUE");
                     if(showInfoDevi == false){
                         Blue();
                     }
                 break;
 
                 case REMOTE_GREEN:
-                    //Debug("BOTON REMOTE_GREEN");
-
                     if(showInfoDevi == false){
                         Green();
                     }
                 break;
 
                 case REMOTE_YELLOW:
-                    //Debug("BOTON REMOTE_YELLOW");
-
-                    // if(contInfoDevice == 2 && showInfoDevi == false){
-                    //     clearTimeout(timeInfoDevice);
-                    //     contInfoDevice++;
-                    //     timeInfoDevice = setTimeout(function(){
-                    //         contInfoDevice=0;
-                    //     }, 5500);
-                    // }
                     if(showInfoDevi == false){
                        Yellow(); 
                     }
-                    
                 break;
 
-        /********** NAVEGACION **********/
-
                 case ARROW_KEY_UP:
-                    //Debug("BOTON ARROW_KEY_UP");
-
                     if(contInfoDevice == 0 && showInfoDevi == false){
                         contInfoDevice++;
                         timeInfoDevice = setTimeout(function(){
@@ -97,19 +69,18 @@ var CheckInfo = 0;
                             contInfoDevice=0;
                         }, 5500);
                     }
-                    console.log(contInfoDevice);
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvUp();
                     } else if(CurrentModule === 'Menu' && showInfoDevi == false){
                         MenuUp();
                     } else if(CurrentModule === 'Movies' && showInfoDevi == false){
                         VodUp();
+                    } else if(CurrentModule == "Interactivo"){
+                        UpInteractive();
                     }
                 break;
 
                 case ARROW_KEY_DOWN:
-                    //Debug("BOTON ARROW_KEY_DOWN");
-
                     if(contInfoDevice == 1 && showInfoDevi == false){
                         contInfoDevice++;
                         timeInfoDevice = setTimeout(function(){
@@ -121,19 +92,18 @@ var CheckInfo = 0;
                             contInfoDevice=0;
                         }, 5500);
                     }
-                    console.log(contInfoDevice);
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvDown();
                     } else if(CurrentModule === 'Menu' && showInfoDevi == false){
                         MenuDown();
                     } else if(CurrentModule === 'Movies' && showInfoDevi == false){
                         VodDown();
+                    } else if(CurrentModule == "Interactivo"){
+                        DownInteractive();
                     }
                 break;
 
                 case ARROW_KEY_RIGHT:
-                    //Debug("BOTON ARROW_KEY_RIGHT");
-
                     if(contInfoDevice == 4 && showInfoDevi == false){
                         contInfoDevice++;
                         timeInfoDevice = setTimeout(function(){
@@ -145,7 +115,6 @@ var CheckInfo = 0;
                             contInfoDevice=0;
                         }, 5500);
                     }
-                    console.log(contInfoDevice);
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvRight();
                     } else if(CurrentModule === 'Menu' && showInfoDevi == false){
@@ -154,12 +123,12 @@ var CheckInfo = 0;
                         VodRight();
                     } else if(CurrentModule === 'Moods' && showInfoDevi == false){
                         MoodsRight();
-                    } 
+                    } else if(CurrentModule == "Interactivo"){
+                        RightInteractive();
+                    }
                 break;
 
                 case ARROW_KEY_LEFT:
-                    //Debug("BOTON ARROW_KEY_LEFT");
-
                     if(contInfoDevice == 5 && showInfoDevi == false){
                         contInfoDevice++;
                         timeInfoDevice = setTimeout(function(){
@@ -171,7 +140,6 @@ var CheckInfo = 0;
                         contInfoDevice=0;
                         showInfoDevi = true;
                     }
-                    console.log(contInfoDevice);
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvLeft();
                     } else if(CurrentModule === 'Menu' && showInfoDevi == false){
@@ -180,125 +148,93 @@ var CheckInfo = 0;
                         VodLeft();
                     } else if(CurrentModule === 'Moods' && showInfoDevi == false){
                         MoodsLeft();
-                    } 
+                    } else if(CurrentModule == "Interactivo"){
+                        LeftInteractive();
+                    }
                 break;
                 
                 case SMALL_ARROW_UP:
-                    //Debug("BOTON SMALL_ARROW_UP");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvPageUp();
                     }
                 break;
                 
                 case SMALL_ARROW_DOWN:
-                    //Debug("BOTON SMALL_ARROW_DOWN");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvPageDown();
                     }
                 break;
-                
-        /********** CANAL +/- **********/
 
                 case REMOTE_CHANNEL_UP:
-                    //Debug("BOTON REMOTE_CHANNEL_UP");
-
-                    if (ActiveEpgContainer === true && (typeof(ENTONE) !== 'undefined' || typeof(gSTB) !== 'undefined')) {
-                        if(CurrentModule === 'Tv' && showInfoDevi == false){
-                            TvPageUp();
+                    
+                    if(CurrentModule === 'Movies'){
+                        if(playingMovie == false){
+                            GoPage('tv.php', 1, 'Tv', 'UP');
                         }
-                    }else if(RecordingPanel == true){
-                        console.log("AAH BUENO");
-                    }else{
-                        if(CurrentModule === 'Tv' && showInfoDevi == false){
-                            if(DelayChangeChannel == false){
-                                DelayChangeChannel = true;
-                                TvChannelUp();
-                                setTimeout(function(){
-                                    DelayChangeChannel = false;
-                                },1000);
+                    }else if(CurrentModule === 'Tv'){
+                        if (ActiveEpgContainer === true && (typeof(ENTONE) !== 'undefined' || typeof(gSTB) !== 'undefined')) {
+                            if(showInfoDevi == false){
+                                TvPageUp();
+                            }
+                        }else if(RecordingPanel == true){
+                        }else{
+                            if(showInfoDevi == false){
+                                if(DelayChangeChannel == false){
+                                    DelayChangeChannel = true;
+                                    TvChannelUp();
+                                    setTimeout(function(){
+                                        DelayChangeChannel = false;
+                                    },1000);
+                                }
                             }
                         }
                     }
-                    
                 break;
 
                 case REMOTE_CHANNEL_DOWN:
-                    //Debug("BOTON REMOTE_CHANNEL_DOWN");
-
-                    if (ActiveEpgContainer === true && (typeof(ENTONE) !== 'undefined' || typeof(gSTB) !== 'undefined')) {
-                        if(CurrentModule === 'Tv' && showInfoDevi == false){
-                            TvPageDown();
-                        }
-                    }else if(RecordingPanel == true){
-                        if(ListTypeFocus === 'serie'){
-                            
-                            if((RecordingsList[IndexRecordedFocus].length - 1) > 9 && IndexRecordedProgFocus < (RecordingsList[IndexRecordedFocus].length - 1) ){
-                                console.log("AAH BUENO: "+IndexRecordedProgFocus);
-                                SetRecordings('down');
-            
-                                PvrRowFocus = 1;
-            
-                                SetFocusRecordings();
+                    if(CurrentModule === 'Movies'){
+                        if(playingMovie == false){
+                            GoPage('tv.php', 1, 'Tv', 'Down');
+                        }       
+                    }else if(CurrentModule === 'Tv'){
+                        if (ActiveEpgContainer === true && (typeof(ENTONE) !== 'undefined' || typeof(gSTB) !== 'undefined')) {
+                            if(showInfoDevi == false){
+                                TvPageDown();
                             }
-                        } else {
-                            if(RecordingsList.length > 9 && IndexRecordedFocus < (RecordingsList.length - 1)){
-                                SetRecordings('down');
-            
-                                PvrRowFocus = 1;
-            
-                                SetFocusRecordings();
+                        }else if(RecordingPanel == true){
+                        }else{
+                            if(showInfoDevi == false){
+                                if(DelayChangeChannel == false){
+                                    DelayChangeChannel = true;
+                                    TvChannelDown();
+                                    setTimeout(function(){
+                                        DelayChangeChannel = false;
+                                    },1000);
+                                }
                             }
-                        }
-                    }else{
-                        if(CurrentModule === 'Tv' && showInfoDevi == false){
-                            if(DelayChangeChannel == false){
-                                DelayChangeChannel = true;
-                                TvChannelDown();
-                                setTimeout(function(){
-                                    DelayChangeChannel = false;
-                                },1000);
-                            }
-                            //TvChannelDown();
                         }
                     }
                 break;
-                
-        /********** OPERACIONES **********/
-        
                 case REMOTE_OK:
-                    //Debug("BOTON REMOTE_OK");
-
-                    //Debug('REMOTE_OK');
                     CheckInfo++;
                     if(CurrentModule === 'Tv'){
-                        //Debug('REMOTE_OK > CurrentModule '+CurrentModule);
                         TvOk();
-                        
                         if(CheckInfo === 2){
                             CheckInfo = 0;
                             TvInfo();
                         }
                     } else if(CurrentModule === 'Menu'){
-                        //Debug('REMOTE_OK > MenuOk '+CurrentModule);
                         MenuOk();
                     } else if(CurrentModule === 'Movies'){
                         VodOk();
                     } else if(CurrentModule === 'Moods'){
                         MoodsOk();
-                    } 
+                    } else if(CurrentModule == "Interactivo"){
+                        OkInteractive();
+                    }
                     break;
             
                 case REMOTE_INFO:
-                    //Debug("BOTON REMOTE_INFO");
-
-                    // if(contInfoDevice == 3 && showInfoDevi == false){
-                    //     clearTimeout(timeInfoDevice);
-                    //     showInfoDevice();
-                    //     contInfoDevice=0;
-                    //     showInfoDevi = true;
-                    // }
                     if(CurrentModule === 'Tv'){
                         TvInfo();
                     } else if(CurrentModule === 'Movies'){
@@ -307,8 +243,6 @@ var CheckInfo = 0;
                 break;
                 
                 case REMOTE_BACK:
-                    //Debug("BOTON REMOTE_BACK");
-
                     if(showInfoDevi == false){
                         Back();
                     }else{
@@ -318,8 +252,6 @@ var CheckInfo = 0;
                 break;
 
                 case REMOTE_CLOSE:
-                    //Debug("BOTON REMOTE_CLOSE");
-
                     if(showInfoDevi == false){
                         Close();
                     }else{
@@ -328,31 +260,20 @@ var CheckInfo = 0;
                 break;
                 
                 case PREVIOUS_PROGRAM:
-                    //Debug("BOTON PREVIOUS_PROGRAM");
-
                     if(CurrentModule === 'Tv'  && showInfoDevi == false){
-                        //Debug('PREVIOUS_PROGRAM');
                         ReturnLastChannel();
                     }else if(showInfoDevi){
                         removeInfoDevice();
                     }
                 break;
-                
-        /********** GUIA **********/
-                
                 case REMOTE_GUIDE:
                     if(CurrentModule === 'Tv'  && showInfoDevi == false){
                         
                         TvGuide();
                     }
                 break;
-                
-        /********** MENU **********/
-                
                 case REMOTE_MENU:
-                    //Debug("BOTON REMOTE_MENU");
-
-                    if(timeMenu == 0 &&  showInfoDevi == false){
+                    if(timeMenu == 0 &&  showInfoDevi == false && PlayingRecording == false ){
                         timeMenu = 1;
                         setTimeout(function(){
                             timeMenu = 0;
@@ -365,12 +286,7 @@ var CheckInfo = 0;
                         }
                     }
                 break;
-                
-        /********** GRABADOR | PAUSELIVE TV **********/
-        
                 case REMOTE_PVR:
-                    //Debug("BOTON REMOTE_PVR");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         Debug("REMOTE_PVR");
                         TvRecorder();
@@ -378,100 +294,120 @@ var CheckInfo = 0;
                 break;
                 
                 case REMOTE_STOP:
-                    //Debug("BOTON REMOTE_STOP");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvStop();
                     }
                 break;
                 
                 case REMOTE_PLAY:
-                    //Debug("BOTON REMOTE_PLAY");
-
                     if(typeof(gSTB) !== 'undefined'){
-                        
                         if(CurrentModule === 'Tv' && showInfoDevi == false){
                             if(SwapPausePlay === false){
-                                
                                 TvPlay();
                                 SwapPausePlay = true;
                             } else {
-                                
                                 TvPause();
                                 SwapPausePlay = false;
+                            }
+                        }else if(CurrentModule === 'Movies'){
+                            if(currentPanelFocused == "playingContent" && statusVideo == "play"){
+                                PauseVideo();
+                                statusVideo = "pause";
+                            }else if(currentPanelFocused == "playingContent" && statusVideo == "pause"){
+                                statusVideo = "play";
+                                ResumeVideo();
                             }
                         }
                     } else {
                         if(CurrentModule === 'Tv' && showInfoDevi == false){
                             TvPlay();
+                        }else if(CurrentModule === 'Movies'){
+                            if(currentPanelFocused == "playingContent" && statusVideo == "pause"){
+                                statusVideo = "play";
+                                ResumeVideo();
+                            }
                         }
                     }
                 break;
 
                 case REMOTE_PAUSE:
-                    //Debug("BOTON REMOTE_PAUSE");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvPause();
+                    }else if(CurrentModule === 'Movies'){
+                        if(currentPanelFocused == "playingContent" && statusVideo == "play"){
+                            PauseVideo();
+                            statusVideo = "pause";
+                        }
                     }
                 break;
                 
                 case REMOTE_FORWARD:
-                    //Debug("BOTON REMOTE_FORWARD");
-
-                    if(CurrentModule === 'Tv' && showInfoDevi == false){
-                        TvForward();
+                    if(CurrentModule === 'Tv'){
+                        if(showInfoDevi == false){
+                            TvForward();
+                        }
+                    }else if(CurrentModule === 'Movies'){
+                        if(playingMovie == true){
+                            speedMovie("forward");
+                        }
                     }
                 break;
                 
                 case REMOTE_BACKWARD:
-                    //Debug("BOTON REMOTE_BACKWARD");
-
-                    if(CurrentModule === 'Tv' && showInfoDevi == false){
-                        TvBackward();
+                    
+                    if(CurrentModule === 'Tv'){
+                        if(showInfoDevi == false){
+                            TvBackward();
+                        }
+                    }else if(CurrentModule === 'Movies'){
+                        if(playingMovie == true){
+                            speedMovie("backward");
+                        }
                     }
                 break;
-                
                 case REMOTE_RECORD:
-                    //Debug("BOTON REMOTE_RECORD");
-
                     if(CurrentModule === 'Tv' && showInfoDevi == false){
                         TvRecord();
                     }
                 break;
-                
                 case REMOTE_FAST_BACKWARD:
-                    if(CurrentModule === 'Tv' && PlayingRecording == true){
-                        if(DelaySkip == false){
-                            DelaySkip = true;
-                            TvPlay();
-                            SkipChapterRecord("backward");  
-                            setTimeout(function(){
-                                DelaySkip = false;
-                            },1000);
+                    if(CurrentModule === 'Tv'){
+                        if(PlayingRecording == true){
+                            if(DelaySkip == false){
+                                DelaySkip = true;
+                                TvPlay();
+                                SkipChapterRecord("backward");  
+                                setTimeout(function(){
+                                    DelaySkip = false;
+                                },1000);
+                            }
+                        }
+                    }else if(CurrentModule === 'Movies'){
+                        if(playingMovie == true){
+                            speedMovie("fastBackward");
                         }
                     }
                 break;
-            
                 case REMOTE_FAST_FORWARD:
-                    if(CurrentModule === 'Tv' && PlayingRecording == true){
-                        
-                        if(DelaySkip == false){
-                            DelaySkip = true;
-                            TvPlay();
-                            TvPlay();
-                            SkipChapterRecord("forward");  
-                            setTimeout(function(){
-                                DelaySkip = false;
-                            },1000);
+                    if(CurrentModule === 'Tv'){
+                        if(PlayingRecording == true){
+                            if(DelaySkip == false){
+                                DelaySkip = true;
+                                TvPlay();
+                                TvPlay();
+                                SkipChapterRecord("forward");  
+                                setTimeout(function(){
+                                    DelaySkip = false;
+                                },1000);
+                            }
+                        }
+                    }else if(CurrentModule === 'Movies'){
+                        if(playingMovie == true){
+                            speedMovie("fastForward");
                         }
                     }
                 break;
-                
-                
         /********** NUMEROS **********/        
-                
-            
                 case 48: // 0
                 case 49: // 1
                 case 50: // 2
@@ -486,7 +422,6 @@ var CheckInfo = 0;
                         NumericChange(PressedKey - 48);
                     }
                     break;
-                
                 case 96: // 0
                 case 97: // 1
                 case 98: // 2
@@ -502,9 +437,7 @@ var CheckInfo = 0;
                     }
                 break;
             }
-
             ++Clicks;
-            
             if(CheckingClicks === false){
                 setTimeout(CheckClicks,TimeCheck);
                 CheckingClicks = true;
@@ -516,26 +449,18 @@ var CheckInfo = 0;
             } 
         }
     }
-    
     function ClearClicks(){
         CheckInfo = 0;
         Clicks = 0;
         ClearingClicks = false;
         Sequence = 0;
     }
-    
     function CheckClicks(){
         if(ClearingClicks === false){
             Clicks = 0;
             CheckingClicks = false;
         }
     }
-
-/*******************************************************************************
- * Función para ejecutar los eventos de las teclas en Pantalla de Vendor = Generic
- *******************************************************************************/
-function MakeEvent(key){
-    document.dispatchEvent(new KeyboardEvent('keydown', {'keyCode':key, 'which':key}));
-}
-    
-    
+    function MakeEvent(key){
+        document.dispatchEvent(new KeyboardEvent('keydown', {'keyCode':key, 'which':key}));
+    }

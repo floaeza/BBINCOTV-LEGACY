@@ -101,9 +101,9 @@ function SetDate() {
             }
         }
 
-    } else if(CurrentModule === 'Menu' || CurrentModule === 'Movies'){
+    } else if(CurrentModule === 'Menu'){
 
-        console.log(montth +' '+ date + ', '+ year);
+        //console.log(montth +' '+ date + ', '+ year);
         MenuDate.textContent = montth +' '+ date + ', '+ year;
         MenuHour.textContent = FormatHour;
     }
@@ -112,18 +112,19 @@ function SetDate() {
     /* */
 
     //Debug('TimeRunning: '+TimeRunning);
-    if(TimeRunning > MaxMinutesRunning){
-
-        TimeRunning = 0;
-
-        if(Executing === false){
-            if(CurrentModule !== 'Tv') {
-                UpdateInfoDevice();
-            } else {
-                UpdateQuickInfoDevice();
+    if(CurrentModule == 'Tv'){
+        if(TimeRunning > MaxMinutesRunning){
+            TimeRunning = 0;
+            if(Executing === false){
+                if(CurrentModule !== 'Tv') {
+                    UpdateInfoDevice();
+                } else {
+                    UpdateQuickInfoDevice();
+                }
             }
         }
     }
+    
     //Debug('-------------------------------- FormatDateAndHour: '+FormatDateAndHour);
 }
 

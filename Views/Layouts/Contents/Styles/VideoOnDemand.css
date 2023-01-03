@@ -33,7 +33,16 @@ div#PanelLeft {
     z-index: 1;
 }
 
-div#PanelRight {
+div#PanelRightMovies {
+    width: 70%;
+    height: 95%;
+    position: fixed;
+    right: 0;
+    bottom: 2%;
+    z-index: 1;
+}
+div#PanelRightSeries {
+    display: none;
     width: 70%;
     height: 95%;
     position: fixed;
@@ -80,7 +89,9 @@ div#MenuDate {
     top: 9%;
     z-index: 1;
 }
-
+#menuSeries{
+    height: 100%;
+}
 div#MenuOptions {
     width: 5%;
     text-align: center;
@@ -94,9 +105,9 @@ div#MenuOptions {
 div.MenuOptions {
     width: 100%;
     float: left;
-    font-size: 35px;
+    font-size: 45px;
     text-align: center;
-    height: 10%;
+    height: 8%;
     border-radius: 5px;
 }
 
@@ -182,7 +193,17 @@ div.RowGenre h6 {
     margin: 1%;
     font-size: 33px;
     border-radius: 10px;
-    color: #fff;
+    color: rgb(255, 255, 255);
+}
+#vodGeneric{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
 }
 div.RowGenreFocus h6 {
     margin: 0;

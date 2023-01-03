@@ -647,7 +647,7 @@ div#infoDevice {
 
 div#RecordingOptions {
     width: 25%;
-    height: 36%;
+    height: 38%;
     position: absolute;
     text-align: center;
     background-size: 100% 100%;
@@ -721,6 +721,7 @@ div#RecorderMessageConfirm {
 div#MessageCloseConfirm  {
     font-size: 43px;
     bottom: 5%;
+    display: none;
     position: absolute;
     width: 40%;
     left: 10%;
@@ -733,6 +734,7 @@ div#MessageCloseCancel  {
     font-size: 43px;
     bottom: 5%;
     position: absolute;
+    display: none;
     width: 30%;
     right: 10%;
     background: #2f414a;

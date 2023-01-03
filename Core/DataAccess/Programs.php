@@ -41,14 +41,15 @@ class Programs extends Database {
         $this->connect();
         $this->select("pvr_programas", "*",
             "dispositivos ON pvr_programas.mac_address_pvr = dispositivos.mac_address", "", "", "",
-            "id_locacion = '".$LocationId."' AND id_operacion = '4' ");
+            "id_locacion = '".$LocationId."' AND id_operacion = '4' ", "","","id_programa desc");
         $Recorded = $this->getResult();
         $this->select("pvr_programas", "*",
            "dispositivos ON pvr_programas.mac_address_pvr = dispositivos.mac_address", "", "", "",
-           "id_locacion = '".$LocationId."' AND id_operacion = '3' ");
+           "id_locacion = '".$LocationId."' AND id_operacion = '3' ", "","","id_programa desc");
         $Recording = $this->getResult();
 
-        $this->ProgramsList = array_merge($Recorded);
+        //$this->ProgramsList = array_merge($Recorded);
+        $this->ProgramsList = array_merge($Recorded, $Recording);
 //        $this->selectFromOtherSelect("pvr_programas", "*",
 //        "(SELECT * FROM pvr_programas WHERE pvr_programas.id_operacion = 4 OR pvr_programas.id_operacion =3)",
 //        "(SELECT * FROM pvr_programas WHERE pvr_programas.id_locacion = ".$LocationId." AND id_asset != 0)", "id_programa");
@@ -65,11 +66,11 @@ class Programs extends Database {
         $this->connect();
         $this->select("pvr_programas", "*",
             "dispositivos ON pvr_programas.mac_address_pvr = dispositivos.mac_address", "", "", "",
-            "id_locacion = '".$LocationId."' AND id_operacion = '4' AND dispositivos.marca = 'Infomir'");
+            "id_locacion = '".$LocationId."' AND id_operacion = '4'", "","","id_programa desc");
         $Recorded = $this->getResult();
         $this->select("pvr_programas", "*",
             "dispositivos ON pvr_programas.mac_address_pvr = dispositivos.mac_address", "", "", "",
-            "id_locacion = '".$LocationId."' AND id_operacion = '3' AND dispositivos.marca = 'Infomir'");
+            "id_locacion = '".$LocationId."' AND id_operacion = '3'", "","","id_programa desc");
         $Recording = $this->getResult();
 
         $this->ProgramsList = array_merge($Recorded, $Recording);

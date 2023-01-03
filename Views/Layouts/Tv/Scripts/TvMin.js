@@ -237,8 +237,6 @@ function ClearEpg(){
 
 
 function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
-    //console.log('__________ [1][BuildProgramsRow]: ('+SetCurrentHourPosition+','+ CurrentChannelPosition+')');
-
     var HourPosition        = -1,
         ExtraHourPosition   = -1,
         BuildHoursPositions = SetCurrentHourPosition,
@@ -247,7 +245,6 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
     for (HourRows = 1; HourRows <= MaxHourRows; HourRows++) {
 
         if(BuildHoursPositions <= (Hours.length-1)){
-            //console.log('__________ [1.1][BuildProgramsRow]:  BuildHoursPositions '+ BuildHoursPositions + ' HourPosition: '+Hours[BuildHoursPositions][1]);
 //                if(BuildHoursPositions >= 0 && BuildHoursPositions <= 12){
 //                    EpgHours.style.backgroundImage	= 'url("./Media/General/def.png")';
 //                } else if(BuildHoursPositions > 12 && BuildHoursPositions <= 25){
@@ -278,13 +275,8 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
 
     var CurrentProgramPosition  = 0;
     CurrentHourPosition = SetCurrentHourPosition;
-    //console.log('_________ [1.4][BuildProgramsRow]: ('+BuildHourPosition+','+ CurrentChannelPosition+')');
     for (Rows = 1; Rows <= MaxRows; Rows++) {
         CurrentProgramPosition = LoadCurrentDataPosition(BuildHourPosition, CurrentChannelPosition);
-
-        //console.log('_________ [1.5][BuildProgramsRow]: CurrentProgramPosition= '+CurrentProgramPosition);
-
-        //console.log('_________ [1.6][BuildProgramsRow]: -> WriteProgramsRow(CurrentProgramPosition: '+CurrentProgramPosition +' CurrentChannelPosition: '+CurrentChannelPosition + ' Row: '+Rows+')');
         WriteProgramsRow(CurrentProgramPosition, CurrentChannelPosition, Rows);
         ++CurrentChannelPosition;
 
@@ -292,18 +284,7 @@ function BuildProgramsRow(SetCurrentHourPosition, CurrentChannelPosition){
             CurrentChannelPosition = 0;
         }
     }
-
-    //console.log('______________________________________');
-    //console.log('OnloadProgramsPositions: ');
-    //console.log(OnloadProgramsPositions);
-    //console.log('FirstProgramsPositions: ');
-    //console.log(FirstProgramsPositions);
-    //console.log('LastProgramsPositions: ');
-    //console.log(LastProgramsPositions);
-    //console.log('______________________________________');
-
     GetRowsPrograms();
-    //console.log('_________ [1.7][BuildProgramsRow]: -> GetRowsPrograms');
 }
 
 /*******************************************************************************
@@ -321,12 +302,6 @@ function LoadCurrentDataPosition(HourPosition, CurrentChannelPosition){
         /*Obtiene las horas inicio y fin de cada programa*/
         StartHour = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].STRH;
         EndHour   = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].FNLH;
-
-        //console.log('######## StartHour: '+ StartHour+ ' EndHour: '+EndHour);
-        //console.log('######## CompareStartHour: '+ CompareHours(StartHour, CurrentHour) + ' CurrentHour '+CurrentHour);
-        //console.log('######## CompareEndHour: '+ CompareHours(EndHour, CurrentHour) + ' CurrentHour '+CurrentHour);
-
-        //Debug('StartHour: '+StartHour + ' CurrentHour: '+CurrentHour + ' CompareHours: ' + CompareHours(StartHour, CurrentHour));
         if(CompareHours(StartHour, CurrentHour) === '='){
             /* Asigna la posicion correcta */
             NewProgramPosition = IndexProgram;

@@ -1,738 +1,626 @@
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Jul 20, 2020, 11:34:13 AM
-    Author     : tania
-*/
-/*NEW#########################################################*/
-/***************************** [ Menu Idioma ] *****************************/
-div#MenuLanguagePanel {
+@font-face {
+    font-family: BebasNeue;
+    src: url(../../../Styles/Fonts/BebasNeue-Regular.ttf);
+}
+@font-face {
+    font-family: Landas;
+    src: url(../../../Styles/Fonts/LandasansMedium-ALJ6m.otf);
+}
+@font-face {
+    font-family: SalmaPro;
+    src: url(../../../Styles/Fonts/SalmaproMedium-0Wooo.otf);
+}
+@font-face {
+    font-family: Amazon;
+    src: url(../../../Styles/Fonts/Amazon-Ember.ttf);
+}
+@font-face {
+    font-family: AmazonLight;
+    src: url(../../../Styles/Fonts/AmazonLight.ttf);
+}
+@font-face {
+    font-family: Roboto;
+    src: url(../../../Styles/Fonts/Roboto-Black.ttf);
+}
+@font-face {
+    font-family: RobotoLight;
+    src: url(../../../Styles/Fonts/Roboto-Light.ttf);
+}
+@font-face {
+    font-family: RobotoRegular;
+    src: url(../../../Styles/Fonts/Roboto-Regular.ttf);
+}
+@font-face {
+    font-family: Diam;
+    src: url(../../../Styles/Fonts/Diam.otf);
+}
+#contentPanel{
+    position: relative;
+    height: 100%;
     width: 100%;
-    height: 10%;
-    position: fixed;
-    text-shadow: 1px 1px 1px #000;
-    color: #fff;
-    background: red;
-    margin-top: 5%;
-    visibility: hidden;
+    z-index: -20;
+    justify-content: space-evenly;
+    background: #181818;
+    --aspect-ratio: 16/9;
 }
-div.LanguageContainer {
-    width: 15%;
-    height: 50%;
-    background: blue;
-    display: inline-block;
-    margin-left: 5%;
-    color: white;
-    text-align: center;
-    margin-top: 1%;
-    font-size: 25px;
-}
-/***************************** [ Panel filtro por Año ] *****************************/
-div#yearfilter {
-    width: 18%;
-    height: 100%;
-    padding-top: 7%;
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0);
-}
-div#PanelYearFilter {
-    width: 79.7%;
-    height: 100%;
-    position: fixed;
-    z-index: 1;
+#header{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
-    right: 2%;
-    color: #fff;
-    text-align: center;
-    font-size: 25px;
-    font-family: Gothic;
-    visibility: hidden;/*oculta el panel en el menu principal*/
+    height: 8%;
+    position: absolute;
+    width: 64%;
 }
-div#PanelMoviesByYear {
-    width: 60%;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    bottom: 0%;
-    z-index: 1;
-    overflow-y: scroll;
-    overflow: hidden;
-}
-.yearOpts{
-    padding: 9px;
-    margin: 3px 0;
-    color: #ffffffd9;
-}
-div.MoviesByYearRow{
-    width: 98%;
-    height: 40%;
-    float: right;
-    margin: 12% 1% 0% 1%;
-}
-div.RowMovieByYearPoster {
-    width: 18%;
-    height: 89%;
-    /* margin: 0% 0.6% 0% 0.6%; */
-    float: left;
-    text-align: center;
-    border: 3px solid transparent;
-    border-radius: 3px;
-    margin-top: -10px;
-    margin-bottom: 45px;
-    margin-right: 15px;
-}
-
-div.RowMovieByYearPoster img{
-    max-width: 100%;
-    min-height: 100%;
-}
-
-div.RowMovieByYearPoster h3 {
-    margin: 0;
-    color: #fff;
-}
-/***************************** [ Panel filtro por Genero ] *****************************/
-
-div#PanelGenderFilter {
-    /* color:#fff; */
-    font-size: 30px;
-    font-family: Gothic;
-    width: 69%;
-    height: 100%;
-    /* margin: 5px; */
-    visibility: hidden;
-    /* bottom: 10px; */
-    position: fixed;
-    /* background: #fff; */
-    z-index: 1;
-    display: flex;
-    /* margin-left: 362px; */
-    /* float: right; */
-    right: 0;
-    /* background: rgb(255 255 255 / 77%); */
-}
-
-div#GenderFilter {
-   width: 20%;
-    display: inline-block;
-    height: 100%;
-    border-top-right-radius: 35px;
-    background: #15598e;
-    margin-top: 24px;
-    max-height: 80%;
-    overflow: hidden;
-}
-
-.genderOptions {
-    font-size: initial;
-    padding: 8px 6px;
-    color: rgb(255, 255, 255);
-}
-div#moviesGenderFilter {
-    width: 79%; 
-    height: 100%;
-}
-div#PanelMoviesByGender {
-    width: 55.5%;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    bottom: 0%;
-    z-index: 1;
-    overflow-y: scroll;
-    overflow: hidden;
-    background-color: rgb(1, 17, 160);
-}
-/***************************** [ Menu filtros ] *****************************/
-div#MenuFilters {
-    width: 18%;
-    height: 100%;
-    margin: 0;
-    bottom: 0;
-    position: fixed;
-    z-index: 1;
-    box-shadow: 3px 3px 5px 0px rgba(0, 0, 0);
-    visibility: hidden;/*oculta el panel en el menu principal*/
-}
-
-div#filterMovieCategory{
-    margin-top: 28%;
-}
-div.OptionsFilter {
-    height: 50%;
-    color: #fff;
-    font-family: Gothic;
-    text-align: left;
-    font-size: 25px;
-    font-weight: bold;
-    line-height: normal;
-    padding: 5%;
-}
-/***************************** [ Opciones en modo no visible ] *****************************/
-div.PlayingOptionsHidden{
-    width: 100%;
-    height: 36%;
-    position: fixed;
-    text-shadow: 1px 1px 1px #000;
-    color: #fff;
-    /* background: red; */
-    margin-top: 13%;
-    visibility: hidden;
-}
-div#PlayingPanelHidden {
-    visibility: hidden;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    background: rgba(0,0,0,0.3);
-}
-div.ButtonContainer{
-    width: 23%;
-    height: 100%;
-    /* background: blue; */
-    /* border: 3px solid rgb(255, 255, 255); */
-    display: inline-block;
-    margin-left: 0%;
-}
-div.ButtonPlayingHidden{
-    width: 11%;
-    display: inline-block;
-    font-size: 64px;
-    height: 30%;
-    border-radius: 7px;
-    margin: 5% 0.5% 0% 0.5%;
-    color: rgb(255, 9, 9);
-    text-shadow: 1px 1px 1px #000;
-    margin-left: 40%;
-    margin-top: 25%;
-}
-/***************************** [ Recommended Movies ] *****************************/
-div#PanelRecommendedMovies {
-    width: 100%;
-    height: 50%;
-    display: inline-block;
-    overflow-x: scroll;
-    overflow: hidden;
-}
-div.RecommendedMoviesRow{
-    width: 98%;
-    height: 100%;
-    float: right;
-    margin: 0% 1% 0% 1%;
-    
-}
-
-div.RecommendedMoviesRowPoster {
-    width: 18%;
-    height: 89%;
-    float: left;
-    text-align: center;
-    border: 3px solid transparent;
-    border-radius: 3px;
-
-}
-
-div.RecommendedMoviesRowPoster img{
-    width: 98%;
-    height: 100%;
-}
-
-div.RecommendedMoviesRowPoster h3 {
-    margin: 0;
-    color: #fff;
-}
-/***************************** [ Titulos ] *****************************/
-.PrincipalMoviesTitle{
-    margin-left: 2%;
-    color: #fff;
-    font-size: 20px;
-    text-align: left;
-    text-shadow: 2px 2px 2px #000;
-    font-family: Gothic;
-    font-weight: bold;
-}
-/***************************** [ All Movies ] *****************************/
-div#PanelAllMovies {
-    width: 100%;
-    height: 50%;
-    display: inline-block;
-    overflow-x: scroll;
-    overflow: hidden;
-}
-
-div.MoviesRow{
-    width: 98%;
-    height: 94%;
-    float: right;
-    margin: 0% 1% 0% 1%;
-    
-}
-
-div.RowPoster {
-    width: 18%;
-    height: 88%;
-    margin: 0% 0.6% 0% 0.6%;
-    float: left;
-    text-align: center;
-    border: 3px solid transparent;
-    border-radius: 3px; 
-}
-
-div.RowPoster img{
-    width: 98%;
-    height: 100%;
-}
-
-div.RowPoster h3 {
-    margin: 0;
-    color: #fff;
-}
-/***************************** [ Contenedores generales ] *****************************/
-
-div#PanelHeader {
-    width: 100%;
-    height: 10%;
-    position: fixed;
-    top: 0;
-    z-index: 1;
-    color: #fff;
-}
-
-div#PanelLeft {
-    width: 20%;
-    height: 100%;
-    position: fixed;
-    left: 10%;
-    bottom: 0;
-    z-index: 1;
-    display: none;
-}
-
-div#PanelRight {
-    width: 75%;
+#headerlogo{
+    display: block;
+    position: relative;
+    top: 26%;
+    left: 8%;
     height: 80%;
-    position: fixed;
-    right: 6%;
-    bottom: 2%;
-    z-index: 1;
+    width: 30%;
+    color: white;
+    font-family: Roboto;
+    line-height: 360%;
+    font-size: 108%;
 }
-
-div.OptionFocus {
-box-shadow: 0px 0px 11px rgba(255, 255, 255, 0.7);
-text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.7);
+#logo{
+    width: 132%;
 }
-
-
-div#BackgroundPanel {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    background-size: cover;
-    z-index: 0;
-    top: 0;
+#headeroptions{
+    font-family: Landas;
+    font-size: 110%;
+    display: -webkit-box;
+    position: relative;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 30%;
+    top: 65%;
+    left: w;
+    width: 42%;
+    letter-spacing: 3px;
 }
-
-/***************************** [ Cabezera ] *****************************/
-div#Title {
-    width:30%;
-    height:10%;
-    position: fixed;
-    top: 2%;
-    left:35%;
-}
-
-div#Title img{
-    max-width: 100%;
-    min-height: 100%;
-}
-
-
-div#MenuDate {
-    width: 12%;
-    height: 8%;
-    position: fixed;
-    bottom: 10%;
-    left:5%;
-    text-align: center;
-    text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
-}
-
-div#MenuHour {
-    width: 12%;
-    height: 8%;
-    position: fixed;
-    bottom: 3%;
-    left: 5%;
-    text-align: center;
-    text-shadow: 2px 2px 2px rgba(0,0,0,0.5);
-}
-
-#MenuHour,
-#MenuDate
-{
-    font-family: Gothic;
-    font-size: 25px;
-    font-weight: bold;
-}
-
-div#MenuOptions {
-    width: 5%;
-    height: 85%;
-    position: fixed;
-    top: 18%;
-    left: 8.5%;
-    z-index: 1;
-}
-
-div.MenuOptions {
-    width: 100%;
-    height: 10%;
-    float: left;
-    font-size: 25px;
-    text-align: center;
-    border-radius: 5px;
-    margin-top: 20%;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.Selected {
-    box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
-    background: rgba(0, 0, 0, 0.3);
-}
-
-div#Banner {
-    width: 69%;
-    height: 50%;
-    background-size: 100% 100%;
-    float: right;
-    margin-right: 1%;
-    display: none;
-}
-
-
-/***************************** [ Filtros derecha ] *****************************/
-
-
-div#Filter {
-    width: 90%;
-    text-align: left;
-    font-size: 33px;
-    line-height: normal;
-    margin: 0 5% 0 5%;
-    border-radius: 5px;
-    font-family: bebas;
-}
-
-/***************************** [ Peliculas derecha ] *****************************/
-
-
-/* div.MoviesRow{
-    width: 98%;
-    float: right;
-    margin: 4.3% 1% 0% 1%;
-    height: 42%;
-
-}
-
-div.RowPoster {
-    width: 18%;
-    height: 85%;
-    margin: 0% 0.6% 0% 0.6%;
-    float: left;
-    text-align: center;
-    border: 3px solid transparent;
-    border-radius: 3px;
-}
-
-div.RowPoster img{
-    max-width: 100%;
-    min-height: 100%;
-}
-
-div.RowPoster h3 {
-    margin: 0;
-    color: #fff;
-} */
-
-/***************************** [ Panel pelicula ] *****************************/
-div#MoviePanel {
-    font-size: 25px;
-    color: #fff;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    visibility: hidden;
-    bottom: 0;
-    position: fixed;
-    background: -o-linear-gradient(rgb(3, 6, 25), rgb(0, 43, 70));
-    background: linear-gradient(rgb(3, 6, 25), rgb(0, 43, 70));
-    z-index: 1;
-}
-
-
-div.MovieTitle {
-width: 75%;
-height: 10%;
-right: 4%;
-top: 5%;
-position: fixed;
-text-align: left;
-font-size: 60px;
-font-weight: bold;
-font-family: Gothic;
-color: #ffff;
-overflow: hidden;
-}
-
-.Poster {
-max-width: 15%;
-min-height: 40%;
-float: left;
-margin: 3% 1.5% 1% 3%;
-border-radius: 8px;
-}
-
-div.MovieDuration {
-    position: fixed;
-    top:18%;
-    left: 30%;
+.headeroption{
+    color: white;
+    height: 120%;
     width: 15%;
     text-align: center;
+    margin-left: 10%;
+    border-radius: 3px;
+    line-height: 100%;
 }
-
-div.Genders {
-    position: fixed;
-    top:18%;
-    right: 24%;
-    width: 30%;
-    text-align: left;
+.headeroptionSelected{
+    border-bottom: 2px solid #C00;
 }
-
-div.Year {
-    position: fixed;
-    top:18%;
-    right: 15%;
-    width: 12%;
-    text-align: center;
+.headeroptionFocused{
+    background: rgba(255, 255, 255, 0.325);
 }
+#suggestedMovie{
+    position: relative;
+    display: inline-block;
+    /* border: 2px solid #C00; */
+    margin-top: -5%;
+    width: 100%;
 
-div.Rating {
-    position: fixed;
-    top:16.5%;
-    right: 9%;
-    text-align: center;
-    font-size: 30px;
-    text-shadow: 2px 2px 2px #000;
-    background: #616161;
-    border-radius: 5px;
-    padding: 0.2%;
-    color: #FFF;
+    height: 48%;
 }
-
-div.Score {
-    position: fixed;
-    top:16%;
-    left: 21%;
-    height: 7%;
-    width: 4%;
-    border: 3px solid #005a9e;
-    border-radius: 60px;
-    font-size: 20px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
+#degraded{
+    position: absolute;
+    z-index: -9;
+    height: 100%;
+    width: 100%;
 }
-
-div.Star {
-    width: 3.5%;
-    position: fixed;
-    top: 16.5%;
-    left: 25.5%;
-    color: #005a9e;
-    border-radius: 60px;
-    font-size: 30px;
-    text-align: center;
-    
+#bannerMovie{
+    position: absolute;
+    z-index: -10;
+    height: 100%;
+    width: 100%;
 }
-
-div.MovieDescription {
-    width: 72%;
-    right: 7%;
-    top: 25%;
-    position: fixed;
+#suggestedMovieTitle{
+    position: relative;
+    font-family: BebasNeue;
+    font-size: 200%;
+    color: #C00;
+    top: 31%;
+    margin-left: 5%;
+    max-height: 30%;
+    height: 12%;
+    width: 50%;
+    overflow: hidden;
+    z-index: 0;
+}
+#suggestedMovieDescription{
+    position: absolute;
+    font-family: Amazon;
     text-align: justify;
-    border-top: 2px solid #0396a6;
-    padding-top: 1%;
-}
-
-div#PlayPanel {
-    height: 10%;
-    position: fixed;
-    bottom: 4%;
+    color: white;
+    top: 44%;
     left: 5%;
-    border-radius: 10px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+    height: 25%;
+    width: 30%;
+    overflow: hidden;
+    z-index: 0;
+}
+#suggestedMoviePlay{
+    width: 10%;
+    height: 9%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    background: #C00;
+    line-height: 210%;
+    color: white;
+    border-radius: 5px;
+    left: 5%;
+    top: 77%;
+    z-index: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    position: absolute;
+}
+#suggestedMovieplayicon{
+    position: relative;
+    margin-top: 4%;
+    height: 77%;
 }
 
-div#ExitPanel {
-    height: 10%;
-    position: fixed;
-    bottom: 4%;
-    left: 20%;
-    border-radius: 10px;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-div.Casting {
-    position: fixed;
+#genders{
+    color:white;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    font-family: Amazon;
+    justify-content: space-evenly;
+    background: #181818;
+    height: 8%;
     width: 90%;
-    bottom: 20%;
-    left: 6%;
+    margin-left: 5%;
+    border-bottom: 2px solid black;
+    font-size: 100%;
 }
-
-div.Director {
-    position: fixed;
-    width: 90%;
-    bottom: 30%;
-    left: 6%;
-}
-
-div.Buttons {
-    width: 14%;
-    bottom: 10%;
-    position: fixed;
-    margin: 1%;
-    border: 2px solid transparent;
-    font-size: 30px;
+.gender{
+    line-height: 280%;
+    margin-right: 5%;
     text-align: center;
-    font-family: Calibri;
+    width: 10%;
 }
-
-div.MovieOption {
-    border: 2px solid #fff;
-    /*background: rgba(255, 255, 255, 0.44);*/
-    text-shadow: 2px 2px 2px #000;
+.genderSelected{
+    border-bottom: 2px solid #C00;
 }
-
-
-.Score, 
-.MovieDuration,
-.Genders,
-.Year,
-.Rating,
-.MovieDescription
-{
-    font-size: 25px;
-    font-family: Calibri;
+.genderFocused{
+    background: rgba(255, 255, 255, 0.325);
 }
-
-.Director,
-.Casting{
-    text-align: left;
-    font-size: 22px;
-    font-family: Bell MT;
-    font-style: italic;
+#videoContent{
+    height: 47%;
+    width: 95%;
+    margin-left: 5%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: space-evenly;
 }
-
-/***************************** [ Opciones reproduccion ] *****************************/
-
-div#PlayingPanel {
-    visibility: hidden;
+.focusVideoContent{
+    height: 65%;
+    margin-top: 5%;
+    width: 40%;
+    margin-right: 2%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    border-radius: 3px;
+    box-shadow: 0px 0px 0px 2px #434343;
+}
+#imgfocusVideoContent{
+    position: relative;
+    width: 30%;
+    height: 100%;
+}
+#divContentText{
+    position: relative;
+    width: 70%;
+    height: 100%;
+}
+#descfocusVideoContent{
+    position: relative;
+    color: white;
+    height: 51%;
+    width: 84%;
+    overflow: hidden;
+    left: 8%;
+    top: 21%;
+    font-size: 104%;
+    font-family: RobotoLight;
+    text-align: justify;
+}
+#titlefocusVideoContent{
+    position: absolute;
+    color: red;
+    width: 85%;
+    height: 12%;
+    overflow: hidden;
+    top: 5%;
+    left: 8%;
+    font-size: 130%;
+    font-family: Roboto;
+}
+.movie{
+    position: relative;
+    height: 65%;
+    width: 12%;
+    margin-top: 5%;
+    margin-right: 2%;
+    border-radius: 3px;
+    box-shadow: 0px 0px 0px 2px #434343;
+}
+#imgVideoContent{
+    position: relative;
     width: 100%;
     height: 100%;
-    margin: 0;
-    background: rgba(0,0,0,0.3);
+}
+.suggestedMoviePlayFocused { 
+    background:rgb(179, 74, 74) !important;
 }
 
-div.PlayingHeader {
-    background: -o-linear-gradient(90deg, rgba(0, 0, 0, 0), rgb(22, 38, 71));
-    background: linear-gradient(-0deg, rgba(0, 0, 0, 0), rgb(22, 38, 71));
+
+
+#selectedContent{
+    position: absolute;
+    display: none;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     width: 100%;
-    height: 30%;
-    position: fixed;
-    text-shadow: 1px 1px 1px #000;
-    color: #fff;
+    height: 100%;
+    --aspect-ratio: 16/9;
+    z-index: -12;
+}
+#selectedContent1{
+    position: absolute;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: -11;
+}
+#posterSelected{
+    position: absolute;
+    width: 20%;
+    height: 52%;
+    border: 1px solid white;
+    top: 10%;
+    left: 14%;
+}
+#imgposterSelected{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+#titleSelected{
+    position: absolute;
+    color: white;
+    font-size: 200%;
+    top: 14%;
+    left: 37%;
+    width: 45%;
+    height: 5%;
+    overflow: hidden;
+    font-family: Diam;
+}
+#previewContent{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -13;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#infoSelected{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    position: absolute;
+    color: rgb(183, 183, 183);
+    font-size: 100%;
+    margin-top: 13%;
+    width: 35%;
+    left: 37%;
+}
+#infoYearSelected{
+    margin-right: 2%;
+}
+#infoClasificacionSelected{
+    margin-right: 2%;
+    border-width: 2%;
+    border-style: solid;
+    border-color: rgb(183, 183, 183);
+}
+#infoDurationSelected{
+    margin-right: 2%;
+}
+#infoDescriptionSelected{
+    color: white;
+    text-align: justify;
+    position: absolute;
+    margin-top: 17%;
+    width: 35%;
+    left: 37%;
+    font-family: Amazon;
+}
+#temporadas{
+    position: absolute;
+    width: 17%;
+    height: 40%;
+    top: 10%;
+    right: -1%;
+
+}
+[id*="Season"] {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    height: 25%;
+    color: white;
+    font-size: 200%;
+    padding: 2%;
+    margin-bottom: 10%;
+    justify-content: space-between;
+}
+.SeasonSelected{
+    border-radius: 5px;
+    background: #9a9a9a;
+}
+#titleSeasNum{
+    position: relative;
+    color: white;
+    font-size: 150%;
+    top: 73%;
+    left: 10%;
+    width: 30%;
+    height: 6%;
+    font-family: BebasNeue;
+}
+#chapters{
+    z-index: -8;
+    position: absolute;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 84%;
+    color: white;
+    margin-left: 10%;
+    top: 80%;
 }
 
-div#PlayingTitle {
-    width: 90%;
-    margin-left: 2%;
-    margin-top: 2%;
-    font-size: 30px;
-    font-weight: bold;
+[id*="Chapter"]{
+    font-family: BebasNeue;
+    margin-right: 5%;
+    width: 10%;
+    padding: 1%;
+    border-radius: 5px;
+    border: 2px solid white;
+    font-size: 100%;
+}
+.ChapterSelected{
+    background: #6b6b6b;
+    /* width: 49%; */
+    /* height: 100%; */
 }
 
-div#PlayingSpeed,
-div#InfoPosition {
-    width: 90%;
-    margin-left: 2%;
-    font-size: 20px;
+#PlayingPanel{
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    /* background: #181818; */
 }
-
-div#ExitPlaying {
-    width: 4%;
-    position: fixed;
-    right: 2%;
+#seasUp {
+    display: none;
+    color: white;
+    font-size: 300%;
+    right: 11.5%;
+    top: 2%;
+    position: absolute;
+}
+#seasDown {
+    display: none;
+    color: white;
+    font-size: 300%;
+    right: 11.5%;
+    bottom: 28%;
+    position: absolute;
+}
+#chapLeft {
+    /* display: none; */
+    color: white;
+    font-size: 300%;
+    left: 6%;
+    bottom: 12.7%;
+    position: absolute;
+}
+#chapRight {
+    color: white;
+    font-size: 300%;
+    right: 3%;
+    bottom: 12.7%;
+    position: absolute;
+}
+#custom-seekbar{  
+    cursor: pointer;
+    height: 0.5%;
+    margin-top: 48%;
+    border-radius: 5px;
+    background: gray;
+    overflow: hidden;
+    position: relative;
+    width: 80%;
+    margin-left: 4%;
+}
+#custom-seekbar span
+{
+  background-color: rgb(255, 0, 0);
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100px;
+  width: 0%;
+}
+#custom-seekbar span.hover:after{
+    content: '■';
+    display:block;
+    position: absolute;
+    background-color: red;
+    color: red;
+    top: 0;
+    right: 0;
+  }
+#timeProgress{
+    position: absolute;
+    height: 4%;
+    color: white;
+    border-radius: 5px;
+    width: 15%;
+    margin-left: 86%;
+    margin-top: -0.5%;
+}
+#buttonSubtitles{
+    position: absolute;
+    width: 3%;
+    bottom: 6%;
+    right: 18%;
+}
+#buttonBackward{
+    position: absolute;
+    width: 3%;
+    bottom: 6%;
+    right: 54%;
+}
+#buttonPlayPause{
+    position: absolute;
+    width: 3%;
+    bottom: 6%;
+    right: 48.5%;
+}
+#buttonForward{
+    position: absolute;
+    width: 3%;
+    bottom: 6%;
+    right: 43%;
+}
+#buttonClose{
+    position: absolute;
+    width: 3%;
+    top: 6%;
+    right: 10%;
+}
+#infoPlaying{
+    position: absolute;
+    background: rgba(0, 0, 0, 0.5);
+    top: 0%;
+    height: 18%;
+    width: 100%;
+}
+#titlePlaying{
+    position: absolute;
+    top: 15%;
+    left: 6%;
+    font-family: BebasNeue;
+    font-size: 200%;
+    color: white;
+}
+#ratingPlaying{
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 6%;
+    font-family: BebasNeue;
+    font-size: 100%;
+}
+.buttonFocused{
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    padding: 2px;
+}
+#languagesPanel{
+    position: absolute;
+    display: none;
+    width: 20%;
+    height: auto;
+    background: #434343;
+    color: white;
+    right: 10%;
+    bottom: 20%;
+    border-radius: 5px;
+}
+#subtitles{
+    position: relative;
+    width: 50%;
+    border-right: 1px solid rgb(255, 255, 255);
+}
+#audio{
+    position: relative;
+    width: 50%;
+    border-left: 1px solid rgb(255, 255, 255);
+}
+#audioTitle{
+    color: red;
+    padding: 2px;
+    padding-top: 10px;
+    font-family: SalmaPro;
     text-align: center;
-    font-size: 35px;
-    top: 3%;
-    border-radius: 10px;
 }
-
-div.PlayingBar {
-    width: 100%;
-    height: 1%;
-    position: fixed;
-    background: rgba(255, 255, 255, 0.5);
-    bottom: 12%;
-}
-
-div#PlayingPosition {
-    width: 1%;
-    height: 0%;
-    position: fixed;
-    bottom: 14.5%;
-    text-align: right;
-    color: #fff;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-}
-
-div#PlayingOptions {
-    width: 100%;
-    height: 20%;
-    position: fixed;
-    bottom: 0%;
+#subtitlesTitle{
+    color: red;
+    padding: 5px;
+    padding-top: 10px;
     text-align: center;
-    background: -o-linear-gradient(-90deg, rgba(0, 0, 0, 0), rgb(22, 38, 71));
-    background: linear-gradient(-180deg, rgba(0, 0, 0, 0), rgb(22, 38, 71));
+    font-family: SalmaPro;
+
 }
+[id*="subtitles_"]{
+    color: white;
+    padding: 5px;
+    font-family: SalmaPro;
 
-
-div.ButtonPlaying {
-    width: 5%;
-    display: inline-block;
-    font-size: 30px;
-    height: 32%;
-    border-radius: 7px;
-    margin: 5% 0.5% 0% 0.5%;
-    color: #fff;
-    text-shadow: 1px 1px 1px #000;
 }
-
-
-div.ButtonFocus {
-    background: rgba(255,255,255,0.5);
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+[id*="audio_"]{
+    color: white;
+    padding: 5px;
+    font-family: SalmaPro;
+}
+.languageFocus{
+    background: #9a9a9a;
+}
+.languageSelected{
+    border-width: 2px;
+    border-bottom: red solid;
+}
+#PruebaMovie{
+    position: absolute;;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -11;
+}
+#PruebaMovie1{
+    position: absolute;;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -11;
 }

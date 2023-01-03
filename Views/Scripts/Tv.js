@@ -10,8 +10,6 @@
  * Kamai 500x: Safari 538.1
  * Lg UV770H: Chrome 53 
  *******************************************************************************/
-  window.history.forward(1);
-    /* Funcion para dar formato a la fecha */
     Date.prototype.yyyymmdd = function () {
         var mm = this.getMonth() + 1;
         var dd = this.getDate();
@@ -99,24 +97,29 @@
     var ContentFrame            = document.getElementById('ContentFrame'),
         ActiveFrame             = false;
 
+    var haveInteractiveChannel = false,
+        numberInteractiveChannel = 1000,
+        usersData = '',
+        userFocused,
+        userNumberFocused = 0,
+        currentInteractive = "",
+        actualUser = "";
+
+    var headerInteractive = ['InteractiveOptionSearch', 'InteractiveOptionHome', 'InteractiveOptionTV'],
+        headerInteractivePos = 0,
+        interactiveFocusedSection = ['header', 'popularChannels', 'lastRecords'],
+        interactiveFocusedSectionPos = 0,
+        focusedPopularChannel = 0;
+        focusedLastRecord = 0,
+        visibleSearchBox = false,
+        noFoundCont = false;
     
-    // var div = document.getElementById('loadingTV');
-    // var parent = div.parentElement;
-    // parent.removeChild(div);
-    // div = null;
-    // parent = null;
-    // if(MacAddress === '00:00:00:00:00:00'){
-    //     ////Debug('Imagen para test');
-    //     document.getElementsByClassName('GeneralBox')[0].style.backgroundImage = "url('./Media/General/tv.jpg')";
-    // }
-/*******************************************************************************
- * Obtiene los datos del archivo JSON y empieza la reproduccion de canales
- *******************************************************************************/
+    var InteractiveUsers = document.getElementById("InteractiveUsers");
+    
+    var lastRecordsList = '', isShowingResults = false;
 
     /* Asigna archivo para consultar por primera vez */
-    setTimeout(SetEpgFile,200);
-    /* Carga inicial para reproducir canal por primera vez */
-    //setTimeout(SetChannel,1800, '');
+    setTimeout(SetEpgFile,150);
 function SetEpgFile(){
     /* Consulta la fecha actual cada vez que actualiza la guia */
     CurrentDateFormat = new Date();
@@ -125,24 +128,27 @@ function SetEpgFile(){
     
     /* Si tiene activa EPG actualiza la variable que por defecto tiene el valor de general */
     if(Device['Services']['ActiveEpg'] === true){
-            //if(MacAddress === '00:00:00:00:00:01'){
-            //  SourceEpgFile = Libraries['EpgDaysPath'] + 'epg_demo.json';
-            // } else {
-                SourceEpgFile = Libraries['EpgDaysPath'] + 'epg_' + CurrentDate + '_' + Device['Services']['PackageId'] + '.json';
-            // }
             
-        Debug('------- SetEpgFile ->>> SourceEpgFile: ' + SourceEpgFile);
+        SourceEpgFile = Libraries['EpgDaysPath'] + 'epg_' + CurrentDate + '_' + Device['Services']['PackageId'] + '.json';
         GetJsonEpg(SourceEpgFile, 0);
     } else {
         EpgDataActive = false;
-
-        //////Debug('------- EpgDataActive: FALSE');
         GetJsonChannels();
     }
-    SetChannel('');
+
+    if(prev_Direction !== ''){
+        for(i = 0; i < ChannelsJson["C_Length"]; i++) {
+            if(ChannelsJson[i].NAME == "Movies"){
+                ChannelPosition = i;
+                break;
+            }
+        }
+    }
+    SetChannel(prev_Direction);
 }
     
 function GetJsonEpg(Sour, rest){
+    
     $.ajax({
         cache: false,
         async: false,
@@ -159,6 +165,8 @@ function GetJsonEpg(Sour, rest){
             ////Debug('------- GetJsonEpg -> ChannelsLength: '+ChannelsLength);
         },
         error: function (response){
+            //Debug("EEEEEEEEEE"+response);
+
             if(rest!==-1){
                 if(rest<2){
                     rest++;
@@ -166,17 +174,13 @@ function GetJsonEpg(Sour, rest){
                     d.setDate(d.getDate() - rest);
                     Sour = Libraries['EpgDaysPath'] + 'epg_' + d.yyyymmdd() + '_' + Device['Services']['PackageId'] + '.json';
                     
-                    ////Debug("NO SE ENCONTRO EL ARCHIVO, BUSCANDO: " + SourceEpgFile);
                     GetJsonEpg(Sour, rest);
                 }else{
                     Sour = Libraries['EpgDaysPath'] + 'Default/epg_default_' + Device['Services']['PackageId'] + '.json';
                     
-                    ////Debug("NO SE ENCONTRO EL ARCHIVO, BUSCANDO: " + SourceEpgFile);
                     GetJsonEpg(Sour, -1);
-                
                 }
             }else{
-                // El archivo no se encuentra o viene vacio, consulta a la base de datos
                 EpgDataActive = false;
                 GetJsonChannels();
             }
@@ -209,9 +213,6 @@ function GetJsonChannels(){
             ChannelsJson = $.parseJSON(response);   
             ChannelsLength = ChannelsJson.length - 1;
             ChannelMax     = parseInt(ChannelsJson[ChannelsLength].CHNL, 10);
-            
-            ////Debug('------- GetJsonChannels -> ChannelsLength: '+ChannelsLength);
-            
             if(Device['Services']['ActiveEpg'] === true){
                 SetLog(ErrorLoadGuide);
             }
@@ -225,67 +226,34 @@ function GetJsonChannels(){
 
 function SetChannel(NewDirection){
     ////Debug('SetChannel = '+NewDirection);
-    
     if(ActiveEpgContainer === false){
         
         /* Valida si se esta subiendo o bajando de canal para restar|sumar una posicion */
         if(NewDirection !== ''){
-            
-            ////Debug('############### A LastChannelPosition '+LastChannelPosition + ' ChannelPosition: '+ChannelPosition);
-            /* Obtiene los datos del canal a reproducir */
             LastChannelPosition = ChannelPosition;
             ////Debug('############### B LastChannelPosition '+LastChannelPosition+ ' ChannelPosition: '+ChannelPosition);
-            
-            
             Direction = NewDirection;
 
-            ////Debug('SetChannel = Direction '+Direction);
-            /* Suma o resta segun sea el caso */
             (Direction === 'UP') ? ChannelPosition++: ChannelPosition--;
-
-            ////Debug('1- ChannelPosition =  '+ChannelPosition);
-
-            /* Validamos si llego al princio/fin del arreglo*/
             if(ChannelPosition < 0){
                 ChannelPosition = ChannelsLength;
             }
-
             if(ChannelPosition > ChannelsLength){
                 ChannelPosition = 0;
             }
-
             ////Debug('2- ChannelPosition =  '+ChannelPosition);
         }
-
-        /* Actualiza el canal */
             Source = ChannelsJson[ChannelPosition].SRCE;
             Port   = ChannelsJson[ChannelPosition].PORT;
-            //alert(Source + Port);
             ProgramIdChannnel = ChannelsJson[ChannelPosition].PRGM;
             ProgramIdPosition = ChannelsJson[ChannelPosition].PSCN;
             AudioPid          = ChannelsJson[ChannelPosition].ADIO;
-
-        /* Regresamos a su valor inicial la variable DIRECTION*/
             Direction = 'UP';
-            ////Debug('********************************************');
-            ////Debug('STTN::: '+ChannelsJson[ChannelPosition].STTN);
-
-            ////Debug('SRCE::: '+Source + ' : '+Port);
-            //ShowRecorderMessage('CHANNEL UPP DOWN '+ChannelPosition);
             if(ChannelsJson[ChannelPosition].STTN !== 'CONTENT'){
                 if(ActiveDigitalChannel === true){
                     CloseDigitalChannel();
                 }
-                ////Debug('PlayChannel');
-                //alert('Source: '+ Source +' Port: ' +Port);
-                //PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition);   /* TvFunctions por marca */
                 if(load){
-                    
-                    
-                    //window.onload=function() {
-                    //    alert();    
-                    //    PlayChannel(Source, Port);   /* TvFunctions por marca */
-                    //}
                     $(document).ready(function(){
                         //your code
                         if(window.tizen !== undefined){
@@ -301,45 +269,25 @@ function SetChannel(NewDirection){
                     if(window.tizen !== undefined){
                         PlayChannel(Source, Port);
                     }else{
-                        //alert(Source+Port); 
                         PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition);   /* TvFunctions por marca */
                     }
                 }
-                
-                //PlayChannel(Source, Port);   /* TvFunctions por marca */
-            } else {
-                Debug('GetDigitalChannel');
-                //if(typeof(gSTB) !== 'undefined'){
-                    //alert(ChannelsJson[ChannelPosition].STTN);
-                    // if(load){
-                    //     //window.onload=function() {
-                    //     //    alert();    
-                    //     //    PlayChannel(Source, Port);   /* TvFunctions por marca */
-                    //     //}
-                    //     $(document).ready(function(){
-                            //your code
-                            GetDigitalChannel();
-                    //     });
-                    //     load = false;
-                    // }else{
-                    //     ActiveDigitalChannel = true;
-                    //     SetDigitalChannel();
-    
-                    //     // Si la guia esta cerrada muestra cuadro con informacion del canal en reproduccion
-                    //     ShowInfo();
-                    // }
-                    
-                // } else {
-                    //  SetFrame();
-                // }
-                
+            }else if(ChannelsJson[ChannelPosition].NAME =='MenuInteractivo'){
+                if(NewDirection == ''){
+                    haveInteractiveChannel = true;
+                    HideInfo();
+                    GetMenuInteractivo();
+                }else {
+                    SetChannel(NewDirection);
+                }
+            } else if(ChannelsJson[ChannelPosition].NAME =='Movies'){
+                GoPage('content.php', 5, 'Movies'); 
+            }else{
+                GetDigitalChannel();      
             }
         
     }
-    ////Debug('------- SetChannel ->: '+Source + ' ChannelPosition: '+ChannelPosition);
 }
-
-
 
 function GetDigitalChannel(){
     ActiveDigitalChannel = true;
@@ -359,14 +307,9 @@ function GetDigitalChannel(){
         },
         success: function (response){
             DigitalContent = $.parseJSON(response);
-            ////Debug('SetDigitalChannel');
-            
         }
     });
     setTimeout(SetDigitalChannel(),1000);
-    
-    
-    // Si la guia esta cerrada muestra cuadro con informacion del canal en reproduccion
     ShowInfo();
 }
 
@@ -377,9 +320,6 @@ function SetDigitalChannel(){
     if(ActiveDigitalChannel === true){
         if(DigitalContent.length > 0){
             var FileType = DigitalContent[IndexDigital].split('.')[1];
-           // ImageDigital.src = '';
-            //ImageDigital.style.display = 'none';
-
             if(FileType === 'mp4'){
                 clearTimeout(IntervalDigital);
 
@@ -387,7 +327,7 @@ function SetDigitalChannel(){
                 ImageDigital.style.display = 'none';
                 
                 PlayDigitalChannel(DigitalSource+DigitalContent[IndexDigital]);
-        
+                Debug( '..................Source'+ DigitalSource+DigitalContent[IndexDigital])
         
                 Debug('Hasta aqui todo bien FINAL');
             } else {
@@ -397,66 +337,45 @@ function SetDigitalChannel(){
 
                 IntervalDigital = setInterval(SetDigitalChannel,9000);
             }
-
-            ////Debug(DigitalSource+DigitalContent[IndexDigital]);
-
             IndexDigital++;
 
             if(IndexDigital > DigitalContent.length - 1){
                 IndexDigital = 0;
             }
         } else {
-            //ShowRecorderMessage('SetDigitalChannel');
             TvChannelUp();
         }
+        
     }
 }
-
-
 function CloseDigitalChannel(){
     Debug("CloseDigitalChannel");
     ActiveDigitalChannel = false;
     ImageDigital.src = '';
     ImageDigital.style.display = 'none';
-    
     clearTimeout(IntervalDigital);
 }
-
 function SetFrame(){
     ActiveFrame = true;
-
-    // Detiene el proceso de la reproduccion anterior
     StopVideo();
-    
-    // Maximiza el video en caso de que no este en pantalla completa
     MaximizeTV();
-    
-    // Activamos la bandera
     PlayingChannel   = true;   
     
-    // Si la guia esta cerrada muestra cuadro con informacion del canal en reproduccion
     ShowInfo();
-
-    // Si tiene una fecha ya registrada guarda estadisticas en la BD
     if(StartDateChannel !== ''){
         SetChannelStatistics();
     }
-    
-    // Actualiza la fecha inicio de la reproduccion del canal */
     StartDateChannel = new Date();
-    
     var Page         = ChannelsJson[ChannelPosition].SRCE,
         ModuleId     = ChannelsJson[ChannelPosition].PORT,
         ChangeModule = ChannelsJson[ChannelPosition].INDC;
     
     ContentFrame.style.display = 'inline';
     ContentFrame.src = Libraries['ServerSource'] + Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule;
-    ////Debug(Libraries['ServerSource'] + Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule);
 }
 
 function CloseFrame(){
     ActiveFrame = false;
-    
     ContentFrame.style.display = 'inline';
     ContentFrame.src = '';
 }
@@ -465,10 +384,7 @@ function CloseFrame(){
  *******************************************************************************/  
    
     function ReturnLastChannel(){
-        
-        ////Debug('................ReturnLastChannel(): '+LastChannelPosition+ ' ChannelPosition: '+ChannelPosition);
         if(ActiveEpgContainer === false){
-            ////Debug('ActiveEpgContainer === false');
             if(LastChannelPosition !== ChannelPosition){
                 Source = ChannelsJson[LastChannelPosition].SRCE;
                 Port   = ChannelsJson[LastChannelPosition].PORT;
@@ -483,7 +399,6 @@ function CloseFrame(){
                     if(ActiveDigitalChannel === true){
                         CloseDigitalChannel();
                     }
-                    
                     if(ActiveFrame === true){
                         CloseFrame();
                     }
@@ -501,14 +416,11 @@ function CloseFrame(){
                             PlayChannel(Source, Port);
                         }else
                         PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition);   /* TvFunctions por marca */
-                    }
-                    
+                    }    
                 } else {
-                    Debug('');
                     GetDigitalChannel();
                 }
             } else {
-                ////Debug('ELSE LCP === CP:: '+LastChannelPosition +' !== '+ ChannelPosition);
             }
         }
     }
@@ -519,7 +431,6 @@ function CloseFrame(){
 
     function NumericChange(Key){
 
-        ////Debug('Key: '+Key);
         if(ActiveEpgContainer === false){
             /* Limpiamos el timer */
             clearTimeout(NumericChangeTimer);
@@ -533,10 +444,6 @@ function CloseFrame(){
                 ChannelToChange = ChannelToChange + Key;
             }
 
-            ////Debug('ChannelToChange: '+ChannelToChange);
-
-            ////Debug('ChannelMax: '+ChannelMax);
-
             if(ChannelToChange > ChannelMax){
                 /* Si excede el numero de canales maximo limpia el timer y regrese a su valor inicial el numero a cambiar */
                 clearTimeout(NumericChangeTimer);
@@ -544,43 +451,24 @@ function CloseFrame(){
 
                 ChannelContainer.textContent = '';
             } else {
-                /* Muestra el contener del canal con los numeros recibidos */
-
                 ChannelContainer.textContent = ChannelToChange;
                 clearTimeout(NumericChangeTimer);
-
-                /* Crea timer para ocultar el canal y hacer el cambio */
                 NumericChangeTimer = setTimeout(function () {
-                    /*Obtiene el numero de canal actual*/
                     var CurrentChannel   = parseInt(ChannelsJson[ChannelPosition].CHNL, 10);
-                    ////Debug('CurrentChannel: '+CurrentChannel);
-                    /* Busca la posicion del canal o recibido */
                     var PositionToChange = FindChannelPosition(ChannelToChange);
-                    ////Debug('PositionToChange: '+PositionToChange);
                     if(ChannelToChange !== CurrentChannel){
-                        /* Asignamos el ultimo canal reproducido */
                         LastChannelPosition = ChannelPosition;
-                        /* Actualizamos a la posicion a cambiar */
                         ChannelPosition = PositionToChange;
-                        /* Regresa el canal a cambiar a 0 */
                         ChannelToChange = 0;
-                        /* Limpia el timer */
                         clearTimeout(NumericChangeTimer);
-                        /* Reproduce el canal */
                         SetChannel('');
                     }
-
-                    /* Oculta el contenedor del numero */
                     ChannelContainer.textContent = '';
                 }, 3000);
             }
         }
     }
     
-/*******************************************************************************
- * Busca el canal disponible
- *******************************************************************************/
-
     function FindChannelPosition(ChannelToChange){
         var Index            = 0,
             NewChannelNumber = parseInt(ChannelToChange, 10),
@@ -598,8 +486,6 @@ function CloseFrame(){
             }
             Index++;
         }
-
-        /* En caso de no encontrar el canal, buscara la posicion mas cercana */
         if(CheckChannel === false){
             while(IndexB < ChannelsLength){
 
@@ -650,19 +536,13 @@ function CloseFrame(){
         }
         return Position;
     }
-    
-/*******************************************************************************
- * Muestra la informacion del canal
- *******************************************************************************/
-    
+
 function ShowInfo(){
     
     if(ActiveEpgContainer === false){
         if(ActiveInfoContainer === false){
             InfoContainer.style.visibility = 'visible';
         }
-
-        /* Carga la informacion actual*/
         LoadCurrentData(FindCurrentHour(GetCurrentHour()));
 
         if(EpgDataActive === true){
@@ -671,8 +551,6 @@ function ShowInfo(){
             var Rtg = '<p class="Rtg">\u00A0'+ChannelsJson[ChannelPosition].PROGRAMS[ProgramPosition].TVRT+'</p>';
 
             InfoContainerNodes[1].textContent  = ChannelsJson[ChannelPosition].CHNL+' - ' +ChannelsJson[ChannelPosition].INDC.toUpperCase();
-            //InfoContainerNodes[3].textContent  = ChannelsJson[ChannelPosition].QLTY;
-            //InfoContainerNodes[5].textContent  = ChannelsJson[ChannelPosition].INDC;
             InfoContainerNodes[7].textContent  = FormatHour;
             InfoContainerNodes[9].innerHTML    = Ttle + Times + Rtg;
             if(RecordingsToCheck !== ''){
@@ -683,8 +561,6 @@ function ShowInfo(){
                     }
                 }
             }
-            //InfoContainerNodes[11].textContent = TimeConvert(ChannelsJson[ChannelPosition].PROGRAMS[ProgramPosition].MNTS);
-            //InfoContainerNodes[13].textContent = FormatHours(ChannelsJson[ChannelPosition].PROGRAMS[ProgramPosition].STRH)+' - '+FormatHours(ChannelsJson[ChannelPosition].PROGRAMS[ProgramPosition].FNLH);
             InfoContainerNodes[15].textContent = ChannelsJson[ChannelPosition].PROGRAMS[ProgramPosition].DSCR;
                         
         } else {
@@ -695,39 +571,17 @@ function ShowInfo(){
         Times = null;
         Ttle = null;
         Rtg = null;
-
-            /* Limpia el contador */
         clearTimeout(InfoTimer);
-
-        /* Contador para ocultar contenedor principal con la informacion*/
         InfoTimer = setTimeout(HideInfo,TimeoutInfo);
-
         ActiveInfoContainer = true;
     }
 }
     
-// ORDEN ELEMENTOS INFO
-// 1  ='ChannelNumber'
-// 3  ='Quality'
-// 5  ='ChannelName'
-// 7  ='Date'
-// 9  ='Title'
-// 11 ='Duration'
-// 13 ='Time'
-// 15 ='Description'
-
-/*******************************************************************************
- * Oculta la informacion del canal y vacia los contenedores
- *******************************************************************************/
-
     function HideInfo(){
         if(ActiveInfoContainer === true){
             InfoContainer.style.visibility = 'hidden';
-            
             ActiveInfoContainer = false;
-
             clearTimeout(InfoTimer);
-            
             ClearInfo();
         }
     }
@@ -754,54 +608,32 @@ function ShowInfo(){
             StartHour       = '', 
             EndHour         = '', 
             IndexProgram    = 0;
-    
         if(ActiveEpgContainer === true){
-            /* Obtenemos la posicion del canal seleccionado en la guia */
             CurrentChannelPosition = ChannelPositionFocus;
         } else {
-            /* Obtenemos la posicion del canal actual*/
             CurrentChannelPosition = ChannelPosition;
         }
-
-        /* Valida que los datos del json esten cargados y contenga mas de un programa de informacion*/
         if(EpgDataActive === true && ChannelsJson[CurrentChannelPosition].P_Length > 0){
             for(IndexProgram = 0; IndexProgram < ChannelsJson[CurrentChannelPosition].P_Length; IndexProgram++){
-                /*Obtiene las horas inicio y fin de cada programa*/
-                //////Debug(IndexProgram);
                 StartHour = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].STRH;
                 EndHour   = ChannelsJson[CurrentChannelPosition].PROGRAMS[IndexProgram].FNLH;
-
-                //////Debug('StartHour: '+StartHour + ' CurrentHour: '+CurrentHour + ' CompareHours: ' + CompareHours(StartHour, CurrentHour));
                 if(CompareHours(StartHour, CurrentHour) === '='){
-                    /* Asigna la posicion correcta */
                     ProgramPosition = IndexProgram;
-
-                    /* Iguala IndexPrograma para terminar el ciclo FOR */
                     IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
                 } else if(CompareHours(StartHour, CurrentHour) === '>'){
-                    /* Asigna la posicion correcta */
                     ProgramPosition = IndexProgram;
-
-                    /* Iguala IndexPrograma para terminar el ciclo FOR */
                     IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
                 } else if(CompareHours(StartHour, CurrentHour) === '<' && CompareHours(EndHour, CurrentHour) === '>'){
-                    /* Asigna la posicion correcta */
                     ProgramPosition = IndexProgram;
-
-                    /* Iguala IndexPrograma para terminar el ciclo FOR */
                     IndexProgram = ChannelsJson[CurrentChannelPosition].P_Length;
                 } 
             }
         }
     }
     
-    
     function PlayChannelEpg(){
-
         ChannelPosition = FocusChannelPosition;
-        //ShowRecorderMessage('PlayChannelEpg '+ChannelPosition);
         CloseEpg();
-
         var Source = ChannelsJson[ChannelPosition].SRCE,
             Port   = ChannelsJson[ChannelPosition].PORT;
              ProgramIdChannnel = ChannelsJson[ChannelPosition].PRGM,
@@ -812,7 +644,6 @@ function ShowInfo(){
             if(ActiveDigitalChannel === true){
                 CloseDigitalChannel();
             }
-            //PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition);   /* TvFunctions por marca */
             if(load){
                 
                 $(document).ready(function(){
@@ -829,53 +660,25 @@ function ShowInfo(){
                 }else
                 PlayChannel(Source, Port, ProgramIdChannnel, ProgramIdPosition);   /* TvFunctions por marca */
             }
-        } else {
-            Debug('##################GetDigitalChannel EPG##############');
-            //if(typeof(gSTB) !== 'undefined'){
-            //GetDigitalChannel();
-            //if(load){
-                //window.onload=function() {
-                //    alert();    
-                //    PlayChannel(Source, Port);   /* TvFunctions por marca */
-                //}
-                    //your code
-                 GetDigitalChannel();
-            //     load = false;
-            // }else{
-            //     ActiveDigitalChannel = true;
-            //     SetDigitalChannel();
-            //     // Si la guia esta cerrada muestra cuadro con informacion del canal en reproduccion
-            //     ShowInfo();
-            // }
-        }  
+        }  else if(ChannelsJson[ChannelPosition].NAME !=='Movies'){
+            GetDigitalChannel();
+        }else{
+            GoPage('content.php', 5, 'Movies');       
+        }
     }
-    
-
-    
-/*******************************************************************************
- * CONTENTRADO MOVIMIENTOS FLECHAS EN LA TELEVISION 
- *******************************************************************************/
-/*
- * @VariablesTvSquare:
- * -- ActiveEpgContainer
- * @VariablesPauseLiveTv:
- * -- PauseLive
- * @VariablesRecorder:
- * -- PlayingRecording
- * -- RecordingOptionsActive
- * -- RecordPlayOptionsActive
- * -- ActivePvrInfoContainer
- */
 
     function TvOk(){
-        //alert(Device['Type']);
-        
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
+                    Debug(" ========= >Location ID" + Device['LocationId']);    
+                    Debug(" ========= >Location Name" + Device['LocationName']);                    
                     if (Device['Type'] === 'NONE') {
                         PlayChannelEpg();
-                    } else {
+                    } else if(Device['LocationName'] == 'DEFAULT'){
+                        ShowRecorderMessage('This device is not assigned to your location, contact it support');
+                        PlayChannelEpg();
+                    }else {
                         OpenRecordingOptions();
                     }
                 } else if (RecordingOptionsActive === true) {
@@ -912,17 +715,15 @@ function ShowInfo(){
         } else {
             HideRecorderMessage();
         }
-        
     }
-    
     function TvInfo(){
         if(PauseLive === true){
-            /* Muestra la barra con el detalle de PauseLiveTv */
             SetSpeed('play');
             if(PlayingRecording === true){
                 ShowPvrInfo();
-            }else
+            }else{
                 ShowInfo();
+            }
         } else if(PlayingRecording === true){
             ShowPvrInfo();
         } else {
@@ -932,9 +733,7 @@ function ShowInfo(){
             ShowInfo();
         }
     }
-
-    function TvRight(){
-        
+    function TvRight(){  
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
@@ -943,7 +742,6 @@ function ShowInfo(){
                 if (RecordManualOptionsActive === true) {
                     SetFocusManualOption('down');
                 }
-
                 clearTimeout(EpgTimer);
                 EpgTimer = setTimeout(CloseEpg, TimeoutEpg);
             } else if (RecordingPanel === true) {
@@ -959,9 +757,7 @@ function ShowInfo(){
             }
         }
     }
-
     function TvLeft(){
-        
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
@@ -970,7 +766,6 @@ function ShowInfo(){
                 if (RecordManualOptionsActive === true) {
                     SetFocusManualOption('up');
                 }
-
                 clearTimeout(EpgTimer);
                 EpgTimer = setTimeout(CloseEpg, TimeoutEpg);
             } else if (RecordingPanel === true) {
@@ -983,13 +778,10 @@ function ShowInfo(){
                         DelaySkip = false;
                     },1000);
                 }
-                
             }
         }
     }
-    
     function TvDown(){
-        
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
@@ -999,7 +791,6 @@ function ShowInfo(){
                 } else if (RecordManualOptionsActive === true) {
                     SetManualTime('down');
                 }
-
                 clearTimeout(EpgTimer);
                 EpgTimer = setTimeout(CloseEpg, TimeoutEpg);
             } else if (RecordingPanel === true) {
@@ -1009,9 +800,7 @@ function ShowInfo(){
             }
         }
     }
-    
     function TvPageDown(){
-        
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
@@ -1022,7 +811,6 @@ function ShowInfo(){
             }
         }
     }
-    
     function TvUp(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
@@ -1033,33 +821,26 @@ function ShowInfo(){
                 } else if (RecordManualOptionsActive === true) {
                     SetManualTime('up');
                 }
-
                 clearTimeout(EpgTimer);
                 EpgTimer = setTimeout(CloseEpg, TimeoutEpg);
             } else if (RecordingPanel === true) {
                 PvrUp();
             } else if (RecordPlayOptionsActive === true) {
-
                 SetFocusOptionRecordPlay('up');
-
             }
         }
     }
-    
     function TvPageUp(){
-        
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
                     PageUp();
                 }
-
                 clearTimeout(EpgTimer);
                 EpgTimer = setTimeout(CloseEpg, TimeoutEpg);
             }
         }
     }
-    
     function TvPlay(){
         if(PlayingRecording === true){
             SetSpeed('play');
@@ -1070,7 +851,6 @@ function ShowInfo(){
             }
         }
     }
-    
     function TvPause(){
         if(PlayingRecording === true){
             SetSpeed('pause');
@@ -1081,14 +861,11 @@ function ShowInfo(){
             }
         }
     }
-    
     function TvStop(){
         if(PlayingRecording === true){
-            //ShowRecorderMessage('TvStop');
             OpenRecordPlayOptions();
         }
     }
-    
     function TvForward(){
         if(PlayingRecording === true){
             SetSpeed('forward');
@@ -1098,8 +875,7 @@ function ShowInfo(){
                 SetSpeed('forward');
             }
         }
-    }
-    
+    } 
     function TvBackward(){
         if(PlayingRecording === true){
             SetSpeed('backward');
@@ -1109,8 +885,7 @@ function ShowInfo(){
                 SetSpeed('backward');
             }
         }
-    }
-    
+    }  
     function TvRecord(){
         if(ActiveEpgContainer === true && Device['Type'] !== 'NONE'){
             if(ActiveEpgContainer === true ){
@@ -1130,10 +905,7 @@ function ShowInfo(){
             }
         }
     }
-    
     function TvRecorder(){
-        //Debug(RecorderMessageActive   + "          "+ PlayingRecording);
-        
         if(RecorderMessageActive === false) {
             if (PlayingRecording === false) {
                 Debug(Device['Type']);
@@ -1141,79 +913,808 @@ function ShowInfo(){
                     if (RecordingOptionsActive === true) {
                         CloseRecordingOptions();
                     }
-
                     if (ActiveEpgContainer === true) {
                         CloseEpg();
                     }
-
                     if (RecordManualOptionsActive === true) {
                         CloseManualRecord();
                     }
-
                     if (ActiveInfoContainer === true) {
-                        ////Debug('ActiveInfoContainer' + ActiveInfoContainer);
                         HideInfo();
                     }
-                    //Debug('(((((((((((((((TvRecorder(((((((((((((((');
                     OpenPvr();
                 }
             } else {
-                //ShowRecorderMessage('TvRecorder');
                 OpenRecordPlayOptions();
             }
         } else {
             HideRecorderMessage();
         }
-    }
-    
+    }  
 function TvGuide(){
-    
     if(RecorderMessageActive === false) {
         if (PlayingRecording === false) {
             if (RecordingOptionsActive === true) {
                 CloseRecordingOptions();
             }
-
             if (RecordingPanel === true) {
                 ClosePvr();
             }
-
             if (RecordManualOptionsActive === true) {
                 CloseManualRecord();
             }
-
             if (ActiveInfoContainer === true) {
                 HideInfo();
             }
-
             if (Device['Type'] !== 'NONE') {
                 GetRecordingsToRecord();
             }
-            
             OpenEpg();
         } else {
-            //ShowRecorderMessage('TvGuide');
             OpenRecordPlayOptions();
         }
     }  else {
         HideRecorderMessage();
     }
 }
-    
 function TvChannelUp(){
-    //ShowRecorderMessage('TvChannelUp ='+ PlayingRecording);
     if(PlayingRecording === false){
         SetChannel('UP');
     } else {
         OpenRecordPlayOptions();
     }
 }
-    
 function TvChannelDown(){
-    //ShowRecorderMessage('TvChannelDown ='+ PlayingRecording);
     if(PlayingRecording === false){
         SetChannel('DOWN');
     } else {
         OpenRecordPlayOptions();
     }
+}
+function GetMenuInteractivo(){
+    StopVideo();
+    CurrentModule = "Interactivo";
+    if(actualUser ==""){
+        currentInteractive = "selectUser";
+    }else{
+        currentInteractive = "mainPanel";
+    }
+    //setUsers(usersData);
+    document.getElementById("InteractiveChannel").style.display = "block";
+    
+    document.getElementById("SelectUsers").style.display = "none";
+    document.getElementById("InteractiveChannelMain").style.display = "block";
+    currentInteractive = "mainPanel";
+    getPopularChannels();
+    // getLastRecords();
+    GetPvrInfo();
+    if(Device['Type']!='NONE'){
+        GetRecordings();
+    }
+    setLastRecors();
+    setMainPanelFocused();
+    HideInfo();
+
+    // $.ajax({
+    //     type: 'POST',
+    //     url: ServerSource + 'Core/Controllers/Interactivo.php',
+    //     async:false,
+    //     data: {
+    //         Option : 'getUsers',
+    //         macDevice : MacAddress
+    //     },
+    //     success: function (response){
+    //         usersData = $.parseJSON(response);
+    //         setUsers(usersData);
+    //         if(currentInteractive == "mainPanel"){
+    //             getPopularChannels();
+    //         }
+    //     }
+    // });
+}
+function searchProgram(programName){
+    $.ajax({
+        type: 'POST',
+        url: ServerSource + 'Core/Controllers/Interactivo.php',
+        async:false,
+        data: {
+            Option : 'searchProgram',
+            programName : programName
+        },
+        success: function (response){
+            var findedPrograms = $.parseJSON(response);
+            ShowResults(findedPrograms);
+        }
+    });
+}
+function ShowResults(findedPrograms){
+    if(findedPrograms.length > 0){
+        document.getElementById('showResults').style.display = 'block';
+        isShowingResults = true;
+        var div, channelNumber, programName, programHours;
+        var keys;
+        var romper = 0;
+        for(var i = 0; i < findedPrograms.length; i++) {
+            keys = Object.keys(findedPrograms[i]);
+            for(var j = 0; j < keys.length; j++) {
+                for(var x = 0; x < findedPrograms[i][keys[j]].length; x++){
+                    div = document.createElement('div');
+                    div.classList.add('Result');
+                    channelNumber = document.createElement('div');
+                    channelNumber.id = "ResultChannel";
+                    channelNumber.innerHTML = keys[j];
+        
+                    programName = document.createElement('div');
+                    programName.id = "ResultName";
+                    programName.innerHTML = findedPrograms[i][keys[j]][x].TTLE;
+        
+                    programHours = document.createElement('div');
+                    programHours.id = "ResultHours";
+                    programHours.innerHTML = findedPrograms[i][keys[j]][x].STRH + " - " + findedPrograms[i][keys[j]][x].FNLH;
+        
+                    div.appendChild(channelNumber);
+                    div.appendChild(programName);
+                    div.appendChild(programHours);
+        
+                    document.getElementById('showResults').appendChild(div);
+                    romper ++;
+                    if(romper == 8){
+                        break;
+                    }
+                }
+                if(romper == 8){
+                    break;
+                }
+            }
+            if(romper == 8){
+                break;
+            }
+        }
+        document.getElementById('showResults').style.height = (romper*9.25)+'%';
+        for(var i=0; i<document.getElementsByClassName('Result').length; i++){
+            document.getElementsByClassName('Result')[i].style.height = (90/romper)+'%';
+        }
+    }else{
+        // alert('No results found for this search');
+        noFoundCont = true;
+        ShowNoFoundMessage('No results found for this search');
+
+    }
+}
+function setUsers(users){
+    document.getElementById("InteractiveChannel").style.display = "block";
+    var divUser, span, divName;
+    for(var i=0; i<users.length; i++){
+        divUser = document.createElement("div");
+        divUser.id = "User"+i;
+        if(i == 0){
+            divUser.classList.add("UserFocused");
+            userFocused = divUser;
+        }
+        span = document.createElement("div");
+        span.classList.add("dot");
+        span.innerText = (users[i].name).charAt(0);
+        span.classList.add(getSColor(random(1, 7)));
+        
+        divName = document.createElement("div");
+        divName.id = "usersName";
+        divName.innerText = users[i].name;
+        divUser.appendChild(span);
+        divUser.appendChild(divName);
+        //document.getElementById("InteractiveUsersName").appendChild(divName);
+        InteractiveUsers.appendChild(divUser);
+        // InteractiveUsers.appendChild(divName);
+        divUser = null;
+        span = null;
+        divName = null;
+    }
+    if(users.length<4){
+        divUser = document.createElement("div");
+        divUser.id = "User"+users.length;
+        divUser.classList.add("addUser");
+        if(users.length == 0){
+            divUser.classList.add("UserFocused");
+            userFocused = divUser;
+        }
+        span = document.createElement("div");
+        span.classList.add("dot");
+        span.innerHTML = "+";
+        span.classList.add(getSColor(random(1, 7)));
+        span.style.marginTop = "10%";
+        divUser.appendChild(span);
+        InteractiveUsers.appendChild(divUser);
+    }
+}
+function LeftInteractive(){
+    switch(currentInteractive){
+        case "selectUser":
+            if(userNumberFocused != 0){
+                document.getElementById("User"+userNumberFocused).classList.remove("UserFocused");
+                userNumberFocused--;
+                document.getElementById("User"+userNumberFocused).classList.add("UserFocused");
+            }
+            break;
+        case "addUser":
+            KeyboardDirection("LEFT");
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(headerInteractivePos > 0 && visibleSearchBox == false && isShowingResults ==false){
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.remove("focusedItem");
+                        headerInteractivePos--;
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.add("focusedItem");
+                    }else if(visibleSearchBox == true && isShowingResults == false){
+                        KeyboardDirection("LEFT");
+                    }
+                    break;
+                case 1:
+                    if(focusedPopularChannel > 0){
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.remove("focusedItem");
+                        focusedPopularChannel--;
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.add("focusedItem");        
+                    }
+                    break;
+                case 2:
+                    if(focusedLastRecord > 0){
+                        document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.remove("focusedItem");
+                        focusedLastRecord--;
+                        document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.add("focusedItem");        
+                    }
+                    break;
+            }
+            break;
+    }
+}
+function RightInteractive(){
+    switch(currentInteractive){
+        case "selectUser":
+            if(usersData.length > userNumberFocused && userNumberFocused != 3){
+                document.getElementById("User"+userNumberFocused).classList.remove("UserFocused");
+                userNumberFocused++;
+                document.getElementById("User"+userNumberFocused).classList.add("UserFocused");
+            }
+            break;
+        case "addUser":
+            KeyboardDirection("RIGHT");
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(headerInteractivePos < headerInteractive.length-1 && visibleSearchBox == false && isShowingResults ==false){
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.remove("focusedItem");
+                        headerInteractivePos++;
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.add("focusedItem");
+                    }else if(visibleSearchBox == true && isShowingResults == false){
+                        KeyboardDirection("RIGHT");
+                    }
+                    break;
+                case 1:
+                    if(focusedPopularChannel < 4){
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.remove("focusedItem");
+                        focusedPopularChannel++;
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.add("focusedItem");        
+                    }
+                    break;
+                case 2:
+                    if(focusedLastRecord < 4){
+                        document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.remove("focusedItem");
+                        focusedLastRecord++;
+                        document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.add("focusedItem");        
+                    }
+                    break;
+            }
+            break;
+    }
+}
+function DownInteractive(){
+    switch(currentInteractive){
+        case "addUser":
+            KeyboardDirection("DOWN");
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(visibleSearchBox == false){
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.remove("focusedItem");
+                        headerInteractivePos = 0;
+                        interactiveFocusedSectionPos++;
+                        focusedPopularChannel=0;
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.add("focusedItem");
+                    }else if(visibleSearchBox == true && isShowingResults ==false){
+                        KeyboardDirection("DOWN");
+                    }
+                    break;
+                case 1:
+                    if(Device['Type']!='NONE'){
+                        if(visibleSearchBox == false && RecordingsList.length > 0){
+                            document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.remove("focusedItem");
+                            headerInteractivePos = 0;
+                            interactiveFocusedSectionPos++;
+                            focusedPopularChannel=0;
+                            focusedLastRecord = 0
+                            document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.add("focusedItem");
+                        }
+                    }
+                    break;
+                case 2:
+                    break;
+            }
+            break;
+    }
+}
+function UpInteractive(){
+    switch(currentInteractive){
+        case "addUser":
+            KeyboardDirection("UP");
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(visibleSearchBox == true && isShowingResults ==false){
+                        KeyboardDirection("UP");
+                    }
+                    break;
+                case 1:
+                    if(visibleSearchBox == false){
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.remove("focusedItem");
+                        headerInteractivePos = 0;
+                        interactiveFocusedSectionPos--;
+                        focusedPopularChannel=0;
+                        document.getElementById(headerInteractive[headerInteractivePos]).classList.add("focusedItem");
+                        // document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.add("focusedItem");
+                    }else if(visibleSearchBox == true){
+                        KeyboardDirection("UP");
+                    }
+                    break;
+                case 2:
+                    if(visibleSearchBox == false){
+                    // document.getElementById(headerInteractive[headerInteractivePos]).classList.add("focusedItem");
+                        document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.remove("focusedItem");
+                        headerInteractivePos = 0;
+                        interactiveFocusedSectionPos--;
+                        focusedPopularChannel=0;
+                        focusedLastRecord = 0
+                        document.getElementsByClassName("popularChannel")[focusedPopularChannel].classList.add("focusedItem");
+                    }
+                    break;
+            }
+            break;
+    }
+}
+function OkInteractive(){
+    switch(currentInteractive){
+        case "selectUser":
+            if(userNumberFocused == usersData.length){
+                addUser();
+            }else{
+                selectUser(usersData[userNumberFocused]);
+            }
+            break;
+        case "addUser":
+            KeyboardDirection("OK");
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(headerInteractivePos == 2){
+                        document.getElementById("InteractivePopularChannelImg").innerHTML = "";
+                        document.getElementById("InteractiveLastRecordsImg").innerHTML = "";
+                        setMainPanelFocused();
+                        hideInteractiveMenu();
+                        SetChannel('UP');
+                    }else if(headerInteractivePos == 0){
+                        if(visibleSearchBox == false){
+                            visibleSearchBox = true;
+                            document.getElementById("keyboard").style.display = "block";
+                            document.getElementById("InteractiveSearchBox").style.display = "flex";
+                            document.getElementById("InteractiveSearchBox").style.width = "50%";
+                        }else if(noFoundCont == true){
+                            HideNoFoundMessage();
+                            noFoundCont = false;
+                        }else if(isShowingResults ==false){
+                            KeyboardDirection("OK");
+                        }
+                    }
+                    break;
+                case 1:
+                    var CurrentChannel   = parseInt(ChannelsJson[ChannelPosition].CHNL, 10);
+                    var PositionToChange = FindChannelPosition(parseInt(document.getElementsByClassName("popularChannel")[focusedPopularChannel].id));
+                    if(ChannelToChange !== CurrentChannel){
+                        LastChannelPosition = ChannelPosition;
+                        ChannelPosition = PositionToChange;
+                        ChannelToChange = 0;
+                        document.getElementById("InteractivePopularChannelImg").innerHTML = "";
+                        document.getElementById("InteractiveLastRecordsImg").innerHTML = "";
+                        setMainPanelFocused();
+                        hideInteractiveMenu();
+                        SetChannel('');
+                    }
+                case 2:
+                    
+                    ClearSpeed();
+                    GetPvrInfo();
+                    
+                    CurrentModule = 'Tv';
+                    
+                    IndexRecordedFocus  = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[1]);
+                    IndexRecordedProgFocus   = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[2]);
+                    if((RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].operacion !=='4') || RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].active === '1'){
+                        ShowRecorderMessage('This recording is not yet available, please wait');
+                    }else{
+
+                        if(parseInt(DiskInfo[DiskInfoIndex].rtsp_conexiones) >= 4){
+                            ShowRecorderMessage('All connections to your recorder are active, please wait or close a connection');
+                        } else {
+                            UpdateRtspConnections('add');
+                            if(parseInt(RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].numberFiles) == 0){
+                                PlayVideo(RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].url);
+                            }else{
+                                PlayRecordsPlaylist(RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].url, RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].numberFiles, RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].duration);
+                            }
+            
+                            //Debug('URL>>>>>> '+RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].url);
+            
+                            PlayingRecording = true;
+            
+                            //ClosePvr();
+                            HidePvr();
+            
+                            ShowPvrInfo();
+                            SetSpeed('play');
+                        }
+                    }
+                    document.getElementById("InteractivePopularChannelImg").innerHTML = "";
+                    document.getElementById("InteractiveLastRecordsImg").innerHTML = "";
+                    setMainPanelFocused();
+                    hideInteractiveMenu();
+                    break;
+            }
+            break;
+    }
+}
+function CloseInteractivo(){
+    
+    switch(currentInteractive){
+        case "addUser":
+            document.getElementById("InteractiveAddUser").style.display = "none";
+            document.getElementById("keyboard").style.display = "none";
+            document.getElementById("SelectUsers").style.display = "flex";
+            currentInteractive = "selectUser";
+            document.getElementById("AddText").textContent = "";
+            break;
+        case "mainPanel":
+            switch(interactiveFocusedSectionPos){
+                case 0:
+                    if(headerInteractivePos == 0){
+                        if(visibleSearchBox == true && isShowingResults ==false){
+                            visibleSearchBox = false;
+                            document.getElementById("keyboard").style.display = "none";
+                            document.getElementById("InteractiveSearchBox").style.display = "none";
+                            document.getElementById("InteractiveSearchBox").style.width = "0%";
+                        }else if(isShowingResults == true){
+                            document.getElementById("showResults").innerHTML = "";
+                            document.getElementById("showResults").style.display= "none";
+                            isShowingResults = false;
+                        }
+                    }
+                    break;
+                case 1:
+                case 2:
+                    break;
+            }
+            break;
+    }
+}
+
+function selectUser(user){
+    actualUser = user;
+    if(currentInteractive == "selectUser"){
+        document.getElementById("SelectUsers").style.display = "none";
+        document.getElementById("InteractiveChannelMain").style.display = "block";
+        currentInteractive = "mainPanel";
+        getPopularChannels();
+        setMainPanelFocused();
+    } else if(currentInteractive == "addUser"){
+        document.getElementById("InteractiveAddUser").style.display = "none";
+        document.getElementById("keyboard").style.display = "none";
+        document.getElementById("InteractiveChannelMain").style.display = "block";
+        currentInteractive = "mainPanel";
+        setMainPanelFocused();
+    }
+}
+function getLastRecords(){
+    $.ajax({
+        type: 'POST',
+        async: false,
+        url: 'Core/Controllers/Recorder.php',
+        data: {
+            Option : 'RecordingsList',
+            LocationId : Device['LocationId'],
+            // LocationId : 257,
+            MacAddress : MacAddress
+        },
+        success: function (response){
+            lastRecordsList = $.parseJSON(response);
+            setLastRecors();
+        }
+    });
+}
+function setLastRecors(){
+    if(Device['Type']!='NONE'){
+        if(RecordingsList.length>0){
+            var div, logo, title;
+            var recordsCount = 0;
+            for(var i=0; i<RecordingsList.length; i++){
+                for(var j=1; j<RecordingsList[i].length; j++){
+                    div = document.createElement("div");
+                    div.id = RecordingsList[i][j].channel;
+                    div.classList.add("lastRecord");
+                    div.title = 'Rec,'+i+","+j;
+
+                    logo = document.createElement("div");
+                    logo.classList.add("ChannelLogo");
+                    logo.style.backgroundImage = 'url("Media/Logos/VDM/record.png")';
+                    div.appendChild(logo);
+
+                    title = document.createElement("div");
+                    title.innerText = RecordingsList[i][0];
+                    title.id = "nameRecordInt";
+                    div.appendChild(title);
+
+                    title = document.createElement("div");
+                    title.innerText = RecordingsList[i][j].channel;
+                    title.id = "numberRecordInt";
+                    div.appendChild(title);
+                    
+                    document.getElementById("InteractiveLastRecordsImg").appendChild(div);
+                    recordsCount++;
+                    if(recordsCount == 5){
+                        break;
+                    }
+                }
+                if(recordsCount == 5){
+                    break;
+                }
+            }
+        }else{
+            div = document.createElement("div");
+            div.id = 'noRecords';
+            div.innerText = 'You have no recordings';
+            document.getElementById("InteractiveLastRecordsImg").appendChild(div);
+        }
+    }else{
+        div = document.createElement("div");
+        div.id = 'noRecords';
+        div.innerText = 'You have no recordings';
+        document.getElementById("InteractiveLastRecordsImg").appendChild(div);
+    }
+}
+function getPopularChannels(){
+    $.ajax({
+        cache: false,
+        type: 'POST',
+        url: ServerSource + 'Core/Controllers/Statistics.php',
+        data: {
+            Option: 'getPopularChannelsByUser',
+            LocationId: Device['LocationId'],
+        },
+        success: function (response){
+            var popular = $.parseJSON(response);
+            setPopularChannels(popular);
+        }
+    });
+}
+function setPopularChannels(popular){
+    if(popular.length>4){
+        var div, logo, title;
+        for(var i=0; i<5; i++){
+            div = document.createElement("div");
+            div.id = popular[i].numero_canal;
+            div.classList.add("popularChannel");
+            logo = document.createElement("div");
+            logo.classList.add("ChannelLogo");
+            logo.style.backgroundImage = 'url("'+ Libraries['ChannelsPath'] + ChannelsJson[FindChannelPosition(parseInt(popular[i].numero_canal))].LOGO+'")';
+            div.appendChild(logo);
+
+            title = document.createElement("div");
+            title.innerText = popular[i].numero_canal;
+            title.id = "numberChannelInt";
+            div.appendChild(title);
+            
+            title = document.createElement("div");
+            title.innerText = popular[i].nombre_canal;
+            title.id = "nameChannelInt";
+            div.appendChild(title);
+
+            document.getElementById("InteractivePopularChannelImg").appendChild(div);
+        }
+    }
+}
+function setMainPanelFocused(){
+    switch(interactiveFocusedSectionPos){
+        case 0:
+            document.getElementById(headerInteractive[headerInteractivePos]).classList.remove('focusedItem');
+            headerInteractivePos = 0;
+            interactiveFocusedSectionPos = 0;
+            document.getElementById(headerInteractive[headerInteractivePos]).classList.add('focusedItem');
+            break;
+        case 1:
+            interactiveFocusedSectionPos = 0;
+            headerInteractivePos = 0;
+            document.getElementById(headerInteractive[headerInteractivePos]).classList.add('focusedItem');
+            break;
+        case 2:
+            interactiveFocusedSectionPos = 0;
+            headerInteractivePos = 0;
+            document.getElementById(headerInteractive[headerInteractivePos]).classList.add('focusedItem');
+            break;
+    }
+}
+function hideInteractiveMenu(){
+    document.getElementById("InteractiveChannel").style.display = 'none';
+    CurrentModule = "Tv";
+}
+function addUser(){
+    currentInteractive = "addUser";
+    document.getElementById("SelectUsers").style.display = "none";
+    document.getElementById("InteractiveAddUser").style.display = "block";
+    document.getElementById("keyboard").style.display = "block";
+}
+function newUser(name){
+    var valid = true;
+    for(var i=0; i<usersData.length; i++){
+        if(usersData[i].name == name){
+            valid = false;
+            break;
+        }
+    }
+    if(valid == true){
+        $.ajax({
+            type: 'POST',
+            url: ServerSource + 'Core/Controllers/Interactivo.php',
+            async:false,
+            data: {
+                Option : 'newUser',
+                macDevice : MacAddress,
+                newUser: name
+            },
+            success: function (response){
+                register = $.parseJSON(response);
+                selectUser({'id_user': register, 'name': name});
+            }
+        });
+    }else{
+        alert("Este Nombre De Usuario Ya Existe");
+    }
+}
+
+function random(min, max) {
+    var r = Math.round(Math.random() * (max - min) + parseInt(min));
+    return r;
+}
+
+function random(min, max, ex) {
+    r = Math.round(Math.random() * (max - min) + parseInt(min));
+    if (r === ex) r++;
+    if (r > max) r = r - 2;
+    return r;
+}
+
+function getSColor(n) {
+    switch (n) {
+        case 1: color = 1; return "green-sea";
+        case 2: color = 2; return "nephritis";
+        case 3: color = 3; return "belize-hole";
+        case 4: color = 4; return "wisteria";
+        case 5: color = 5; return "orange";
+        case 6: color = 6; return "pumpkin";
+        case 7: color = 7; return "pomegranate";
+    }
+}
+
+var keyposition, keyvalue, parentKey, antkey;
+
+function KeyboardDirection(direction){
+    keyposition = document.getElementsByClassName("buttonSelected");
+    if(keyposition.length == 0){
+        keyposition = document.getElementsByClassName("buttonSpaceSelected");
+        if(keyposition.length == 0){
+            keyposition = document.getElementsByClassName("buttonSearchSelected"); 
+            if(keyposition.length == 0){
+                keyposition = document.getElementsByClassName("buttonSelectSelected"); 
+            }
+        }
+    }
+    switch(direction){
+        case "UP":
+            if(keyposition[0].parentNode.id !== "keyboard1"){
+                if(keyposition[0].className == "buttonSelected"){
+                    if(keyposition[0].parentNode.id == "keyboard2"){
+                        antkey =parseInt(keyposition[0].id)-10;
+                    }else{
+                        antkey = (parseInt(keyposition[0].id)==10)?parseInt(keyposition[0].id)-9:parseInt(keyposition[0].id)-8;
+                    }
+                    keyposition[0].className = "button";
+                    document.getElementById(antkey).className = 'buttonSelected';
+                }else if(keyposition[0].className == "buttonSpaceSelected"){
+                    keyposition[0].className = "buttonSpace";
+                    document.getElementById("22").className = "buttonSelected"
+                }else if(keyposition[0].className == "buttonSearchSelected"){
+                    keyposition[0].className ="buttonSearch";
+                    document.getElementById("26").className = "buttonSelected"
+                }else if(keyposition[0].className == "buttonSelectSelected"){
+                    keyposition[0].className ="buttonSelect";
+                    document.getElementById("27").className = "buttonSelected"
+                }
+            }        
+            break;
+        case "DOWN":
+            if(keyposition[0].parentNode.id !== "keyboard4"){
+                if(parseInt(keyposition[0].id) >= 25 ){
+                    keyposition[0].className ="button";
+                    document.getElementById("29").className = "buttonSelectSelected";
+                }else if(parseInt(keyposition[0].id) >= 20){
+                    keyposition[0].className ="button";
+                    document.getElementById("28").className = "buttonSpaceSelected";
+                }else{
+                    if(keyposition[0].parentNode.id == "keyboard2"){
+                        antkey = (parseInt(keyposition[0].id)==11)?parseInt(keyposition[0].id)+9: parseInt(keyposition[0].id)+8;
+                    }else{
+                        antkey = (parseInt(keyposition[0].id)==10)?parseInt(keyposition[0].id)+9:parseInt(keyposition[0].id)+10;
+                    }
+                    keyposition[0].className = "button";
+                    document.getElementById(antkey).className = 'buttonSelected';
+                }
+            }
+            break;
+        case "LEFT":
+            if(parseInt(keyposition[0].id) == 29){
+                keyposition[0].className = "buttonSelect";
+                document.getElementById("28").className = "buttonSpaceSelected";
+            }else if((parseInt(keyposition[0].id) >= 2 && parseInt(keyposition[0].id) <11) || (parseInt(keyposition[0].id) >= 12 && parseInt(keyposition[0].id) <20) || (parseInt(keyposition[0].id) >= 21 && parseInt(keyposition[0].id) <28)){
+                antkey = parseInt(keyposition[0].id)-1;
+                keyposition[0].className = "button";
+                document.getElementById(antkey).className = 'buttonSelected';
+            }
+            break;
+        case "RIGHT":
+            if(parseInt(keyposition[0].id) == 28){
+                keyposition[0].className = "buttonSpace";
+                document.getElementById("29").className = "buttonSelectSelected";
+            }else if((parseInt(keyposition[0].id) >= 1 && parseInt(keyposition[0].id) <10) || (parseInt(keyposition[0].id) >= 11 && parseInt(keyposition[0].id) <19) || (parseInt(keyposition[0].id) >= 20 && parseInt(keyposition[0].id) <27)){
+                antkey = parseInt(keyposition[0].id)+1;
+                keyposition[0].className = "button";
+                document.getElementById(antkey).className = 'buttonSelected';
+            }
+            break;
+        case "OK":
+            if(parseInt(keyposition[0].id)<=26 && document.getElementById("AddText").textContent.length<7){
+                if(visibleSearchBox == false){
+                    document.getElementById("AddText").textContent = document.getElementById("AddText").textContent + keyposition[0].outerText;
+                }else{
+                    document.getElementById("InteractiveSearchBox").textContent = document.getElementById("InteractiveSearchBox").textContent + keyposition[0].outerText;
+                }
+            }else if(parseInt(keyposition[0].id)==27){
+                if(visibleSearchBox == false){
+                    document.getElementById("AddText").textContent = document.getElementById("AddText").textContent.substring(0, document.getElementById("AddText").textContent.length - 1);
+                }else {
+                    document.getElementById("InteractiveSearchBox").textContent = document.getElementById("InteractiveSearchBox").textContent.substring(0, document.getElementById("InteractiveSearchBox").textContent.length - 1);
+                }
+            }else if(parseInt(keyposition[0].id)==28 && document.getElementById("AddText").textContent.length<7){
+                if(visibleSearchBox == false){
+                    document.getElementById("AddText").textContent = document.getElementById("AddText").textContent + " ";
+                }else{
+                    document.getElementById("InteractiveSearchBox").textContent = document.getElementById("InteractiveSearchBox").textContent + " ";
+                }
+            }else if(parseInt(keyposition[0].id)==29){
+                if(visibleSearchBox == true){
+                    searchProgram(document.getElementById("InteractiveSearchBox").textContent);
+                }
+            }
+            break;
+    }
+}
+function KeyboardNumeric(Number){
+    document.getElementById("AddText").value = document.getElementById("AddText").value + Number;
 }

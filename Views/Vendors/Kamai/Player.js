@@ -11,12 +11,14 @@
         PlayDigita      = false,
         PauseLive       = false,
         PauseStatus     = false,
+        pltActive           = false,
         HDMIstatus;
 
     var WindowMaxWidth  = 0,
         WindowMaxHeight = 0,
         WindowMinWidth  = 0,
-        WindowMinHeight = 0;
+        WindowMinHeight = 0,
+        updatingMoviePosition = null;
 
         GetWindowFullSize();
         GetWindowMinSize();
@@ -28,14 +30,14 @@
     var Video   = new ENTONE.video(1,0);
         Video.setPltvBuffer(7200);
 
-Debug('#################################################################');
+    Debug('#################################################################');
 
-/* *****************************************************************************
- * Reproductor de canal
- * ****************************************************************************/
+    /* *****************************************************************************
+    * Reproductor de canal
+    * ****************************************************************************/
 
     function PlayChannel(Source, Port){
-        Debug('PlayChannel---->> Source + CheckPort'+Source + ':'+ Port);
+        Debug('PlayChannel--------------------------------->> Source + CheckPort'+Source + ':'+ Port);
         
         var CheckPort = '';
         
@@ -134,7 +136,92 @@ Debug('#################################################################');
 
         Video.setVideoCallback(HandleVideo);
     }
-    
+    function PlayMovie(Source, pos){
+        Video.open(Source);
+        Video.play(1);
+        Video.setVideoCallback(HandleVideo);
+
+        MaximizeTV();
+        
+        setTimeout(function(){Video.setPlayPosition(pos);},500);
+        
+        if(updatingMoviePosition !== null){
+            clearInterval(updatingMoviePosition);
+            updatingMoviePosition = null;
+        }
+        
+        updatingMoviePosition = setInterval(updateMoviePosition, 1000);
+    }
+    function setSubtitles(option, sour){
+        if(option){
+            var actualPosition = Video.getPlayPosition();
+            StopVideo();
+            PlayMovie(actualSources + "_sub.mp4", actualPosition)
+        }else{
+            var actualPosition = Video.getPlayPosition();
+            StopVideo();
+            PlayMovie(actualSources + ".mp4", actualPosition)
+        }
+    }
+    function updateMoviePosition(){
+        var percentage = ((Video.getPlayPosition()/1000)/ (Video.getDuration()/1000) ) * 100;
+        $("#custom-seekbar span").css("width", percentage+"%");
+        
+        var hour = Math.floor((Video.getPlayPosition()/1000) / 3600);
+        hour = (hour < 10)? '0' + hour : hour;
+        var minute = Math.floor(((Video.getPlayPosition()/1000) / 60) % 60);
+        minute = (minute < 10)? '0' + minute : minute;
+        var second = Math.floor((Video.getPlayPosition()/1000) % 60);
+        second = (second < 10)? '0' + second : second;
+        var actual = hour + ':' + minute+ ':' + second;
+
+        hour = Math.floor((Video.getDuration()/1000) / 3600);
+        hour = (hour < 10)? '0' + hour : hour;
+        minute = Math.floor(((Video.getDuration()/1000) / 60) % 60);
+        minute = (minute < 10)? '0' + minute : minute;
+        second = Math.floor((Video.getDuration()/1000) % 60);
+        second = (second < 10)? '0' + second : second;
+        var total = hour + ':' + minute + ':' + second;
+
+        document.getElementById("timeProgress").innerText =actual+" / "+total;
+    }
+
+    function speedMovie(Option){
+        if(Option == "forward"){
+            if(Video.getDuration() > Video.getPlayPosition()+10000){
+                Video.setPlayPosition(Video.getPlayPosition() + 10000);
+                // Video.setPlayPosition(Video.getDuration() - 20000);
+            }
+        }else if(Option == "backward"){
+            var actual = Video.getPlayPosition()-11000;
+            if(actual >= 10000){
+                Video.setPlayPosition(actual);
+            }
+        }else if(Option == "fastForward"){
+            if(Video.getDuration() > Video.getPlayPosition()+600000){
+                Video.setPlayPosition(Video.getPlayPosition() + 600000);
+                // Video.setPlayPosition(Video.getDuration() - 20000);
+            }
+        }else if(Option == "fastBackward"){
+            var actual = Video.getPlayPosition()-610000;
+            if(actual >= 0){
+                Video.setPlayPosition(actual);
+            }
+        }
+    }
+
+    function SkipCommercials(dir){
+        if(dir === "right"){
+            if(((Video.getDuration()/1000) > (Video.getPlayPosition()/1000) + 60)){
+                Video.setPlayPosition(Video.getPlayPosition() + 60000);
+            }
+        }else{
+            if((0 < (Video.getPlayPosition()/1000) - 10)){
+                Video.setPlayPosition(Video.getPlayPosition() - 10000);
+            }
+        }
+    }
+
     function PreviewVideo(Source){
         // Guarda la estadistica
         StopVideo();
@@ -166,8 +253,8 @@ Debug('#################################################################');
     }
     
     function GetWindowMinSize(){
-        WindowMinWidth   = ((window.screen.width)*TvPercentageSize)/100;
-        WindowMinHeight  = ((window.screen.height)*TvPercentageSize)/100;
+        WindowMinWidth   = ((window.screen.width)*34)/100;
+        WindowMinHeight  = ((window.screen.height)*34)/100;
     }
 
 
@@ -184,7 +271,7 @@ Debug('#################################################################');
  * ****************************************************************************/
 
     function MinimizeTV(){
-            Video.setVideoPosition(TvPositionLeft, TvPositionTop, WindowMinWidth, WindowMinHeight, 0);
+            Video.setVideoPosition(160, 65, WindowMinWidth, WindowMinHeight, 0);
     }
 
 /* *****************************************************************************
@@ -213,12 +300,17 @@ Debug('#################################################################');
                 PlayingRecording = false;
             }
         }
+        pltActive = false;
         PlayDigita = false;
         Debug('StopVideo 2 ');
+        if(PauseLive === true){
+            HideBarStatus();
+        }
     }
     
     function PauseVideo(){
         PauseStatus = true;
+        pltActive = true;
         Video.play(0);
     }
     

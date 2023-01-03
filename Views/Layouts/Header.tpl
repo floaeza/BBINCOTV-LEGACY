@@ -2,8 +2,10 @@
 <!-- Contiene la cabecera de los modulos-->
 <script> 
     var CurrentModule = '[@CurrentModule]',
-        ModuleId      = '[@ModuleId]',
-        IndexLogo     = '[@IndexLogo]';
+        ModuleId      = '[@ModuleId]',      
+        IndexLogo = '[@IndexLogo]';
+
+    var prev_Direction = '[@prev_Direction]';
 </script>
 <html>
     <head>

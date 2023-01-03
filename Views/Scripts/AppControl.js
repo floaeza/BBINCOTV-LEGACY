@@ -1,7 +1,7 @@
 
 var Comando = [];
-var MacAddressAppControl = '00:00:00:00:00:00';
-
+var MacAddressAppControl = '00:00:00:00:00:00', activeremoteAuto = false;
+var remoteAuto = null;
 function InitialDataAppControl(){    
     // @ts-ignore
     if (typeof(ASTB) !== 'undefined') {
@@ -60,7 +60,12 @@ function ChangeAppControl(){
         // @ts-ignore
         //alert(Comando[0].MAC);
         if (Comando[i].STATUS === 'pendingServer'){
-            // @ts-ignore
+            // @ts-ignorealert(Comado[i].ORDEN)
+            if((Comando[i].ORDEN).split("_")[0]+"_"+(Comando[i].ORDEN).split("_")[1] == "CHANGE_CHANNEL"){
+                ChannelToChange = (Comando[i].ORDEN).split("_")[2];
+                Comando[i].ORDEN = "CHANGE_CHANNEL";
+            }
+                    
             switch(Comando[i].ORDEN){
                 // @ts-ignore
                 case 'REMOTE_RED':
@@ -204,11 +209,40 @@ function ChangeAppControl(){
                             TvGuide();
                         }
                     break;
+                case 'REMOTE_BACK':
+                    if(CurrentModule === 'Tv'){
+                        TvClose();
+                    }
+                    break;
+                case 'REMOTE_AUTO':
+                        if(CurrentModule === 'Tv'){
+                            if(remoteAuto == null){
+                                remoteAuto = setInterval(function(){
+                                    TvChannelUp();
+                                },10000);
+                            } else {
+                                clearInterval(remoteAuto);
+
+                                remoteAuto = null;
+                            }
+                        }
+                    break;
+                case "CHANGE_CHANNEL":
+                    var CurrentChannel   = parseInt(ChannelsJson[ChannelPosition].CHNL, 10);
+                    var PositionToChange = FindChannelPosition(ChannelToChange);
+                    if(ChannelToChange !== CurrentChannel){
+                        LastChannelPosition = ChannelPosition;
+                        ChannelPosition = PositionToChange;
+                        ChannelToChange = 0;
+                        SetChannel('');
+                    }
+                    break;
+                    
             }
     
             //$.ajax({
             //    type: "POST",
-            //    url: 'BBINCO/TV/Core/Controllers/Firebase.php',
+            //    url: 'BBINCO/TV1/Core/Controllers/Firebase.php',
             //    data: { 
             //        Option    : 'DeleteControlbyMac',
             //        MacAddress: '00:1a:79:6c:cc:3e'
@@ -241,5 +275,3 @@ InitialDataAppControl();
 if(STBControll[0]['CON']=="1"){
    DBAppControl();
 }
-
-     

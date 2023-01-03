@@ -1,6 +1,6 @@
 div#MenuBackgroun {
     display: block;
-    background: url('../../../../../Media/Menu/VDM/VDM.png');
+    background: url('../../../../Media/Menu/VDM/VDM.png');
     background-size: 100%;
     width: 100%;
     height: 100%;
@@ -71,11 +71,12 @@ div#MenuListMain{
 
 div#MenuWeather,
 div#MenuHour,
-div#MenuDate,
 div#MenuDate, .MenuNodes{
     font-family: Arial, Helvetica, sans-serif;
     color: white;
     text-align: left;
+    
+    font-size: 25px;
 }
 #WeatherIcon {
     float: left;

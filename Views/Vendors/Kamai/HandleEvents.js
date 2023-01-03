@@ -27,12 +27,12 @@
 // UP
 // {"status":28675}
 // {"status":28677}
-
+var records = {}
 EventHdmi = 1;
 
 function HandleVideo(event_type){
 
-    Debug('------------------------------------->>> EventType: '+event_type);
+    //Debug('------------------------------------->>> EventType: '+event_type);
 
 
     if(event_type === 'EN_VIDEOEVENT_FIRST_PTS'){
@@ -56,6 +56,8 @@ function HandleVideo(event_type){
             } else {
                 SetDigitalChannel();
             }
+        }else if(CurrentModule === 'Movies') {
+            endMovie();
         }
 
         if(Executing === false){
@@ -70,7 +72,7 @@ ENTONE.stb.setHdmiEvtCallback(function(e){
 
     EventHdmiRes = EventHdmiObj['event_name'];
 
-    Debug('EventHdmiRes--->'+EventHdmiRes);
+    //Debug('EventHdmiRes--->'+EventHdmiRes);
 
     if(EventHdmiRes === 'hdmi_disconnected'){
         EventHdmi = 0;
@@ -79,7 +81,7 @@ ENTONE.stb.setHdmiEvtCallback(function(e){
     }
 
     if(Executing === false){
-        Debug('UpdateQuickInfoDevice >> HDMICALLBACK '+Executing);
+        //Debug('UpdateQuickInfoDevice >> HDMICALLBACK '+Executing);
         UpdateQuickInfoDevice();
     }
 }, this);
@@ -99,7 +101,7 @@ ENTONE.network.setNetworkEvtCallback(function(e){
 
 
 function GetProgramsToSchedule(){
-    Debug('-------->> GetProgramsToScheduleNow');
+    ////Debug('-------->> GetProgramsToScheduleNow');
     $.ajax({
         type: 'POST',
         url: 'Core/Controllers/Recorder.php',
@@ -130,40 +132,43 @@ function GetProgramsToSchedule(){
                 End = ProgramsToSchedule[Indexps]['utc_final'];
                 TimeOut = (parseInt(End) - parseInt(Start))*1000;
 
-                Debug('>> '+ProgramId + ', ' +Source +', '+ Title +', '+ Start +', '+ End + ', '+TimeOut);
+                //Debug('>> '+ProgramId + ', ' +Source +', '+ Title +', '+ Start +', '+ End + ', '+TimeOut);
 
                 // try {
 
-                Debug('Recordings >> Start= '+ProgramId);
+                //Debug('Recordings >> Start= '+ProgramId);
                 Recordings[ProgramId] = new ENTONE.recorder(Source, pad(parseInt(ProgramId), 10), null, {recnow:1});
                 Recordings[ProgramId].start();
+                records[ProgramId] = ProgramId;
                     //var recorder = new ENTONE.recorder(Source, pad(parseInt(ProgramId), 10), null, {recnow:1});
                     //recorder.start();
 
-                        Recordings[ProgramId].setRecorderCallback(function(e, h){
-                        //recorder.setRecorderCallback(function(e, h){
-                            Debug('-------------------------> setRecorderCallback: '+ProgramId+ ', '+e);
-                            // if (e === ENTONE.recorder.PVR_RECORD_FINISHED){
-                            //     UpdateDiskInfo();
-                            // }
-                        }, this);
+                        // Recordings[ProgramId].setRecorderCallback(function(e, h){
+                        // //recorder.setRecorderCallback(function(e, h){
+                        //     //Debug('-------------------------> setRecorderCallback: '+ProgramId+ ', '+e);
+                        //     if (e === ENTONE.Recordings[ProgramId].PVR_RECORD_FINISHED){
+                                
+                        //         UpdateDiskInfo();
+                        //         UpdateProgramActive(ProgramId, OperationsList.recorded, false);
+                        //     }
+                        // }, this);
 
-                        setTimeout(function(){
-                            //recorder.stop();
-                            Debug('Recordings >> Stop= '+ProgramId);
-                            Recordings[ProgramId].stop();
+                        setTimeout(function(id){
+                           //recorder.stop();
+                            //Debug('Recordings >> Stop= '+id);
+                            Recordings[id].stop();
                             //recorder.cleanup();
-                            UpdateProgramActive(ProgramId, OperationsList.recorded, false);
-                        }, TimeOut);
+                            UpdateProgramActive(id, OperationsList.recorded, false);
+                        }, TimeOut, ProgramId);
 
                     UpdateProgramActive(ProgramId, OperationsList.recording, true);
                 // } catch (e) {
-                //     Debug('> Failed to create recorder or start recording. Error handling');
+                //     //Debug('> Failed to create recorder or start recording. Error handling');
                 // }
             }
         }
     });
-    Debug('--------<< GetProgramsToScheduleNow');
+    ////Debug('--------<< GetProgramsToScheduleNow');
 }
 
 /*******************************************************************************
@@ -182,8 +187,8 @@ function UpdateProgramActive(ProgramId, OperationId, ActiveRecording){
             ActiveRecording : ActiveRecording,
         },
         success: function (response){
-            Debug('----------UpdateProgramActive----------');
-            Debug(response);
+            ////Debug('----------UpdateProgramActive----------');
+            ////Debug(response);
         }
     });
 }
@@ -194,7 +199,7 @@ function UpdateProgramActive(ProgramId, OperationId, ActiveRecording){
 
 function GetSchedulesToDelete(){
 
-    Debug('-------->> GetSchedulesToDelete');
+    ////Debug('-------->> GetSchedulesToDelete');
     $.ajax({
         type: 'POST',
         url: 'Core/Controllers/Recorder.php',
@@ -216,7 +221,7 @@ function GetSchedulesToDelete(){
         }
     });
 
-    Debug('--------<< GetSchedulesToDelete');
+    ////Debug('--------<< GetSchedulesToDelete');
 }
 
 function DeleteProgram(ProgramId){
@@ -228,7 +233,7 @@ function DeleteProgram(ProgramId){
             ProgramId : ProgramId
         },
         success: function (response){
-            //Debug(response);
+            ////Debug(response);
         }
     });
 }
@@ -253,7 +258,7 @@ function UpdateDiskInfo(){
             AvailableSize : StorageInfo.pvrFreeSpace / 1024
         },
         success: function (response){
-            Debug(response);
+            //Debug(response);
         }
     });
 }
@@ -262,8 +267,8 @@ function SetMediaRecordings(){
     var AssetsList = [];
         AssetsList = ENTONE.recorder.getAssetList();
 
-        Debug(JSON.stringify(AssetsList));
-        Debug(AssetsList.length);
+        //Debug(JSON.stringify(AssetsList));
+        //Debug(AssetsList.length);
 
 }
 
@@ -277,46 +282,29 @@ if(Device['Type'] === 'WHP_HDDY' || Device['Type'] === 'PVR_ONLY'){
     HandlerPvr();
 
     GetProgramsSerie();
-
-    setInterval(HandlerPvr,60000);
+    
 }
 
 function HandlerPvr(){
-Debug('---------->>>');
- //var AL = ENTONE.recorder.getAssetList();
-     //Debug(JSON.stringify(AL));
-
     var StorageInfo = [];
         StorageInfo = ENTONE.recorder.getStorageInfo();
 
-        Debug('>>>> HDD freeSpace: '+StorageInfo.freeSpace);
-        Debug('>>>> HDD totalSpace: '+StorageInfo.totalSpace);
-
     var assi = ENTONE.recorder.getAssetInfo('0000000217');
 
-         Debug('>>> REC duration: '+assi.duration);
-         Debug('>>> REC size: '+assi.size);
-
     var HDST = ENTONE.stb.getHdmiSettings();
-
-
     var Rs = Video.getOsdResolution() ;
 
-    //var seres = ENTONE.stb.setResolution(ENTONE.stb.RES_1080I);
-
     var GRI = ENTONE.resource.getRecorders();
-    Debug(JSON.stringify(GRI));
-
-
-
     GetProgramsToSchedule();
 
     GetSchedulesToDelete();
 
-
     // ENTONE.recorder.getAssetInfo(assetname)
 
-    Debug('-------> HandlerPvr');
+    ////Debug('-------> HandlerPvr');
+    setTimeout(function() {
+        HandlerPvr();
+    },30000);
 }
 
 

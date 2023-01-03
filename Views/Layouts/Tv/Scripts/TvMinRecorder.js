@@ -581,8 +581,11 @@ function SetRecordings(Direction){
         IndexProgram = 0;
 
     var IndexRecorded = 0;
+
+    Debug("------->1111<--------")
     
     if(ListTypeFocus === 'all'){
+        Debug("------->2222<--------")
         Debug('IF ALL');
         if(IndexRecordedFocus === -1){
             IndexRecorded = -1;
@@ -598,7 +601,7 @@ function SetRecordings(Direction){
                 IndexRecordedFocus++;
             }
         }
-
+        Debug("------->3333<--------")
         var ActiveRec = '',
             LastChr = '';
         for (Row = 1; Row <= 17; Row++) {
@@ -610,18 +613,21 @@ function SetRecordings(Direction){
             }
         
             if(IndexRecorded < RecordingsList.length){
+                Debug("------->4444<--------")
                 //Debug('IndexRecorded < RecordingsList.length');
                 if(RecordingsList[IndexRecorded].length > 2){
+                    Debug("------->5555<--------")
                     Icon = '<i class="fa fa-folder-open"></i>';
                     Title = 'serie';
                     PvrListNodes[Row].innerHTML = '\u00A0'+ Icon + ' '+ RecordingsList[IndexRecorded][IndexProgram];
-                    
                 } else {
+                    Debug("------->6666<--------")
                     Icon = '<i class="fa fa-file"></i>';
                     Title = 'rec';
-
                     if(RecordingsList[IndexRecorded][1].active === '1'){
+                        Debug("------->7777<--------")
                         if(RecordingsList[IndexRecorded][1].operacion === '3'){
+                            Debug("------->8888<--------")
                             ActiveRec = ' (recording)';
                             Icon = '<i class="fa fa-circle" id="IconRecording"></i>';
                         }else{
@@ -1759,7 +1765,6 @@ function PvrUp(){
 }
 
 function PvrDown(){
-    console.log("DOWN");
     clearTimeout(PvrTimer);
     PvrTimer = setTimeout(ClosePvr,TimeoutPvr);
     if(RecordOptions === true){
@@ -1839,7 +1844,6 @@ function PvrDown(){
 }
 
 function PvrRight(){
-    console.log(RecorderMessageConfirmActive + " RIGHT " + RecordOptions);
     clearTimeout(PvrTimer);
     PvrTimer = setTimeout(ClosePvr,TimeoutPvr);
     if(RecordOptions === false && DeleteOptions === false){
@@ -1888,7 +1892,6 @@ function PvrRight(){
             }
         }
     }else if(RecorderMessageConfirmActive === true){
-        console.log(MessageCloseConfirm.style.background);
         if(MessageCloseCancel.style.background == "rgb(47, 65, 74)"){
             MessageCloseCancel.style.background = "rgba(223, 190, 94, 0.9)";
             MessageCloseConfirm.style.background = "rgb(47, 65, 74)";

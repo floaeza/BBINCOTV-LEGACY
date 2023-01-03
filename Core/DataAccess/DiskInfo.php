@@ -41,7 +41,7 @@ class DiskInfo extends Database {
         $this->connect();
         $this->select("pvr_info", "*", 
                       "dispositivos ON pvr_info.mac_address = dispositivos.mac_address", "", "", "", 
-                      "pvr_info.id_locacion = '".$LocationId."' AND dispositivos.marca = 'Infomir'");
+                      "pvr_info.id_locacion = '".$LocationId."'");
 
         $this->DiskInfoList = $this->getResult();
         $this->disconnect();

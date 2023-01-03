@@ -94,6 +94,15 @@ and open the template in the editor.
     font-family: arial-rounded;
     src: url(./Fonts/ARLRDBD.ttf);
 }
+
+.green-sea {background: #19be9b}
+.nephritis {background: #2dc873}
+.belize-hole {background: #3296dc;}
+.wisteria {background: #9b5ab4;}
+.orange {background: #f0c30f;}
+.pumpkin {background: #e67d23;}
+.pomegranate {background: #e64b3c;}
+
 /*
 TITULOS
 <div style='font-family: novecento;'>1 Aviso program Avenger infinity war 14:38 /-($)!?</div>
@@ -317,4 +326,542 @@ div#DigitalChannel {
     z-index: 0;
     position: fixed;
     display: none;
+}
+
+div#InteractiveChannel{
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: #222222;
+    display: none;
+}
+div#InteractiveUsers{
+    top: 30%;
+    left: 6%;
+    height: 28.5%;
+    width: 80%;
+    /* background: #ffffff; */
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+}
+div#InteractiveUsersName{
+    top: 50%;
+    left: 10%;
+    height: 28.5%;
+    width: 80%;
+    /* background: #ffffff; */
+    position: absolute;
+    display: flex;
+}
+[id*="User"]{
+    /* position: relative;
+    display: flex;
+    background: #df778a; 
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    width: 20%; */
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    /* background: #df778a; */
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    width: 20%;
+    flex-direction: column;
+}
+[id*="InteractiveOption"]{
+    position: relative;
+    width: 15%;
+    font-size: 130%;
+    line-height: 270%;
+    margin-left: 2%;
+    margin-right: 2%;
+    text-align: center;
+}
+img#InteractiveLogo{
+    position: relative;
+    width: 18%;
+    font-size: 130%;
+    line-height: 270%;
+    margin-left: 2%;
+    margin-right: 2%;
+    text-align: center;
+}
+div#InteractiveText{
+    position: relative;
+    color: white;
+    font-size: 250%;
+    top: 10%;
+    width: 50%;
+    height: 10%;
+    left: 24%;
+    text-align: center;
+}
+div#SelectUsers{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.focusedItem{
+    background: #ffffff6b;
+    border: white solid 1px;
+    border-radius: 5px;
+}
+span#InteractiveHeaderIcon{
+    position: relative;
+    top: 8%;
+    height: 80%;
+    background: #ffffff;
+    color: #ffffff;
+    text-align: center;
+    font-size: 400%;
+    line-height: 200%;
+    right: 5%;
+    width: 6%;
+    margin-left: 1%;
+    border-radius: 50%;
+}
+.addUser{
+    
+}
+.UserFocused{
+    background: #6a6a6a;
+}
+div#noRecords{
+    position: absolute;;
+    width: 90%;
+    height: 75%;
+    left: 5%;
+    color: white;
+    background: #212121;
+    font-size: 200%;
+    line-height: 500%;
+    text-align: center;
+}
+div#usersName{
+    position: absolute;
+    font-size: 200%;
+    color: white;
+    width: 100%;
+    bottom: 0%;
+    text-align: -moz-center;
+    text-align: -webkit-center;
+    text-align: -ms-center;
+}
+.dot {
+    position: absolute;
+    height: 80%;
+    color: #ffffff;
+    text-align: -moz-center;
+    text-align: -webkit-center;
+    text-align: -ms-center;
+    font-size: 400%;
+    line-height: 200%;
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    /* border-radius: 50%; */
+}
+div#InteractiveAddUser{
+    display: none;
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    left: 10%;
+    top: 0%;
+}
+
+div#AddText{
+    position: relative;
+    top: 25%;
+    left: 10%;
+    background: black;
+    color: white;
+    width: 80%;
+    height: 10%;
+    font-size: 200%;
+    line-height: 170%;
+    border-radius: 10px;
+    border: white solid 1px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+div#InteractiveSearchBox{
+    position: absolute;
+    top: 10%;
+    background: black;
+    color: white;
+    width: 0%;
+    height: 80%;
+    font-size: 150%;
+    line-height: 180%;
+    border-radius: 10px;
+    border: white solid 1px;
+    display: none;
+    z-index: 10;
+}
+div#InteractiveChannelMain{
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+div#InteractiveHeader{
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    position: absolute;
+    background: #161616;
+    color: white;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+div#numberChannelInt{
+    position: absolute;
+    top: 65%;
+    height: 10%;
+    left: 5%;
+    width: 100%;
+    font-size: 150%;
+    line-height: 85%;
+    /* text-align: center; */
+    color: white;
+}
+div#nameChannelInt{
+    position: absolute;
+    top: 55%;
+    height: 10%;
+    left: 5%;
+    width: 90%;
+    font-size: 120%;
+    line-height: 85%;
+    color: white;
+}
+
+div#numberRecordInt{
+    position: absolute;
+    top: 52%;
+    height: 10%;
+    left: 5%;
+    width: 90%;
+    font-size: 120%;
+    line-height: 85%;
+    color: white;   
+}
+div#nameRecordInt{
+    position: absolute;
+    top: 63%;
+    height: 32%;
+    left: 5%;
+    width: 90%;
+    font-size: 150%;
+    line-height: 85%;
+    overflow: hidden;
+    /* text-align: center; */
+    color: white;
+}
+div#OptionsHeader{
+    width: 80%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+div#InteractivePopularChannel{
+    position: relative;
+    top: 11%;
+    width: 100%;
+    height: 40%;
+    background: #161616;
+}
+div#InteractiveLastRecords{
+    position: relative;
+    top: 12%;
+    width: 100%;
+    height: 45%;
+    background: #161616;
+}
+div#InteractiveLastRecordsTittle{
+    position: relative;
+    top: 1%;
+    left: 2%;
+    width: 80%;
+    height: 16%;
+    font-size: 150%;
+    color: white;
+}
+div#InteractivePopularChannelTittle{
+    position: relative;
+    top: 1%;
+    left: 2%;
+    width: 80%;
+    height: 20%;
+    font-size: 150%;
+    color: white;
+}
+.popularChannel{
+    position: relative;
+    width: 18%;
+    background: #212121;
+    border-radius: 5px;  
+    height: 100%;
+}
+.ChannelLogo {
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    height: 40%;
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px;
+    float: left;
+}
+.lastRecord{
+    position: relative;
+    width: 18%;
+    background: #212121;
+    border-radius: 5px;  
+    height: 97%; 
+}
+div#showResults{
+    position: absolute;
+    display: none;
+    height: 74%;
+    width: 40%;
+    border-radius: 10px;
+    left: 30%;
+    top: 5%;
+    background: black;
+    border: white solid 1px;
+    z-index: 20;
+}
+.Result{
+    position: relative;
+    display: flex;
+    height: 10.95%;
+    width: 100%;
+    border-radius: 10px;
+    background: rgb(0, 0, 0);
+    color: white;
+    border: white solid 1px;
+    z-index: 20;
+    margin-bottom: 1.9%;
+}
+.ResultFocus{
+    background: rgb(255, 255, 255);
+    color: black;
+}
+div#ResultChannel{
+    position: relative;;
+    height: 100%;
+    width: 15%;
+    font-size: 150%;
+    margin-left: 5%;
+    font-size: 130%;
+    line-height: 265%;
+    color: white;
+
+}
+div#ResultName{
+    position: relative;
+    height: 100%;
+    width: 50%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    overflow: hidden;
+    color: white;
+    line-height: 330%;
+}
+div#ResultHours{
+    position: relative;
+    height: 100%;
+    width: 30%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    color: white;
+
+    line-height: 330%;
+}
+
+div#InteractivePopularChannelImg{
+    width: 100%;
+    height: 78%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;   
+    justify-content: space-around;
+}
+div#InteractiveLastRecordsImg{
+    width: 100%;
+    height: 83%;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;   
+    justify-content: space-around;
+}
+/******************************* KEYBOARD *******************************/
+
+div#keyboard{
+    position: absolute;
+    display: none;
+    bottom: 25%;
+    border-radius: 0.8em;
+    height: 30%;
+    width: 90%;
+    right: 5%;
+    z-index: 10;
+    background: #353535;
+}
+div#keyboard1{
+    position: relative;
+    top: 8%;
+    width: 100%;
+    height: 16%;
+    display: flex;
+    vertical-align: middle;
+    justify-content: space-around;
+}
+div#keyboard2{
+    position: relative;
+    top: 15%;
+    left: 5%;
+    width: 90%;
+    height: 16%;
+    display: flex;
+    justify-content: space-around;
+}
+div#keyboard3{
+    position: relative;
+    top: 22%;
+    width: 80%;
+    left: 10%;
+    height: 16%;
+    display: flex;
+    vertical-align: middle;
+    justify-content: space-around;
+}
+div#keyboard4{
+    position: relative;
+    top: 29%;
+    left: 7.5%;
+    width: 85%;
+    height: 15%;
+    display: flex;
+    vertical-align: middle;
+    justify-content: space-around;
+}
+.button{
+    background: #434343;
+    color: #3087ba;
+    border-radius: 0.2em;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    line-height: 4vh;
+    width: 7.5%;
+    font-size: 2.2vh;
+    display: inline-block;
+    
+    text-align: center;
+}
+.buttonSelected{
+    background: #fff;
+    color: rgb(0, 0, 0);
+    border-radius: 0.2em;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    line-height: 4vh;
+    width: 7.5%;
+    font-size: 2.2vh;
+    display: inline-block;
+    text-align: center;
+}
+.buttonSpace{
+    background: #434343;
+    color: #3087ba;
+    border-radius: 0.2em;
+    width: 60%;
+    font-size: 2.2vh;
+    line-height: 4vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+
+    text-align: center;
+}
+.buttonSearch{
+    background: #434343;
+    color: #3087ba;
+    border-radius: 0.2em;
+    border: 3vh;
+    width: 17%;
+    line-height: 4vh;
+    font-size: 2.2vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+
+    text-align: center;
+}
+.buttonSelect{
+    background: #434343;
+    color: #3087ba;
+    border-radius: 0.2em;
+    border: 3vh;
+    width: 17%;
+    line-height: 4vh;
+    font-size: 2.2vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    text-align: center;
+}
+
+
+.buttonSpaceSelected{
+    background: #fff;
+    color: #000;
+    border-radius: 0.2em;
+    width: 60%;
+    font-size: 2.2vh;
+    line-height: 4vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    text-align: center;
+}
+.buttonSearchSelected{
+    background: #fff;
+    color: #000;
+    border-radius: 0.2em;
+    border: 3vh;
+    width: 17%;
+    line-height: 4vh;
+    font-size: 2.2vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    text-align: center;
+}
+.buttonSelectSelected{
+    background: #fff;
+    color: #000;
+    border-radius: 0.2em;
+    border: 3vh;
+    width: 17%;
+    line-height: 4vh;
+    font-size: 2.2vh;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #3087ba;
+    text-align: center;
 }

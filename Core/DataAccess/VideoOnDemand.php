@@ -30,6 +30,21 @@ class VideoOnDemand extends Database {
 
         return $this->VideoOnDemandList;
     }
+    function getSeriesList($OrderBy, $Order, $Where, $Like) {
+        $this->Function = 'getSeriesList';
+        
+        $this->connect();
+        
+        if(empty($Where)){
+            $this->select("vod_series", "*","","","","","","","","$OrderBy $Order");
+        } else {
+            $this->select("vod_series", "*","","","","","$Where"," '$Like' ","","$OrderBy $Order");
+        }
+        $this->VideoOnDemandList = $this->getResult();
+        $this->disconnect();
+
+        return $this->VideoOnDemandList;
+    }
     
     function getGendersByMovie($MovieId) {
         $this->Function = 'getGendersByMovie';
@@ -52,7 +67,27 @@ class VideoOnDemand extends Database {
 
         return $this->VideoOnDemandList;
     }
-    
+    function getGendersBySerie($MovieId) {
+        $this->Function = 'getGendersByMovie';
+        
+        $this->connect();
+        $this->select("vod_serie_genero", "genero", 
+                      "vod_generos ON vod_serie_genero.id_genero = vod_generos.id_genero", 
+                      "","","",
+                      "id_serie = '".$MovieId."' "
+                );
+
+        $Result = $this->getResult();
+        
+        $this->VideoOnDemandList = array();
+        foreach ($Result as $Row):
+            array_push($this->VideoOnDemandList,$Row['genero']);
+        endforeach;
+
+        $this->disconnect();
+
+        return $this->VideoOnDemandList;
+    }
     function getCastingByMovie($MovieId) {
         $this->Function = 'getCastingByMovie';
         
@@ -75,6 +110,28 @@ class VideoOnDemand extends Database {
         return $this->VideoOnDemandList;
     }
     
+    function getCastingBySerie($MovieId) {
+        $this->Function = 'getCastingByMovie';
+        
+        $this->connect();
+        $this->select("vod_serie_cast", "*", 
+                      "vod_casting ON vod_serie_cast.id_cast = vod_casting.id_cast", 
+                      "","","",
+                      "id_serie = '".$MovieId."' ","","",""
+                );
+        
+        $Result = $this->getResult();
+        
+        $this->VideoOnDemandList = array();
+        foreach ($Result as $Row):
+            array_push($this->VideoOnDemandList,array('Name' => $Row['nombre_cast'],'LastName' => $Row['apellido_cast']));
+        endforeach;
+
+        $this->disconnect();
+
+        return $this->VideoOnDemandList;
+    }
+
     function getDirectorByMovie($MovieId) {
         $this->Function = 'getDirectorByMovie';
         
@@ -96,7 +153,27 @@ class VideoOnDemand extends Database {
 
         return $this->VideoOnDemandList;
     }
-    
+    function getDirectorBySerie($MovieId) {
+        $this->Function = 'getDirectorByMovie';
+        
+        $this->connect();
+        $this->select("vod_serie_director", "*", 
+                      "vod_directores ON vod_serie_director.id_director = vod_directores.id_director", 
+                      "","","",
+                      "id_serie = '".$MovieId."' "
+                );
+        
+        $Result = $this->getResult();
+        
+        $this->VideoOnDemandList = array();
+        foreach ($Result as $Row):
+            array_push($this->VideoOnDemandList,array('Name' => $Row['nombre_director'],'LastName' => $Row['apellido_director']));
+        endforeach;
+
+        $this->disconnect();
+
+        return $this->VideoOnDemandList;
+    }
     function GetYearsList(){
         $this->Function = 'getYearsList';
         
@@ -142,13 +219,42 @@ class VideoOnDemand extends Database {
 
     function GetMoviesByGender($Gender) {
         $this->Function = 'getMoviesByGender';
-        
         $this->connect();
         $this->select("vod_pelicula_genero", "*", 
                       "vod_peliculas ON vod_pelicula_genero.id_pelicula = vod_peliculas.id_pelicula", 
                       "vod_generos ON vod_pelicula_genero.id_genero = vod_generos.id_genero","","",
-                      "genero = '".$Gender."' "
+                      "vod_pelicula_genero.id_genero = ".$Gender
                 );
+
+        $this->VideoOnDemandList = $this->getResult();
+
+        $this->disconnect();
+        
+        return $this->VideoOnDemandList;
+    }
+    function GetSeriesByGender($Gender) {
+        $this->Function = 'getSeriesByGender';
+        
+        $this->connect();
+        $this->select("vod_serie_genero", "*", 
+                      "vod_series ON vod_serie_genero.id_series = vod_series.id_series", 
+                      "vod_generos ON vod_serie_genero.id_genero = vod_generos.id_genero","","",
+                      "vod_serie_genero.id_genero = ".$Gender
+                );
+
+        $this->VideoOnDemandList = $this->getResult();
+
+        $this->disconnect();
+        
+        return $this->VideoOnDemandList;
+    }
+
+    function getChapters($id_serie, $temporada) {
+        $this->Function = 'getChapters';
+        
+        $this->connect();
+     
+        $this->select("vod_series_capitulos", "*", "", "", "", "","vod_series_capitulos.temporada = ".$temporada." AND vod_series_capitulos.id_serie = ".$id_serie,"","","numero_capitulo");
 
         $this->VideoOnDemandList = $this->getResult();
 

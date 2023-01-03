@@ -11,7 +11,7 @@
         SM_FormatEndDate       = '',
         SM_StartDateModuleMM   = '',
         SM_EndDateModuleMM     = '',
-        SM_MinSeconds          = 10000, // 30 segundos
+        SM_MinSeconds          = 30000, // 30 segundos
         SM_DifferenceInSec     = '';
         
     var FormatStartDate     = '',
@@ -36,131 +36,105 @@
 
         window.localStorage;
 
-    function GoPage(Page, ModuleId, ChangeModule){
-        //alert('Pagina: '+ Page+'Module Id: '+ ModuleId+'CangeModule: '+ChangeModule);
-        ////Debug(ModuleId + "  " + OnScreen + "  " + ChannelPosition);
+    function GoPage(Page, ModuleId, ChangeModule, prev_Direction){
         updateDataModule(ModuleId);
-
-        ////Debug('GoPage ---> '+Page);
         if(CurrentModule !== 'Menu'){
+        
         }
-        //if(CurrentModule === 'Tv' && StartDateChannel !== ''){
         if(CurrentModule === 'Tv'){
-            //Debug('TVCLOSE & SETCHANNELSTATISTICS');
-            StopVideo();
             TvClose();
-            //SetChannelStatistics();
+            StopVideo();
         }
-        ////Debug('StopVideo ---> ');
-
-        //SetModuleStatistics();
-        
-        ////Debug('SetModuleStatistics ---> ');
-        
-        ////Debug(Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule);
-
-        // if(typeof(ASTB) !== 'undefined' || MacAddress == '00:00:00:00:00:00'){
-        //     //parent.document.getElementById('Menu').src=Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule;
-
-        //     for(var i = 0; parent.document.getElementsByTagName('iframe').length; i++){
-        //         parent.document.getElementsByTagName('iframe')[i].style.width='0%';
-        //         parent.document.getElementsByTagName('iframe')[i].style.height='0%';
-        //     }
-        //     parent.document.getElementById(ChangeModule).style.width='100%';
-        //     parent.document.getElementById(ChangeModule).style.height='100%';
-        //     parent.document.getElementById(ChangeModule).focus();
-
-        // }else{
-            if (window.tizen !== undefined) {
-
-                //Debug('Window.tizen !== undefined');
-                var PageH = Page.replace('php','html');
-                
-                //Debug('GoPageHTML ---> '+PageH);
-                
-                localStorage.setItem('Module', ChangeModule);
-                localStorage.setItem('Id', ModuleId);
-    
-                //location.replace(PageH);
-                window.location.href = PageH;
-                
-            } else {
-                ////Debug('>>>>>>> LOCATION.REPLACE');
-                //Executing = true;
-                //location.replace(Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule);
-    
-                //location.replace(Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule);
-                //  if(typeof(ASTB) !== 'undefined'){
-                //      Browser.Go('http://10.0.3.9/BBINCO/TV/' + Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule)
-                //  }else{
+        if (window.tizen !== undefined) {
+            var PageH = Page.replace('php','html');
+            localStorage.setItem('Module', ChangeModule);
+            localStorage.setItem('Id', ModuleId);
+            window.location.href = PageH;
+        } else {            
+            if(typeof(prev_Direction) !== 'undefined' && Page == 'tv.php'){
+                if(typeof(ASTB) !== 'undefined'){
+                    location.href= Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule+'&prev_Direction='+prev_Direction;
+                }else{
+                    window.location.href = Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule+'&prev_Direction='+prev_Direction;
+                }
+            }else{
                 if(typeof(ASTB) !== 'undefined'){
                     location.href= Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule;
                 }else{
                     window.location.href = Page+'?MacAddress='+MacAddress+'&ModuleId='+ModuleId+'&CurrentModule='+ChangeModule;
                 }
-                
             }
+            
+                
         }
-    //}
+    }
     
     function SetChannelStatistics(){ 
+        Debug("========>SetChannelStatistics   1");
             FormatStartDate     = getDate(StartDateChannel);
             EndDateModule       = new Date();
             FormatEndDate       = getDate(EndDateModule);
             StartDateModuleMM   = StartDateChannel.getTime();
             EndDateModuleMM     = EndDateModule.getTime();
             DifferenceInSec     = EndDateModuleMM - StartDateModuleMM;
-            //alert("Start: " + StartDateModuleMM + " End: " + EndDateModuleMM+ " Diferencia: "+DifferenceInSec);
-        /* Valida si el tiempo de vista del modulo esta en un rango de tiempo coherente */
+            console.log("========>SetChannelStatistics   2");
+            console.log("========>DifferenceInSec   " +DifferenceInSec);
+            console.log("========>MinSeconds   " +MinSeconds);
+            Debug("========>MaxSeconds   " +MaxSeconds);
+
         if(DifferenceInSec > MinSeconds && DifferenceInSec < MaxSeconds){
-            
-            var ChannelName    = ChannelsJson[ChannelPosition].NAME,
-                ChannelStation = ChannelsJson[ChannelPosition].STTN;
+
+            var ChannelName   = ChannelsJson[ChannelPosition].NAME,
+                ChannelStation = ChannelsJson[ChannelPosition].STTN,
+                ChannelNum = ChannelsJson[ChannelPosition].CHNL;
+                Debug("========>SetChannelStatistics   3   " + actualUser.id_user);
         
-            xhr = $.ajax({
+            $.ajax({
                 cache: false,
                 type: 'POST',
                 url: ServerSource + 'Core/Controllers/Statistics.php',
                 data: {
                     Option: 'Channels',
+                    idUser: actualUser.id_user,
                     MacAddress: MacAddress,
                     ChannelName: ChannelName,
                     StationNumber: ChannelStation,
+                    ChannelNum: ChannelNum,
                     LocationId: Device['LocationId'],
                     StartTime: FormatStartDate,
                     EndTime: FormatEndDate
                 }
             });
-            xhr = null;
+            Debug("========>SetChannelStatistics   4");
+
         }
     }
             
     function SetModuleStatistics(){ 
-            SM_FormatStartDate     = getDate(SM_StartDateModule);
-            SM_EndDateModule       = new Date();
-            SM_FormatEndDate       = getDate(SM_EndDateModule);
-            SM_StartDateModuleMM   = SM_StartDateModule.getTime();
-            SM_EndDateModuleMM     = SM_EndDateModule.getTime();
-            SM_DifferenceInSec     = SM_EndDateModuleMM - SM_StartDateModuleMM;
+        //     SM_FormatStartDate     = getDate(SM_StartDateModule);
+        //     SM_EndDateModule       = new Date();
+        //     SM_FormatEndDate       = getDate(SM_EndDateModule);
+        //     SM_StartDateModuleMM   = SM_StartDateModule.getTime();
+        //     SM_EndDateModuleMM     = SM_EndDateModule.getTime();
+        //     SM_DifferenceInSec     = SM_EndDateModuleMM - SM_StartDateModuleMM;
 
-        /* Valida si el tiempo de vista del modulo esta en un rango de tiempo coherente */
-        if(Math.abs(SM_DifferenceInSec) > SM_MinSeconds){
+        // /* Valida si el tiempo de vista del modulo esta en un rango de tiempo coherente */
+        // if(Math.abs(SM_DifferenceInSec) > SM_MinSeconds){
 
-            xhr = $.ajax({
-                cache: false,
-                type: 'POST',
-                url: ServerSource + 'Core/Controllers/Statistics.php',
-                data: {
-                    Option: 'Modules',
-                    CurrentModule: CurrentModule,
-                    MacAddress: MacAddress,
-                    LocationId: Device['LocationId'],
-                    StartTime: SM_FormatStartDate,
-                    EndTime: SM_FormatEndDate
-                }
-            });
-            xhr = null;
-        }
+        //     $.ajax({
+        //         cache: false,
+        //         type: 'POST',
+        //         url: ServerSource + 'Core/Controllers/Statistics.php',
+        //         data: {
+        //             Option: 'Modules',
+        //             CurrentModule: CurrentModule,
+        //             MacAddress: MacAddress,
+        //             LocationId: Device['LocationId'],
+        //             StartTime: SM_FormatStartDate,
+        //             EndTime: SM_FormatEndDate
+        //         }
+        //     });
+        // }
     }
     function updateDataModule(Module){
         //alert(Module);
@@ -186,7 +160,7 @@
 
         /* Valida si el tiempo de vista del modulo esta en un rango de tiempo coherente */
         if(Math.abs(MM_DifferenceInSec) > MM_MinSeconds){
-            xhr = $.ajax({
+            $.ajax({
                 cache: false,
                 type: 'POST',
                 url: ServerSource + 'Core/Controllers/Statistics.php',
@@ -199,16 +173,9 @@
                     EndTime: MM_FormatEndDate
                 }
             });
-            xhr = null;
         }
     }
-
-    
-// Funciones genericas
-
-/* */
-
-    function ShowStars(StarsText){
+function ShowStars(StarsText){
         var Index = 0,
             StarsNumber = 0,
             Icons = ' ';
@@ -254,14 +221,7 @@
         var nowPlusOneDayStr = nowPlusOneDay.format('MMM, DD');
         return nowPlusOneDayStr;
     }
-    
-/*
- * Funcion utilizada para obtener la hora actual en le cliente
- *                      ¡¡¡ OJO !!!
- * Este metodo solo es funcional para la EPG, ya que devielve la hora
- * en funcion de cada 30 min. Es decir, si son las 14:15 devolvera 14:00,
- * so son las 14:45 devolvera 14:30 y asi...
- */
+
     function GetCurrentHour(){
 
         var GDate = new Date();
@@ -284,11 +244,6 @@
         return Hour;
     }
     
-/*
- * Funcion de busqueda del indice de la hora actual dentro del arreglo de horas
- * Parametros:
- * hour: La hora actual al momento de consultar
- */
     function FindCurrentHour(hour){
         var Result = 0,
             i = 0;
@@ -300,22 +255,9 @@
         }
         return Result;
     }
-    
-/*
- * Funcion para comparar horas dentro de la EPG. Esta funcion se encarga de validar
- * si Hour1 es mayor o menor que Hour2.
- * Parametros:
- * Hour1: Hora inicial a comparar
- * Hour2: Hora final a comparar
- * Retornos:
- * Los valores a retornar pueden ser >, < ó =; Los cuales se utilizaran como indicadores
- * para hacer comparaciones.
- */
+ 
     function CompareHours(Hour1, Hour2){
 
-        //console.log('CompareHours -----------> Recibiendo Hour1= '+Hour1+ ' Hour2= ' +Hour2);
-        
-        
         var Result = '',
             Minut1 = Hour1.split(':')[1],
             Hours1 = Hour1.split(':')[0],
@@ -327,8 +269,6 @@
             Minut2 = parseInt(Minut2,10);
             Hours2 = parseInt(Hour2,10);
             
-            //console.log(Hours1+' - '+Minut1);
-            //console.log(Hours2+' - '+Minut2);
         if(Minut1 >= 25 && Minut1 <=29){
             Minut1 = 30;
         }
@@ -338,30 +278,22 @@
         }
 
         
-        ////Debug('CompareHours -----------> Hora1: '+Hour1.substr(0,2)+' Minuto1: '+Hour1.substr(3,2)+' Hora2: '+Hour2.substr(0,2)+' Minuto2: '+Hour2.substr(3,2));
         if(Hours1 > Hours2){
-            //console.log('CompareHours -----------> if(Hours1 > Hours2) '+Hours1+ ' > ' +Hours2);
             Result = '>';
         }else if(Hours1 < Hours2){
-            //console.log('CompareHours -----------> else if(Hours1 < Hours2) '+Hours1+ ' < ' +Hours2);
             Result = '<';
         }else if(Hours1 == Hours2 && Minut1 > Minut2){
-            //console.log('CompareHours -----------> else if(Hours1 == Hours2 && Minut1 > Minut2) '+Hours1+':'+Minut1+ ' > ' +Hours2+':'+Minut2);
             Result = '>';
         }else if(Hours1 == Hours2 && Minut1 < Minut2){
-            //console.log('CompareHours -----------> else if(Hours1 == Hours2 && Minut1 < Minut2) '+Hours1+':'+Minut1+ ' < ' +Hours2+':'+Minut2);
             Result = '<';
         }else if(Hours1 == Hours2 && Minut1 == Minut2){
-            //console.log('CompareHours -----------> else if(Hours1 == Hours2 && Minut1 == Minut2) '+Hours1+':'+Minut1+ ' = ' +Hours2+':'+Minut2);
             Result = '=';
         }
-        //console.log('Result '+ Result);
-
+ 
         Minut1 = null;
         Hours1 = null;
         Minut2 = null;
         Hours2 = null;
-
         return Result;
     }
     
@@ -423,8 +355,6 @@
             sec_min += '' + sec;
             return sec_min+ ' min';
     }
-    
-///**/
 function SecondsToTimeVod(time) {
     var hr = ~~((time/1000) / 3600),
         min = ~~((time/1000) / 60),
@@ -484,8 +414,6 @@ function ConvertToHourEpoch(time24){
         
     return pad(HourNumber,2)+''+Minutes;
 }
-
-    
     function GetWeather(){
         xhr = $.ajax({
             cache: false,
@@ -499,7 +427,6 @@ function ConvertToHourEpoch(time24){
         xhr = null;
         
     }
-    
     function SetIcon(){
         if(CurrentModule === 'Menu'){
             var skycons = new Skycons({
@@ -510,15 +437,11 @@ function ConvertToHourEpoch(time24){
                 'color': '#EEB462'
             });
         }
-
         skycons.add('WeatherIcon', ObjectWeather.Icon);
         $('#WeatherSummary').text(ObjectWeather.Summary);
         $('#WeatherFarenheit').html(String(Math.round(ObjectWeather.Temperature)));
         $('#WeatherCelsius').html(String(toCelsius(ObjectWeather.Temperature)));
-    }
-
-
-        
+    }        
     function toCelsius(f) {
         var x = (5/9) * (f-32);
         return Math.round(x);
@@ -527,7 +450,7 @@ function ConvertToHourEpoch(time24){
     var ErrorLoadGuide = 1;
     
     function SetLog(LogNumber){
-        xhr = $.ajax({
+        $.ajax({
             cache: false,
             type: 'POST',
             url: ServerSource + 'Core/Controllers/Log.php',
@@ -537,5 +460,4 @@ function ConvertToHourEpoch(time24){
                 CurrentModule: CurrentModule
             }
         });
-        xhr = null;
     }

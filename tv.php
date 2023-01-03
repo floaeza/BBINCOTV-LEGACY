@@ -7,6 +7,7 @@
     $MacAddress     = !empty($_GET['MacAddress']) ? $_GET['MacAddress'] : '';
     $CurrentModule  = !empty($_GET['CurrentModule']) ? $_GET['CurrentModule'] : '';
     $ModuleId       = !empty($_GET['ModuleId']) ? $_GET['ModuleId'] : '';
+    $prev_Direction       = !empty($_GET['prev_Direction']) ? $_GET['prev_Direction'] : '';
 
     require_once 'Core/Models/Database.php';
     require_once 'Core/Models/Templates.php';
@@ -93,7 +94,10 @@
             // Aigna variable general del modulo
             $Header->set('CurrentModule', $CurrentModule);
             $Header->set('ModuleId', $ModuleId);
+            $Header->set('prev_Direction', $prev_Direction);
             $Header->set('IndexLogo', $Libraries['LogosPath'].$ConfigData->getConfigByName('IndexLogo'));
+            
+
 
         // Imprime en HTML todo lo asignado en la cabecera
         echo $Header->output();
