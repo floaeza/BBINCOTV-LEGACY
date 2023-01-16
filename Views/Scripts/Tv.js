@@ -1500,12 +1500,14 @@ function getPopularChannels(){
             LocationId: Device['LocationId'],
         },
         success: function (response){
+            console.log(response);
             var popular = $.parseJSON(response);
             setPopularChannels(popular);
         }
     });
 }
 function setPopularChannels(popular){
+    console.log(popular.length);
     if(popular.length>4){
         var div, logo, title;
         for(var i=0; i<5; i++){

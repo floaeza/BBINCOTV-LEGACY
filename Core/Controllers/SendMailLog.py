@@ -9,7 +9,7 @@ remitente = 'esalazar@bbinco.com'
 destinatarios = ['esalazar@bbinco.com','mauriciob@delmarloscabos.com', 'desarrollo@bbinco.com','oguzman@bbinco.com']
 asunto = 'Log Infomir 322 - Multicast'
 cuerpo = 'Buenas tardes. \nLes comparto el log resultante hasta el momento.\n\n\n'
-ruta_adjunto = '/var/www/html/BBINCO/TV1/Core/Controllers/logInformir.txt'
+ruta_adjunto = '/var/www/html/BBINCO/TV2/Core/Controllers/logInformir.txt'
 nombre_adjunto = 'logInformir.txt'
 
 # Creamos el objeto mensaje

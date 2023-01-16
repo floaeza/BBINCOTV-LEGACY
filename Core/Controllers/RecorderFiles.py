@@ -33,6 +33,6 @@ for parametro in FilesData:
     pos += 1
 
 payload = {'Option': 'UpdateProgramOperaPython', 'File': '/media/'+file[3]+"/"+file[4], 'Cantidad':FilesData[0], 'OperationId':'4', 'ActiveRecording': 'false'}
-Devices = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/Recorder.php', data=payload)
+Devices = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/Recorder.php', data=payload)
 #IDF = json.loads(Devices.content)
 #print(IDF)

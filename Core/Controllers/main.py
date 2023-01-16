@@ -11,24 +11,24 @@ import requests
 from os import listdir
 from os.path import isfile, isdir
 import os, fnmatch
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
-from firebase_admin import storage
+# import firebase_admin
+# from firebase_admin import credentials
+# from firebase_admin import firestore
+# from firebase_admin import storage
 
-iplocal = '10.30.0.17'
+iplocal = '10.0.3.241'
 today = datetime.today()
 today = today
 listDays = ["", "", "", "", "", "", "","", "", "", ""]
 
-cred = credentials.Certificate('/var/www/config/soportes-bbinco-5f32cdb2f0a4.json')
-firebase_admin.initialize_app(cred, { 'storageBucket': 'soportes-bbinco.appspot.com' })
-bucket = storage.bucket()
-db = firestore.client()
-Guidesdb = db.collection(u'VDM').document(u'Guias')
+# cred = credentials.Certificate('/var/www/config/soportes-bbinco-5f32cdb2f0a4.json')
+# firebase_admin.initialize_app(cred, { 'storageBucket': 'soportes-bbinco.appspot.com' })
+# bucket = storage.bucket()
+# db = firestore.client()
+# Guidesdb = db.collection(u'VDM').document(u'Guias')
 
 payload = {'Option': 'GetIdentifier'}
-Identifier = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+Identifier = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
 IDF = json.loads(Identifier.content)
 IDF = IDF[0]
 
@@ -43,7 +43,7 @@ def find(pattern, path):
 def ls1(path):    
     return [obj for obj in listdir(path) if isfile(path + obj)]
 
-files = ls1('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/' + IDF['IDF']+'/')
+files = ls1('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/' + IDF['IDF']+'/')
 
 DaysToDelete = datetime.strptime(today.strftime('%Y%m%d'),'%Y%m%d')
 DaysToDelete = DaysToDelete - timedelta(days=1)
@@ -53,7 +53,7 @@ for i in range(10):
     #print(archivo)
     for archivo in files:
         if ('epg_'+DaysToDelete.strftime('%Y%m%d')+'_') in str(archivo):
-            file_path = '/var/www/html/BBINCO/TV1/Core/Controllers/Epg/'+IDF['IDF']+'/'+archivo
+            file_path = '/var/www/html/BBINCO/TV2/Core/Controllers/Epg/'+IDF['IDF']+'/'+archivo
             os.unlink(file_path)
             print(archivo)
         else:
@@ -64,7 +64,7 @@ for n in range(7):
 
 ####Numero de paquetes + 1#########
 payload = {'Option': 'GetAllPackages'}
-Pack = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/Packages.php', data=payload)
+Pack = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/Packages.php', data=payload)
 Packages = json.loads(Pack.content)
 
 def start(day, pos):
@@ -74,17 +74,17 @@ def start(day, pos):
         print("Empezo")
         
         payload = {'Option': 'GetVersion'}
-        Version = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+        Version = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
         Ver = json.loads(Version.content)
         Ver = Ver[0]
         
         payload = {'Option': 'GetOffsetZone'}
-        Zone = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+        Zone = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
         OffSetZone = json.loads(Zone.content)
         OffSetZone = OffSetZone[0]
 
         payload = {'Option': 'GetGatoTime'}
-        GTime = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+        GTime = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
         GatoTime = json.loads(GTime.content)
         GatoTime = GatoTime[0]
         for Package in Packages:
@@ -98,7 +98,7 @@ def start(day, pos):
 
 
             payload = {'Option': 'GetModulesBypackage', 'PackageID': int(Package["id_paquete"])}
-            x = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+            x = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
             channels = json.loads(x.content)
             for channel in channels:
                 dataProgradm = {}
@@ -142,12 +142,12 @@ def start(day, pos):
             ############################################# PROGAMACION #############################################
             #######################################################################################################
             payload = {'Option': 'GetChannelsInfoBypackage', 'PackageID': int(Package["id_paquete"])}
-            x = requests.post('http://'+iplocal+'/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+            x = requests.post('http://'+iplocal+'/BBINCO/TV2/Core/Controllers/PY.php', data=payload)
             channels = json.loads(x.content)
             #print(channels)
-            Guidesdb.update({
-                'archivo': 'epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json'
-            })
+            # Guidesdb.update({
+            #     'archivo': 'epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json'
+            # })
             a = 0
             for channel in channels:
                 a = a + 1
@@ -714,16 +714,16 @@ def start(day, pos):
                             contadorCanal = contadorCanal + 1
 
             data["C_Length"] = contadorCanal
-            with open('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'w', encoding='ascii') as file:
+            with open('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'w', encoding='ascii') as file:
                 json.dump(data, file, indent=4)
 
-            with open('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'r') as file:
+            with open('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'r') as file:
                 filedata = file.read()
 
             filedata = filedata.replace('[', '').replace(']', '')
-            with open('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'w') as file:
+            with open('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json', 'w') as file:
                 file.write(filedata)
-                print('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json ', 'CREADO')
+                print('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/'+IDF['IDF']+'/epg_'+day.strftime("%Y%m%d") + '_' + str(Package["id_paquete"]) + '.json ', 'CREADO')
 
             data.clear()
     except:
@@ -742,20 +742,20 @@ def deleteline(slinea, day):
 for pos in range(len(listDays)):
     start(listDays[pos], pos)
 
-Guidesdb.update({
-    'archivo': ''
-})
-Guidesdb.update({
-    'generar': 'False'
-})
-Guidesdb.update({
-    'porcentajeGenerado': '0'
-})
+# Guidesdb.update({
+#     'archivo': ''
+# })
+# Guidesdb.update({
+#     'generar': 'False'
+# })
+# Guidesdb.update({
+#     'porcentajeGenerado': '0'
+# })
 def CheckDaysGuide():
     today = datetime.now().strftime('%Y%m%d')
     today = datetime.strptime(today, '%Y%m%d')
     
-    files = sorted(find('*.json', '/var/www/html/BBINCO/TV1/Core/Controllers/Epg/VDM/'))
+    files = sorted(find('*.json', '/var/www/html/BBINCO/TV2/Core/Controllers/Epg/VDM/'))
     
     firstday = str(files[0]).split("/")[-1].split("_")[1]
     firstday = datetime.strptime(firstday, '%Y%m%d')
@@ -764,20 +764,20 @@ def CheckDaysGuide():
     lastday = datetime.strptime(lastday, '%Y%m%d')
     days = lastday - today
     
-    Guidesdb.update({
-        'dias': str(days.days)
-    })
-    Guidesdb.update({
-        'ultimo': str(lastday.strftime('%Y%m%d'))
-    })
-    Guidesdb.update({
-        'primero': str(firstday.strftime('%Y%m%d'))
-    })
+    # Guidesdb.update({
+    #     'dias': str(days.days)
+    # })
+    # Guidesdb.update({
+    #     'ultimo': str(lastday.strftime('%Y%m%d'))
+    # })
+    # Guidesdb.update({
+    #     'primero': str(firstday.strftime('%Y%m%d'))
+    # })
 CheckDaysGuide()
 
-files = ls1('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/' + IDF['IDF']+'/')
+files = ls1('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/' + IDF['IDF']+'/')
 for archivo in files:
     if archivo != "VDM.zip":
         bucket = storage.bucket()
         blob = bucket.blob('VDM/' + archivo)
-        blob.upload_from_filename('/var/www/html/BBINCO/TV1/Core/Controllers/Epg/' + IDF['IDF']+'/'+archivo)
+        blob.upload_from_filename('/var/www/html/BBINCO/TV2/Core/Controllers/Epg/' + IDF['IDF']+'/'+archivo)

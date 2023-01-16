@@ -47,7 +47,7 @@ class Statistics extends Database {
                         "canales ON canales.id_estacion = estaciones.id_estacion", 
                         "paquete_canal ON paquete_canal.id_canal = canales.id_canal", 
                         "",
-                        "paquete_canal.id_paquete = 2 AND estadisticas_canal.id_locacion = 234",
+                        "paquete_canal.id_paquete = 2 AND estadisticas_canal.id_locacion = ".$idLoacion,
                         "",
                         "nombre_canal, paquete_canal.numero_canal",
                         "segundos DESC");

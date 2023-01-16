@@ -1,6 +1,83 @@
 <!--Contenido canal digital -->
 <img id='ImageDigitalChannel'>
 <div id='DigitalChannel'></div>
+
+
+
+<div id='InteractiveChannel'>
+    <div id="keyboard">
+            <div id="keyboard1">
+                <label id="1" class="buttonSelected">Q</label>
+                <label id="2" class="button">W</label>
+                <label id="3" class="button">E</label>
+                <label id="4" class="button">R</label>
+                <label id="5" class="button">T</label>
+                <label id="6" class="button">Y</label>
+                <label id="7" class="button">U</label>
+                <label id="8" class="button">I</label>
+                <label id="9" class="button">O</label>
+                <label id="10" class="button">P</label>
+            </div>
+            <div id="keyboard2">
+                <label id="11" class="button">A</label>
+                <label id="12" class="button">S</label>
+                <label id="13" class="button">D</label>
+                <label id="14" class="button">F</label>
+                <label id="15" class="button">G</label>
+                <label id="16" class="button">H</label>
+                <label id="17" class="button">J</label>
+                <label id="18" class="button">K</label>
+                <label id="19" class="button">L</label>
+            </div>
+            <div id="keyboard3">
+                <label id="20" class="button">Z</label>
+                <label id="21" class="button">X</label>
+                <label id="22" class="button">C</label>
+                <label id="23" class="button">V</label>
+                <label id="24" class="button">B</label>
+                <label id="25" class="button">N</label>
+                <label id="26" class="button">M</label>
+                <label id="27" class="button"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 14L14 12M14 12L16 10M14 12L12 10M14 12L16 14M3 12L9.41421 18.4142C9.78929 18.7893 10.298 19 10.8284 19H19C20.1046 19 21 18.1046 21 17V7C21 5.89543 20.1046 5 19 5H10.8284C10.298 5 9.78929 5.21071 9.41421 5.58579L3 12Z" stroke="#3087ba" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></label>
+            </div>
+            <div id="keyboard4">
+                <label id="28" class="buttonSpace">SPACE</label>
+                <label id="29" class="buttonSelect">OK</label>
+            </div>  
+        </div>
+    <div id='SelectUsers'>
+        <!--<div id='InteractiveText'>Who's watching?</div>-->
+        <div id='InteractiveUsers'></div>
+    </div>
+    <div id='InteractiveAddUser'>
+        <div id='AddText'></div>
+    </div>
+    <div id="InteractiveChannelMain">
+        <div id='InteractiveHeader'>
+            <img id='InteractiveLogo' src="Media/Logos/CHL/logo.png"></img>
+            <div id='OptionsHeader'>
+                <div id='InteractiveOptionSearch'>Search</div>
+                <div id='InteractiveSearchBox'></div>
+                <div id='InteractiveOptionHome'>Home</div>
+                <div id='InteractiveOptionTV'>TV</div>
+            </div>
+            <span id='InteractiveHeaderIcon'></span>    
+        </div>
+
+        <div id="InteractivePopularChannel">
+            <div id='InteractivePopularChannelTittle'>Most Viewed Channels</div>
+            <div id='InteractivePopularChannelImg'></div>
+        </div>
+        <div id="InteractiveLastRecords">
+            <div id='InteractiveLastRecordsTittle'>Last Records</div>
+            <div id='InteractiveLastRecordsImg'></div>
+        </div>
+    </div>
+    <div id="showResults">
+    </div>
+</div>
+
+
+
 <iframe id='ContentFrame' src=''></iframe>
 
 

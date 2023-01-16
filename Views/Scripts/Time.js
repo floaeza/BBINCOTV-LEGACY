@@ -19,7 +19,7 @@ if (window.tizen !== undefined) {
     $.ajax({
         cache: false,
         type: 'POST',
-        url: 'http://'+ServerIp+'/BBINCO/TV1/Core/Models/Time.php',
+        url: 'http://'+ServerIp+'/BBINCO/TV2/Core/Models/Time.php',
         async : false,
         success: function (response) {
             var Today = $.parseJSON(response),

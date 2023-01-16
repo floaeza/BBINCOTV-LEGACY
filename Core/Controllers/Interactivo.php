@@ -36,7 +36,7 @@
         case 'searchProgram':
             $date = date('Ymd');
             $programName = !empty($_POST['programName']) ? $_POST['programName'] : '';
-            $string = file_get_contents("/var/www/html/BBINCO/TV1/Core/Controllers/Epg/VDM/epg_".$date."_2.json");
+            $string = file_get_contents("/var/www/html/BBINCO/TV2/Core/Controllers/Epg/VDM/epg_".$date."_2.json");
             $json_a = json_decode($string, true);
             
             

@@ -114,18 +114,18 @@
                 'valor_parametro' => $PackageId,   
                 ); 
             $PackagesData->updateParameter($NewPackage);
-            // $resultado = shell_exec('cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 DebugTr.py');   
+            // $resultado = shell_exec('cd /var/www/html/BBINCO/TV2/Core/Controllers && python3 DebugTr.py');   
             // $Result= "$resultado\n"; 
             /* Añade redirección, por lo que podemos obtener stderr. */
-            // $gestor = popen('cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 DebugTr.py', 'r');
+            // $gestor = popen('cd /var/www/html/BBINCO/TV2/Core/Controllers && python3 DebugTr.py', 'r');
             // $leer = fread($gestor, 2096);
             // $Result = $leer;
             // pclose($gestor);
-            $command = escapeshellcmd('/var/www/html/BBINCO/TV1/Core/Controllers/DebugTr.py');
+            $command = escapeshellcmd('/var/www/html/BBINCO/TV2/Core/Controllers/DebugTr.py');
             $output = shell_exec($command);
             echo $output;
-            // pclose(popen("cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 DebugTr.py'","r"));
-            // $your_command = 'cd /var/www/html/BBINCO/TV1/Core/Controllers && python3 DebugTr.py';
+            // pclose(popen("cd /var/www/html/BBINCO/TV2/Core/Controllers && python3 DebugTr.py'","r"));
+            // $your_command = 'cd /var/www/html/BBINCO/TV2/Core/Controllers && python3 DebugTr.py';
             // shell_exec( $your_command . "> /dev/null 2>/dev/null &" );
             break;
         case 'InfomirGrabador':
