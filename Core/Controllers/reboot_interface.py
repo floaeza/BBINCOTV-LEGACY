@@ -9,7 +9,7 @@ t=xtelnet.session()
 hora = datetime.now().strftime('%H')
 print(int(hora))
 payload = {'Option': 'GetAminos'}
-Devices = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=payload)
+Devices = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=payload)
 IDF = json.loads(Devices.content)
 print(IDF)
 for ips in IDF:
@@ -18,7 +18,7 @@ for ips in IDF:
         #ip = '10.30.12.134'
         mac = ips['mac_address']
         payload = {'Option': 'SetKillProcess', 'MacAddress':mac, 'Kill':1}
-        Devices = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=payload)
+        Devices = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=payload)
         t.connect(ip, username='root',password='root2root',p=23,timeout=8)
         if int(hora) > 16:
             output1=t.execute('ps')

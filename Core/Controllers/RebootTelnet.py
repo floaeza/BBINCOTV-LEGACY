@@ -11,7 +11,7 @@ import base64
 t=xtelnet.session()
 
 payload = {'Option': 'GetAminosToReboot'}
-Devices = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=payload)
+Devices = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=payload)
 IDF = json.loads(Devices.content)
 print(IDF)
 
@@ -63,13 +63,13 @@ for ips in IDF:
             stderr.close()
             client.close()
         info = {'Option': 'updateDeviceReboot', 'MacAddress': ips['mac_address'],'Reboot': 0}
-        req = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=info)            
+        req = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=info)            
     except:
         info = {'Option': 'updateDeviceReboot', 'MacAddress': ips['mac_address'],'Reboot': 477}
-        req = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=info) 
+        req = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=info) 
         continue
 info = {'Option': 'UpdateParameter', 'RebootStatus': 1}
-req = requests.post('http://10.0.3.241/BBINCO/TV2/Core/Controllers/DevicesStatus.php', data=info)
+req = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/DevicesStatus.php', data=info)
 
 
 

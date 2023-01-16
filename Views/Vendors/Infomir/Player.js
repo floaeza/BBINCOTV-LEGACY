@@ -344,7 +344,7 @@
         
         // if((deviceModer !== "MAG424" && deviceModer !=="MAG524") && macDevice != '00:1a:79:6d:d0:7a' && macDevice != '00:1a:79:6d:d1:03' && macDevice != '00:1a:79:6d:d1:a3' && macDevice != '00:1a:79:6d:c6:ff' && macDevice != '00:1a:79:6d:d0:7a' && macDevice != '00:1a:79:72:cb:f7' && macDevice != '00:1a:79:72:4a:9d' && macDevice != '00:1a:79:72:cb:99' && macDevice != '00:1a:79:74:b7:66' && macDevice != '00:1a:79:72:c7:13' && macDevice != '00:1a:79:72:cc:79' && macDevice != '00:1a:79:72:cb:de' && macDevice != '00:1a:79:72:cb:e7' && macDevice != '00:1a:79:70:06:f1'){
         //     var source2 = filename.split('/');
-        //     filename = "http://10.0.3.241/INFOMIR_RECORDINGS/" + source2[4]; 
+        //     filename = "http://10.30.0.17/INFOMIR_RECORDINGS/" + source2[4]; 
         // }
         RecordsPlaylist = [filename];
         durationFull = parseFloat(durationParts) * 60;
