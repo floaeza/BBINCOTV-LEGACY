@@ -50,6 +50,9 @@ function HandleVideo(event_type){
         EventString = 'STATUS_END_OF_STREAM';
 
         if(CurrentModule === 'Tv'){
+            SpeedText = '';
+            OptionText = 'play';
+            UpdateBarStatus();
             if(PlayingRecording === true) {
                 // Termino reproduccion grabacion
                 OpenRecordPlayOptions();
@@ -63,6 +66,10 @@ function HandleVideo(event_type){
         if(Executing === false){
             UpdateQuickInfoDevice();
         }
+    }else if (event_type === 'EN_VIDEOEVENT_SOS') {
+        SpeedText = '';
+        OptionText = 'play';
+        UpdateBarStatus();
     }
 }
 

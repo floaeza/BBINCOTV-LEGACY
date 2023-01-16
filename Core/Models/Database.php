@@ -26,7 +26,7 @@ class Database {
 
             $CamDir = getcwd();
             chdir ('/var/www/config');
-            $config = parse_ini_file("configBBTV_207.ini");
+            $config = parse_ini_file("configBBTV.ini");
             chdir($CamDir);
 
             $this->conexion = new mysqli($config["host"],$config["username"],$config["password"],$config["dbname"]);
@@ -464,7 +464,7 @@ public function update($tabla,$parametro=array(),$where){
     private function tablaExiste($tabla){
         $CamDir = getcwd();
         chdir ('/var/www/config');
-        $config = parse_ini_file("configBBTV_207.ini");
+        $config = parse_ini_file("configBBTV.ini");
         chdir($CamDir);
 
         $tablasbd = $this->conexion->query('SHOW TABLES FROM '.$config["dbname"].' LIKE "'.$tabla.'"');

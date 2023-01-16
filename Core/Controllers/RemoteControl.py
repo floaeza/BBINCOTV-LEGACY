@@ -17,7 +17,7 @@ stbDic = []
 # users_ref = db.collection(u'PaquetesVPL')
 # docs = users_ref.stream()
 payload = {'Option': 'GetIdentifier'}
-Identifier = requests.post('http://10.0.3.9/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
+Identifier = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
 #Identifier = requests.post('http://bbinco.fortiddns.com:669/BBINCO/TV1/Core/Controllers/PY.php', data=payload)
 IDF = json.loads(Identifier.content)
 IDF = IDF[0]
@@ -49,7 +49,7 @@ def on_snapshot(col_snapshot, changes, read_time):
             stb = stbb.to_dict()
             if stb['status'] == 'pending':
                 payload = {'Option': 'InsertControl', 'mac_address': stb['mac_address'], 'guest':stb['guest'], 'IDGuest':stb['IDGuest'], 'orden':stb['order'], 'status':'pendingServer'}
-                var = requests.post('http://10.0.3.9/BBINCO/TV1/Core/Controllers/Firebase.php', data=payload)
+                var = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/Firebase.php', data=payload)
                 update = db.collection(identificador).document(f'{change.document.id}')
                 update.update({u'status': 'pendingServer'})
                 

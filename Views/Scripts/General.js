@@ -349,7 +349,7 @@ function ShowStars(StarsText){
         
             //ShowRecorderMessage();
             if (hr > 0) {
-               sec_min += '' + hr + 'h ' + (min < 10 ? '0' : '');
+               sec_min += '' + hr + ':' + (min < 10 ? '0' : '');
             }
             sec_min += '' + min + ':' + (sec < 10 ? '0' : '');
             sec_min += '' + sec;

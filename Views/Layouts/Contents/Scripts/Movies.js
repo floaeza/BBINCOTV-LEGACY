@@ -478,7 +478,7 @@ function setSeasonFocus(Direction){
         playingMovie = true;
         currentContentType = "Serie";
         PlayingPanel.style.display = "block";
-        actualSources = "http://10.0.3.9/vod/srs/"+currentSerie['FLDR']+"T"+seasonFocused+"/"+chapterFocused;
+        actualSources = "http://10.30.0.17/vod/srs/"+currentSerie['FLDR']+"T"+seasonFocused+"/"+chapterFocused;
         showPlayingPanel();
         PlayMovie(actualSources + ".mp4", 0);
     }
@@ -563,7 +563,7 @@ function selectMovie(){
         visiblePlayingPanel = true;
         playingMovie = true;
         currentContentType = "Movie";
-        actualSources = "http://10.0.3.9/vod/mvs/"+List[moviePosition]['FLDR']+List[moviePosition]['FILE'];
+        actualSources = "http://10.30.0.17/vod/mvs/"+List[moviePosition]['FLDR']+List[moviePosition]['FILE'];
         showPlayingPanel();
         PlayMovie(actualSources + ".mp4", 0);
     }
@@ -730,7 +730,7 @@ function selectSuggestedMovie(){
         visiblePlayingPanel = true;
         playingMovie = true;
         currentContentType = "Movie";
-        actualSources = "http://10.0.3.9/vod/mvs/"+currentSuggestedMovie['FLDR']+currentSuggestedMovie['FILE'];
+        actualSources = "http://10.30.0.17/vod/mvs/"+currentSuggestedMovie['FLDR']+currentSuggestedMovie['FILE'];
         showPlayingPanel();
         PlayMovie(actualSources + ".mp4", 0);
     }
@@ -824,7 +824,7 @@ function endMovie(){
             titlePlaying.innerText = "Chapter "+currentChapters[chapterFocused-1]['NMBR']+": "+ currentChapters[chapterFocused-1]['TTLE'];
             ratingPlaying.innerHTML = currentChapters[chapterFocused-1]['SCOR'] + " <span class=\"fa fa-star\"></span>";
             StopVideo();
-            actualSources = "http://10.0.3.9/vod/srs/"+currentSerie['FLDR']+"T"+seasonFocused+"/"+chapterFocused;
+            actualSources = "http://10.30.0.17/vod/srs/"+currentSerie['FLDR']+"T"+seasonFocused+"/"+chapterFocused;
             showPlayingPanel();
             if(activatedSubtitles){
                 PlayMovie(actualSources + "_sub.mp4", 0);

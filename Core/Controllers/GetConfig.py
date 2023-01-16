@@ -13,7 +13,7 @@ t=xtelnet.session()
 for locaciones in lines:
     locaciones=locaciones.strip()
     payload = {'Option': 'InsertLocation', 'codigo_locacion': locaciones, 'descripcion_locacion': '', 'codigo_miembro': locaciones, 'epg': '1', 'menu': '1', 'mensajes': '0', 'id_paquete': '1', 'id_proyecto': '1', 'id_modulo': '2'}
-    loc = requests.post('http://10.0.3.9/BBINCO/TV1/Core/Controllers/Location.php', data=payload)
+    loc = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/Location.php', data=payload)
     #IDF = json.loads(loc.content)
     #print(IDF)
     

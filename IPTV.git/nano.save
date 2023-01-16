@@ -1,2 +1,2 @@
 #!/bin/sh
-GIT_WORK_TREE=/home/root/10.0.3.9//public-folder git checkout -f
+GIT_WORK_TREE=/home/root/10.30.0.17//public-folder git checkout -f

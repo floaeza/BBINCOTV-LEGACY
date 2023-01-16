@@ -268,11 +268,12 @@ var CheckInfo = 0;
                 break;
                 case REMOTE_GUIDE:
                     if(CurrentModule === 'Tv'  && showInfoDevi == false){
-                        
+                        Debug('GUIA OPNENM')
                         TvGuide();
                     }
                 break;
                 case REMOTE_MENU:
+                    
                     if(timeMenu == 0 &&  showInfoDevi == false && PlayingRecording == false ){
                         timeMenu = 1;
                         setTimeout(function(){

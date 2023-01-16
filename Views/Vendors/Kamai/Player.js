@@ -271,8 +271,10 @@
  * ****************************************************************************/
 
     function MinimizeTV(){
-            Video.setVideoPosition(160, 65, WindowMinWidth, WindowMinHeight, 0);
-    }
+            // Video.setVideoPosition(160, 65, WindowMinWidth, WindowMinHeight, 0);
+            // Video.setVideoPosition(TvPositionLeft, TvPositionTop, WindowMinWidth, WindowMinHeight, 0);
+            Video.setVideoPosition(TvPositionLeft, 1, WindowMinWidth, WindowMinHeight, 0);   
+        }
 
 /* *****************************************************************************
  * Reinicia el dispositivo
@@ -331,27 +333,26 @@
 
         if(PlayingRecording === true || PlayingVod === true){
             PositionInfo = Video.getPlayPositionInfo();
-
             DurationAsset = parseInt(Duration,10) * 60;
-            Debug('>>>>>> DurationAsset: '+DurationAsset);
-            PositionAsset = Math.round((PositionInfo.playPosition)/1000);
+            // Debug('>>>>>> DurationAsset: '+DurationAsset);
+            PositionAsset = Math.round((Video.getPlayPosition())/1000);
+            Debug('--------------------->POSITION INFO VIDEO'+PositionAsset);
 
-            Debug('>>>>>> PositionAsset: '+PositionAsset);
+            // Debug('>>>>>> PositionAsset: '+PositionAsset);
             
             PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
 
-            Debug('PercentagePosition: '+PercentagePosition);
+            // Debug('PercentagePosition: '+PercentagePosition);
         } else if (PauseLive == true){
-            
             DurationAsset = Math.round((Video.getDuration())/1000);
                 //DurationAsset = Video.getDuration();
                 //DurationAsset = parseInt(Duration,10) * 60;
-                Debug('>>>>>> DurationAsset: '+DurationAsset);
+                //Debug('>>>>>> DurationAsset: '+DurationAsset);
                 PositionAsset = Math.round((Video.getPlayPosition())/1000);
-                Debug('>>>>>> PositionAsset: '+PositionAsset);
+                // Debug('>>>>>> PositionAsset: '+PositionAsset);
                 // if(DurationAsset !== 0){
                     PercentagePosition = Math.round((PositionAsset * 100) / DurationAsset);
-                    Debug('>>>>>> PercentagePosition: '+PercentagePosition);
+                    // Debug('>>>>>> PercentagePosition: '+PercentagePosition);
                     //DurationAsset = DurationAsset * 2;
                 // }
             
