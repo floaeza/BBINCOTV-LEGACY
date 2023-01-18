@@ -58,19 +58,21 @@ function Back(){
 }
 
 function Menu(){
-    Debug('--------------------------MENU() CurrentModule:: ' +CurrentModule + ' DEVICE[SERVICES][ACTIVEMENU] '+ Device['Services']['ActiveMenu']);
-    if(CurrentModule !== 'Menu' && Device['Services']['ActiveMenu'] === true){
-        //alert("Menu");
-        Debug('----------- GOPAGE');
-        //if(CurrentModule == 'Tv'){
-           //document.getElementById('loadingTV').style.display = "block"; 
-        //}
-        
-        //GoPage('menu.php', Device['MenuId'], 'Menu');
-        GoPage('menu.php', Device['MenuId'], 'Menu');
-        
+    if(haveInteractiveChannel == true && CurrentModule === 'Tv'){
+        var CurrentChannel   = parseInt(ChannelsJson[ChannelPosition].CHNL, 10);
+        var PositionToChange = FindChannelPosition(numberInteractiveChannel);
+        ClosePvr();
+        if(ChannelToChange !== CurrentChannel){
+            LastChannelPosition = ChannelPosition;
+            ChannelPosition = PositionToChange;
+            ChannelToChange = 0;
+            clearTimeout(NumericChangeTimer);
+            SetChannel('');
+        }
+    }else if(CurrentModule !== 'Menu' && Device['Services']['ActiveMenu'] === true){
+        StopVideo();
+        GoPage('menu.php', Device['MenuId'], 'Menu');       
     } else if(CurrentModule === 'Tv' && Device['Services']['ActiveMenu'] === false){
-        Debug('----------- TV RECORDER');
         TvRecorder();
     }
 }

@@ -7,7 +7,8 @@
 
     // Variables globales
     var PlayingChannel  = false,
-        PauseLive       = false;
+        PauseLive       = false,
+        pltActive = false;
 
     var WindowMaxWidth  = 0,
         WindowMaxHeight = 0,

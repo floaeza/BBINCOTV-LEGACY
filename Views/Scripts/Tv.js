@@ -1336,7 +1336,7 @@ function OkInteractive(){
                     GetPvrInfo();
                     
                     CurrentModule = 'Tv';
-                    
+                    console.log(document.getElementsByClassName("lastRecord"));
                     IndexRecordedFocus  = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[1]);
                     IndexRecordedProgFocus   = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[2]);
                     if((RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].operacion !=='4') || RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].active === '1'){

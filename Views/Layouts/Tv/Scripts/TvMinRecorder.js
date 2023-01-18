@@ -291,20 +291,20 @@ function ShowRecorderMessage(Message){
         RecorderMessage.textContent = Message;
     }
 }
-// function ShowNoFoundMessage(Message){
-//     if(RecorderMessageActive === false){
-//         // Quita las lineas de los programas para que no se vean encima del cuadro de opciones
-//         var AllPrograms = document.getElementsByClassName('Program'),
-//             IndexProgram = 0;
-//         for(IndexProgram = 0; IndexProgram < AllPrograms.length; IndexProgram++) {
-//             AllPrograms[IndexProgram].style.outline = 'none'; //1px solid rgb(0, 68, 114)
-//         }
-//         RecorderMessageActive = true;
-//         RecorderMessage.textContent = '';
-//         PanelMessage.style.display = 'inline';
-//         RecorderMessage.textContent = Message;
-//     }
-// }
+ function ShowNoFoundMessage(Message){
+     if(RecorderMessageActive === false){
+         // Quita las lineas de los programas para que no se vean encima del cuadro de opciones
+         var AllPrograms = document.getElementsByClassName('Program'),
+             IndexProgram = 0;
+         for(IndexProgram = 0; IndexProgram < AllPrograms.length; IndexProgram++) {
+             AllPrograms[IndexProgram].style.outline = 'none'; //1px solid rgb(0, 68, 114)
+         }
+         RecorderMessageActive = true;
+         RecorderMessage.textContent = '';
+         PanelMessage.style.display = 'inline';
+         RecorderMessage.textContent = Message;
+     }
+ }
 function ShowRecorderMessageConfirm(){
     if(RecorderMessageConfirmActive === false){
         // Quita las lineas de los programas para que no se vean encima del cuadro de opciones
@@ -318,11 +318,11 @@ function ShowRecorderMessageConfirm(){
     }
 }
 
-// function HideNoFoundMessage(){
-//     RecorderMessageActive = false;
-//     RecorderMessage.textContent = '';
-//     PanelMessage.style.display = 'none';
-// }
+ function HideNoFoundMessage(){
+     RecorderMessageActive = false;
+     RecorderMessage.textContent = '';
+     PanelMessage.style.display = 'none';
+ }
 function HideRecorderMessage(){
         RecorderMessageActive = false;
         RecorderMessage.textContent = '';
