@@ -611,6 +611,8 @@ div#InteractivePopularChannelTittle{
     width: 18%;
     background: #212121;
     border-radius: 5px;  
+    margin-left: 1%;
+    margin-right: 1%;
     height: 100%;
 }
 .ChannelLogo {
@@ -630,6 +632,8 @@ div#InteractivePopularChannelTittle{
     background: #212121;
     border-radius: 5px;  
     height: 97%; 
+    margin-left: 1%;
+    margin-right: 1%;
 }
 div#showResults{
     position: absolute;
@@ -642,6 +646,7 @@ div#showResults{
     background: black;
     border: white solid 1px;
     z-index: 20;
+    
 }
 .Result{
     position: relative;
@@ -696,8 +701,10 @@ div#InteractivePopularChannelImg{
     height: 78%;
     display: -webkit-box;
     display: -webkit-flex;
-    display: -ms-flexbox;   
-    justify-content: space-around;
+    display: -ms-flexbox;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: justify;
+    /* justify-content: space-evenly; */
 }
 div#InteractiveLastRecordsImg{
     width: 100%;
@@ -715,8 +722,8 @@ div#keyboard{
     bottom: 25%;
     border-radius: 0.8em;
     height: 30%;
-    width: 90%;
-    right: 5%;
+    width: 60%;
+    right: 20%;
     z-index: 10;
     background: #353535;
 }
@@ -726,13 +733,14 @@ div#keyboard1{
     width: 100%;
     height: 16%;
     display: flex;
+    margin-left: 1%;
     vertical-align: middle;
     justify-content: space-around;
 }
 div#keyboard2{
     position: relative;
     top: 15%;
-    left: 5%;
+    left: 10%;
     width: 90%;
     height: 16%;
     display: flex;
@@ -742,7 +750,7 @@ div#keyboard3{
     position: relative;
     top: 22%;
     width: 80%;
-    left: 10%;
+    left: 17%;
     height: 16%;
     display: flex;
     vertical-align: middle;
@@ -752,7 +760,7 @@ div#keyboard4{
     position: relative;
     top: 29%;
     left: 7.5%;
-    width: 85%;
+    width: 100%;
     height: 15%;
     display: flex;
     vertical-align: middle;
@@ -766,10 +774,11 @@ div#keyboard4{
     border-width: 1px;
     border-color: #3087ba;
     line-height: 4vh;
-    width: 7.5%;
+    width: 7.28%;
     font-size: 2.2vh;
     display: inline-block;
-    
+    margin-right: 1%;
+    margin-left: 1%;
     text-align: center;
 }
 .buttonSelected{
@@ -781,6 +790,8 @@ div#keyboard4{
     border-color: #3087ba;
     line-height: 4vh;
     width: 7.5%;
+    margin-right: 1%;
+    margin-left: 1%;
     font-size: 2.2vh;
     display: inline-block;
     text-align: center;
@@ -788,14 +799,13 @@ div#keyboard4{
 .buttonSpace{
     background: #434343;
     color: #3087ba;
-    border-radius: 0.2em;
+    border-radius: 0.3em;
     width: 60%;
     font-size: 2.2vh;
     line-height: 4vh;
     border-style: solid;
     border-width: 1px;
     border-color: #3087ba;
-
     text-align: center;
 }
 .buttonSearch{

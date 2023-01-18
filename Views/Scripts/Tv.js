@@ -1197,7 +1197,7 @@ function RightInteractive(){
                     }
                     break;
                 case 2:
-                    if(focusedLastRecord < 4){
+                    if(focusedLastRecord < document.getElementsByClassName("lastRecord").length-1 ){
                         document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.remove("focusedItem");
                         focusedLastRecord++;
                         document.getElementsByClassName("lastRecord")[focusedLastRecord].classList.add("focusedItem");        

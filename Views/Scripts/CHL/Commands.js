@@ -52,8 +52,8 @@ function Back(){
         VodClose();
     } else if(CurrentModule === 'Moods'){
         MoodsClose();
-    }else{
-        GoPage('menu.php', Device['MenuId'], 'Menu');
+    }else if(CurrentModule === 'Interactivo'){
+        CloseInteractivo();
     }
 }
 
