@@ -40,22 +40,41 @@ class Statistics extends Database {
     function getPupularChannels($idLoacion) {
         $this->Function = 'getPupularChannels';
         
-        $this->connect();
-        $this->select("estadisticas_canal", 
-                        "SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin)) as segundos, SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin))) as horas, estadisticas_canal.nombre_canal as nombre_canal, paquete_canal.numero_canal AS numero_canal", 
-                        "estaciones ON estaciones.nombre_estacion = estadisticas_canal.nombre_canal", 
-                        "canales ON canales.id_estacion = estaciones.id_estacion", 
-                        "paquete_canal ON paquete_canal.id_canal = canales.id_canal", 
-                        "",
-                        "paquete_canal.id_paquete = 2 AND estadisticas_canal.id_locacion = ".$idLoacion,
-                        "",
-                        "nombre_canal, paquete_canal.numero_canal",
-                        "segundos DESC");
+        if($idLoacion != 0){
+            $this->connect();
+            $this->select("estadisticas_canal", 
+                            "SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin)) as segundos, SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin))) as horas, estadisticas_canal.nombre_canal as nombre_canal, paquete_canal.numero_canal AS numero_canal", 
+                            "estaciones ON estaciones.nombre_estacion = estadisticas_canal.nombre_canal", 
+                            "canales ON canales.id_estacion = estaciones.id_estacion", 
+                            "paquete_canal ON paquete_canal.id_canal = canales.id_canal", 
+                            "",
+                            "paquete_canal.id_paquete = 2 AND estadisticas_canal.id_locacion = ".$idLoacion,
+                            "",
+                            "nombre_canal, paquete_canal.numero_canal",
+                            "segundos DESC");
 
-        $this->StatisticsChannels = $this->getResult();
-        $this->disconnect();
+            $this->StatisticsChannels = $this->getResult();
+            $this->disconnect();
 
-        return $this->StatisticsChannels;
+            return $this->StatisticsChannels;
+        }else{
+            $this->connect();
+            $this->select("estadisticas_canal", 
+                            "SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin)) as segundos, SEC_TO_TIME(SUM(TIMESTAMPDIFF(SECOND, fecha_inicio, fecha_fin))) as horas, estadisticas_canal.nombre_canal as nombre_canal, paquete_canal.numero_canal AS numero_canal", 
+                            "estaciones ON estaciones.nombre_estacion = estadisticas_canal.nombre_canal", 
+                            "canales ON canales.id_estacion = estaciones.id_estacion", 
+                            "paquete_canal ON paquete_canal.id_canal = canales.id_canal", 
+                            "",
+                            "paquete_canal.id_paquete = 2",
+                            "",
+                            "nombre_canal, paquete_canal.numero_canal",
+                            "segundos DESC");
+
+            $this->StatisticsChannels = $this->getResult();
+            $this->disconnect();
+
+            return $this->StatisticsChannels;
+        }
     }
     function setStatisticModule($StatisticsArray) {
         $this->Function = 'get';

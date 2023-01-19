@@ -1490,13 +1490,13 @@ function setLastRecors(){
         document.getElementById("InteractiveLastRecordsImg").appendChild(div);
     }
 }
-function getPopularChannels(){
+function getPopularChannels(bandera){
     $.ajax({
         cache: false,
         type: 'POST',
         url: ServerSource + 'Core/Controllers/Statistics.php',
         data: {
-            Option: 'getPopularChannelsByUser',
+            Option: (bandera != 0)?'getPopularChannelsByUser':'getPopularChannels',
             LocationId: Device['LocationId'],
         },
         success: function (response){
@@ -1531,6 +1531,8 @@ function setPopularChannels(popular){
 
             document.getElementById("InteractivePopularChannelImg").appendChild(div);
         }
+    }else{
+        getPopularChannels(0);
     }
 }
 function setMainPanelFocused(){

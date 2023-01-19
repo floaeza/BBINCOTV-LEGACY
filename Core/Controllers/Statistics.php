@@ -43,6 +43,11 @@
             $NewStatistics = $StatisticsData->getPupularChannels($LocationId);
             echo json_encode($NewStatistics);
         break;
+        case 'getPopularChannels':
+            // $idUser     = !empty($_POST['idUser']) ? $_POST['idUser'] : '';
+            $NewStatistics = $StatisticsData->getPupularChannels(0);
+            echo json_encode($NewStatistics);
+        break;
         case 'Modules':
             $CurrentModule   = !empty($_POST['CurrentModule']) ? $_POST['CurrentModule'] : '';
     
