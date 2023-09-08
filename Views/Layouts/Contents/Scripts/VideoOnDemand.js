@@ -946,14 +946,12 @@ function VodRight() {
         //
         /* CurrentFocus = 'Movies'; */
         CurrentFocus = 'MenuCategories'
-        console.log('MenuCategories');
         ClearFocusHeader();
         SetFocusCategory('set');
 
     } else if (CurrentFocus === 'MenuCategories') {
         if (MoviesByGender.length !== 0 || MoviesList.length !== 0) {
             CurrentFocus = 'Movies';
-            console.log('Movies');
             
             
             SetFocusMovie('set');
@@ -964,14 +962,11 @@ function VodRight() {
         }
 
     } else if (CurrentFocus === 'Movies') {
-        console.log('Movies');
         SetFocusMovie('right');
     } else if (CurrentFocus === 'MoviePanel') {
-        console.log('MoviePanel');
 
         SetFocusOnMoviePanel();
     } else if (CurrentFocus === 'Playing') {
-        console.log('Playing');
         
         if (PlayinPanelActive == true) {
             SetFocusPlaying('right');
@@ -988,7 +983,6 @@ function VodLeft() {
         
         if (CategoryRowFocus > 0) {
             CurrentFocus = 'Menu';
-            console.log('Menu');
             MenuFocus--;
             MenuFocus--;         
             SetFocusHeader('up');
@@ -1001,7 +995,6 @@ function VodLeft() {
         if (MovieFocus === 0) {
             CategoryRowFocus--;
             CurrentFocus = 'MenuCategories';
-            console.log('MenuCategories');
 
             ClearFocusMovieList();
 
@@ -1010,10 +1003,8 @@ function VodLeft() {
             SetFocusMovie('left');
         }
     } else if (CurrentFocus === 'MoviePanel') {
-        console.log("QUIENSABE")
         SetFocusOnMoviePanel();
     } else if (CurrentFocus === 'Playing') {
-        console.log('Playing');
         if (PlayinPanelActive == true) {
             SetFocusPlaying('left');
         } else {
@@ -1103,7 +1094,6 @@ function VodOk() {
             ShowPlayingPanel();
         }
     } else if (CurrentFocus === 'StopPlaying') {
-        console.log(PlayinPanelActive);
         if (PlayinPanelActive == true) {
             StopCloseMovie();
             CurrentFocus === 'Movies'

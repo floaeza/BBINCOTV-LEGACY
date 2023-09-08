@@ -230,7 +230,6 @@ function SelectRecordingsOption(){
 
             if(ChannelsJson[FocusChannelPosition].PROGRAMS[FocusProgramPosition].DRTN !== 24){
                  //CheckRecordings();
-                 console.log(ChannelsJson[FocusChannelPosition]);
                  if(TFR >95){
                     ShowRecorderMessage('Full DISK');
                  }else{
@@ -258,6 +257,7 @@ function SelectRecordingsOption(){
                 if(result === 'MV'){
                     ShowRecorderMessage('You can’t add a movie as a series');
                 }else{
+                    
                     AddSerie();
                     SetPvrInfoHours();
                 }
@@ -839,6 +839,7 @@ function SelectRecordOption(){
                     ShowRecorderMessage('All connections to your recorder are active, please wait or close a connection');
                 } else {
                     UpdateRtspConnections('add');
+            
                     if(parseInt(RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].numberFiles) == 0){
                         PlayVideo(RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].url);
                     }else{
@@ -2309,7 +2310,8 @@ function GetPvrInfo(){
         success: function (response){
             DiskInfo = $.parseJSON(response);
             //alert(JSON.stringify(Device));
-            if(DiskInfo.length > 0){
+            setTimeout(function(){
+            	if(DiskInfo.length > 0){
                 if(typeof(gSTB) !== 'undefined'){
                     if(DiskInfo.length === 1 && DiskInfo[0]['mac_address'] === gSTB.GetDeviceMacAddress()){
                         storageInfo = JSON.parse(gSTB.GetStorageInfo('{}'));
@@ -2326,9 +2328,11 @@ function GetPvrInfo(){
                 }else{
                     SetPvrInfo();
                 }
-            }else{
-                Device['Type']='NONE';
-            }
+	            }else{
+	                Device['Type']='NONE';
+	            }	
+            })
+            
         }
     });
 }
@@ -2581,7 +2585,7 @@ function CheckRecordings() {
 
                     /* Agregamos el tiempo offset -6 o -7 en segundos */
                     ProgramUtcStartDate = ProgramUtcStartDate + SecondsOffset;
-                    ProgramUtcEndDate = ProgramUtcEndDate + SecondsOffset;
+                    ProgramUtcEndDate = ProgramUtcEndDate + SecondsOffset + 60;
 
                     if (RecordingsToCheck.length > 0) {
                         var IndexR = 0,

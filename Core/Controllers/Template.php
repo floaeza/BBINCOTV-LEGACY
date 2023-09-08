@@ -29,7 +29,7 @@
             $list = array();
             $ImagesList='';
             $id = 0;
-            $filehandle = opendir('/var/www/html/Multimedia/'.preg_replace("/\s+/", '', $ModuleName).'/');
+            $filehandle = opendir('/var/www/bbinco.vdm/BBINCO/storage/Multimedia/'.preg_replace("/\s+/", '', $ModuleName).'/');
             while ($file = readdir($filehandle)) {
                 if ($file != "." && $file != "..") {
                     $list[$file] = $file;
@@ -48,7 +48,7 @@
             $list = array();
             $ImagesList='';
             $id = 0;
-            $filehandle = opendir('/var/www/html/Multimedia/'.$ModuleName.'/');
+            $filehandle = opendir('/var/www/bbinco.vdm/BBINCO/storage/Multimedia/'.$ModuleName.'/');
             while ($file = readdir($filehandle)) {
                 if ($file != "." && $file != "..") {
                     $list[$file] = $file;

@@ -135,6 +135,11 @@
     <div id='MessageCloseConfirm'>Continue</div>
     <div id='MessageCloseCancel'>Cancel</div>
 </div>
+<div id='PanelMessageAddSerie'>
+    <div id='RecorderMessageAddSerie'></div>
+    <div id='MessageCloseOnlynew'>Only New</div>
+    <div id='MessageCloseAll'>All</div>
+</div>
 
 <!-- Panel grabador -->
 <div id='PvrContainer'>

@@ -12,13 +12,16 @@
         PauseLive       = false,
         PauseStatus     = false,
         pltActive           = false,
-        HDMIstatus;
+        HDMIstatus,
+        chapters = [],
+        positionChapter = 0;
 
     var WindowMaxWidth  = 0,
         WindowMaxHeight = 0,
         WindowMinWidth  = 0,
         WindowMinHeight = 0,
         updatingMoviePosition = null;
+    var pltvSet         = null;
 
         GetWindowFullSize();
         GetWindowMinSize();
@@ -28,7 +31,7 @@
 
     // Variables kamai
     var Video   = new ENTONE.video(1,0);
-        Video.setPltvBuffer(7200);
+        //Video.setPltvBuffer(7200);
 
     Debug('#################################################################');
 
@@ -84,6 +87,8 @@
         StartDateChannel = new Date();
 
         Video.setVideoCallback(HandleVideo);
+        unsetPLTV();
+        pltvSet = setTimeout(setPLTV, 5000);
     }
     
 /* *****************************************************************************
@@ -122,6 +127,9 @@
 
     function PlayVideo(Source){
         // Guarda la estadistica
+       
+        chapters = [],
+        positionChapter = 0
         StopVideo();
 
         // Reproduce el video
@@ -135,6 +143,7 @@
         MaximizeTV();
 
         Video.setVideoCallback(HandleVideo);
+
     }
     function PlayMovie(Source, pos){
         Video.open(Source);
@@ -274,7 +283,7 @@
             // Video.setVideoPosition(160, 65, WindowMinWidth, WindowMinHeight, 0);
             // Video.setVideoPosition(TvPositionLeft, TvPositionTop, WindowMinWidth, WindowMinHeight, 0);
             Video.setVideoPosition(TvPositionLeft, 1, WindowMinWidth, WindowMinHeight, 0);   
-        }
+    }
 
 /* *****************************************************************************
  * Reinicia el dispositivo
@@ -323,6 +332,72 @@
     function SpeedVideo(Speed){
         Video.play(Speed);
     }
+
+    function SkipChapterRecord(direccionSkip){
+        Debug("Duracion =======> "+ (Video.getDuration()/1000));
+        if(chapters.length == 0 && (Video.getDuration()/1000) > 300){
+            Debug("Duracion =======> 1");
+
+            chapters.push(0);
+            if((Video.getDuration()/1000) > 300 && (Video.getDuration()/1000)<= 600){
+                for(var i = 0; i < Math.floor((Video.getDuration()/1000)/60); i++){
+                    chapters.push((i+1)*60);
+                }
+            }else if((Video.getDuration()/1000) > 600 && (Video.getDuration()/1000)<= 1200){
+                for(var i = 0; i < Math.floor((Video.getDuration()/1000)/120); i++){
+                    chapters.push((i+1)*120);
+                }
+            }else if((Video.getDuration()/1000) > 1200 && (Video.getDuration()/1000)<= 1800){
+                for(var i = 0; i < Math.floor((Video.getDuration()/1000)/300); i++){
+                    chapters.push((i+1)*300);
+                }
+            }else if((Video.getDuration()/1000) > 1800 && (Video.getDuration()/1000)<= 2400){
+                for(var i = 0; i < Math.floor((Video.getDuration()/1000)/480); i++){
+                    chapters.push((i+1)*480);
+                }
+            }else if((Video.getDuration()/1000) > 2400){
+                for(var i = 0; i < Math.floor((Video.getDuration()/1000)/600); i++){
+                    chapters.push((i+1)*600);
+                }
+            }
+            Debug("Duracion =======> 2");
+
+        }
+        Debug("Duracion =======> 3");
+
+        for(var x = 0; x < chapters.length; x++){
+            if(x == (chapters.length-1)){
+                if((Video.getPlayPositionInfo()/1000)>chapters[chapters.length-1]){
+                    positionChapter = chapters.length-1;
+                    //ShowRecorderMessage("X1=" + x + " " + chapters[x]);
+                }
+            }if(x == 0 ){
+                if((Video.getPlayPositionInfo()/1000)<chapters[x+1]){
+                    positionChapter = x;
+                    //ShowRecorderMessage("X2=" + x + " " + chapters[x]);
+                }
+            }else if(x>0){
+                if((Video.getPlayPositionInfo()/1000)>chapters[x] && (Video.getPlayPositionInfo()/1000)<chapters[x+1]){
+                    positionChapter = x;
+                    //ShowRecorderMessage("X3=" + x + " " + chapters[x]);
+                }
+            }
+        }
+        Debug("Duracion =======> 4");
+
+        if(direccionSkip == "forward" && positionChapter<chapters.length-1){
+            positionChapter = positionChapter + 1;
+            //AVMedia.SetPosition(chapters[positionChapter]);
+            Video.setPlayPosition(chapters[positionChapter]*1000);
+            Debug("Duracion =======> 5");
+
+        }
+        if(direccionSkip == "backward" && positionChapter>0){
+            positionChapter = positionChapter - 1;
+            //AVMedia.SetPosition(chapters[positionChapter]);
+            Video.setPlayPosition(chapters[positionChapter]*1000);
+        }
+    }
     
 /* *****************************************************************************
  * Obtiene la posicion del video en reproduccion (PAUSE LIVE Y GRABACIONES)
@@ -365,4 +440,13 @@
         //if(HDMIstatus.result.connected == false){
         //    RebootDevice();
         //}
+    }
+
+    function unsetPLTV() {
+        var x44 = Video.setPltvBuffer(0);
+        Debug('-------->UNSET PLTV: '+x44);
+    }
+    function setPLTV(){
+        var x44 = Video.setPltvBuffer(3600);
+        Debug('$$$$$$$$$$>SET PLVTV: '+x44);
     }

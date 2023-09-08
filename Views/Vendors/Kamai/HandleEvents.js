@@ -50,10 +50,10 @@ function HandleVideo(event_type){
         EventString = 'STATUS_END_OF_STREAM';
 
         if(CurrentModule === 'Tv'){
-            SpeedText = '';
-            OptionText = 'play';
-            UpdateBarStatus();
             if(PlayingRecording === true) {
+                SpeedText = '';
+                OptionText = 'play';
+                UpdateBarStatus();
                 // Termino reproduccion grabacion
                 OpenRecordPlayOptions();
             } else {
@@ -137,7 +137,7 @@ function GetProgramsToSchedule(){
                 Source = Source.replace('igmp','udp');
                 Start = ProgramsToSchedule[Indexps]['utc_inicio'];
                 End = ProgramsToSchedule[Indexps]['utc_final'];
-                TimeOut = (parseInt(End) - parseInt(Start))*1000;
+                TimeOut = (parseInt(End) - (new Date().getTime() / 1000) + 20)*1000;
 
                 //Debug('>> '+ProgramId + ', ' +Source +', '+ Title +', '+ Start +', '+ End + ', '+TimeOut);
 

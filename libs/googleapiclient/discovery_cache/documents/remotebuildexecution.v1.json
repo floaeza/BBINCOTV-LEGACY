@@ -108,8 +108,8 @@
     "media": {
       "methods": {
         "download": {
-          "description": "Downloads media. Download is supported on the URI `/v1/media/{+name}?alt=media`.",
-          "flatPath": "v1/media/{mediaId}",
+          "description": "Downloads media. Download is supported on the URI `/v1/Media/{+name}?alt=media`.",
+          "flatPath": "v1/Media/{mediaId}",
           "httpMethod": "GET",
           "id": "remotebuildexecution.media.download",
           "parameterOrder": [
@@ -124,7 +124,7 @@
               "type": "string"
             }
           },
-          "path": "v1/media/{+resourceName}",
+          "path": "v1/Media/{+resourceName}",
           "response": {
             "$ref": "GoogleBytestreamMedia"
           },
@@ -134,8 +134,8 @@
           "supportsMediaDownload": true
         },
         "upload": {
-          "description": "Uploads media. Upload is supported on the URI `/upload/v1/media/{+name}`.",
-          "flatPath": "v1/media/{mediaId}",
+          "description": "Uploads media. Upload is supported on the URI `/upload/v1/Media/{+name}`.",
+          "flatPath": "v1/Media/{mediaId}",
           "httpMethod": "POST",
           "id": "remotebuildexecution.media.upload",
           "mediaUpload": {
@@ -145,7 +145,7 @@
             "protocols": {
               "simple": {
                 "multipart": true,
-                "path": "/upload/v1/media/{+resourceName}"
+                "path": "/upload/v1/Media/{+resourceName}"
               }
             }
           },
@@ -161,7 +161,7 @@
               "type": "string"
             }
           },
-          "path": "v1/media/{+resourceName}",
+          "path": "v1/Media/{+resourceName}",
           "request": {
             "$ref": "GoogleBytestreamMedia"
           },

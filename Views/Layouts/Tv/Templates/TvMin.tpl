@@ -53,7 +53,9 @@
     </div>
     <div id="InteractiveChannelMain">
         <div id='InteractiveHeader'>
-            <img id='InteractiveLogo' src="Media/Logos/CHL/logo.png"></img>
+            <div id="InteractiveLogo">
+                <img id='InteractiveLogo' src="Media/Logos/CHL/logo.png">
+            </div>
             <div id='OptionsHeader'>
                 <div id='InteractiveOptionSearch'>Search</div>
                 <div id='InteractiveSearchBox'></div>

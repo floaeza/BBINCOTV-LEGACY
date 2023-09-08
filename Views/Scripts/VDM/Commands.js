@@ -15,26 +15,26 @@ function Red(){
     //     gSTB.clearMemoryCaches();
     //     gSTB.DeleteAllCookies();
     // }
-    // var relo = location.href;
-    // location.href = relo;
+    var relo = location.href;
+        location.href = relo;
 }
 
 function Blue(){
-    if (window.tizen !== undefined){
-        var onSuccess = function() {
-            Debug("[rebootDevice] succeeded!");
-        };
-        var onError = function(error) {
-            Debug("[rebootDevice] failed! error code: " + error.code + " error name: " + error.name + "  message " + error.message);
-        };
-        b2bcontrol.rebootDevice(onSuccess, onError);
-    }else {
+    // if (window.tizen !== undefined){
+    //     var onSuccess = function() {
+    //         Debug("[rebootDevice] succeeded!");
+    //     };
+    //     var onError = function(error) {
+    //         Debug("[rebootDevice] failed! error code: " + error.code + " error name: " + error.name + "  message " + error.message);
+    //     };
+    //     b2bcontrol.rebootDevice(onSuccess, onError);
+    // }else {
         RebootDevice();
-    }
+    // }
 }
 function Green(){
     // rtsp://10.30.12.201:554/0000009326
-    
+    // alert('Hola Mundo');
     //Debug("Resultado tras setRTSP == === = =" + JSON.stringify());
     // stbPlayerManager.setRTSP({
     //     type: 0,
@@ -42,12 +42,6 @@ function Green(){
     //     // endByAnnounce: true,
     //     // useUDP: true
     // });
-    player.play({
-        uri: "rtsp://10.30.12.201:554/0000009349",
-        solution: 'rtsp'
-    });
-
-    MaximizeTV();
 }
 
 function Yellow(){

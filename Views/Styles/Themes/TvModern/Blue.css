@@ -169,13 +169,17 @@ div#RecordingManualOptions,
 div#BarPosition,
 div#RecorderMessage,
 div#RecorderMessageConfirm,
+div#RecorderMessageAddSerie,
 div#MessageClose,
 div#MessageCloseConfirm,
 div#MessageCloseCancel,
+div#MessageCloseOnlynew,
+div#MessageCloseAll,
 .PvrSun {
     color: #fff;
 }
-div#PanelMessageConfirm {
+div#PanelMessageConfirm,
+div#PanelMessageAddSerie {
     /* background-color: #128ba6; */
     background-color: #128ba6;
     /* background-image: url('Blue/square.png'); */

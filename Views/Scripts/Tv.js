@@ -113,7 +113,7 @@
         focusedLastRecord = 0,
         visibleSearchBox = false,
         noFoundCont = false;
-    
+        
     var InteractiveUsers = document.getElementById("InteractiveUsers");
     
     var lastRecordsList = '', isShowingResults = false;
@@ -135,23 +135,13 @@ function SetEpgFile(){
         EpgDataActive = false;
         GetJsonChannels();
     }
-
-    if(prev_Direction !== ''){
-        for(i = 0; i < ChannelsJson["C_Length"]; i++) {
-            if(ChannelsJson[i].NAME == "Movies"){
-                ChannelPosition = i;
-                break;
-            }
-        }
-    }
-    SetChannel(prev_Direction);
 }
     
 function GetJsonEpg(Sour, rest){
     
     $.ajax({
         cache: false,
-        async: false,
+        async: true,
         url: ServerSource + Sour,
         success: function (response){
             SourceEpgFile = Sour;
@@ -161,8 +151,17 @@ function GetJsonEpg(Sour, rest){
             ////Debug(Sour);
             ChannelsLength = ChannelsJson.C_Length - 1;
             ChannelMax     = parseInt(ChannelsJson[ChannelsLength].CHNL, 10);
-            
             ////Debug('------- GetJsonEpg -> ChannelsLength: '+ChannelsLength);
+            if(prev_Direction !== ''){
+                for(i = 0; i < ChannelsJson["C_Length"]; i++) {
+                    if(ChannelsJson[i].NAME == "Movies"){
+                        ChannelPosition = i;
+                        break;
+                    }
+                }
+            }
+            SetChannel(prev_Direction);
+
         },
         error: function (response){
             //Debug("EEEEEEEEEE"+response);
@@ -202,7 +201,7 @@ function CheckUpdatedJson(){
 function GetJsonChannels(){ 
     $.ajax({
         type: 'POST',
-        async: false,
+        async: true,
         cache: false,
         url: ServerSource + 'Core/Controllers/Packages.php',
         data: { 
@@ -216,6 +215,16 @@ function GetJsonChannels(){
             if(Device['Services']['ActiveEpg'] === true){
                 SetLog(ErrorLoadGuide);
             }
+            if(prev_Direction !== ''){
+                for(i = 0; i < ChannelsJson["C_Length"]; i++) {
+                    if(ChannelsJson[i].NAME == "Movies"){
+                        ChannelPosition = i;
+                        break;
+                    }
+                }
+            }
+            SetChannel(prev_Direction);
+
         }
     });
 }
@@ -225,7 +234,8 @@ function GetJsonChannels(){
  *******************************************************************************/
 
 function SetChannel(NewDirection){
-    ////Debug('SetChannel = '+NewDirection);
+    Debug('SetChannel = '+NewDirection);
+    console.log(ChannelsJson[ChannelPosition].NAME);
     if(ActiveEpgContainer === false){
         
         /* Valida si se esta subiendo o bajando de canal para restar|sumar una posicion */
@@ -281,11 +291,11 @@ function SetChannel(NewDirection){
                     SetChannel(NewDirection);
                 }
             } else if(ChannelsJson[ChannelPosition].NAME =='Movies'){
-                GoPage('content.php', 5, 'Movies'); 
+                GoPage('content.php', 5, 'Movies');
             }else{
-                GetDigitalChannel();      
+                HideInfo();
+                GetDigitalChannel();
             }
-        
     }
 }
 
@@ -293,7 +303,7 @@ function GetDigitalChannel(){
     ActiveDigitalChannel = true;
 
     var GetModule = ChannelsJson[ChannelPosition].INDC;
-
+    
     DigitalSource = Libraries['MultimediaSource'] + GetModule + '/';
     DigitalImgSource = '../../Multimedia/' + GetModule + '/';
 
@@ -307,9 +317,10 @@ function GetDigitalChannel(){
         },
         success: function (response){
             DigitalContent = $.parseJSON(response);
+            
         }
     });
-    setTimeout(SetDigitalChannel(),1000);
+    setTimeout( SetDigitalChannel(),1500);
     ShowInfo();
 }
 
@@ -321,22 +332,22 @@ function SetDigitalChannel(){
         if(DigitalContent.length > 0){
             var FileType = DigitalContent[IndexDigital].split('.')[1];
             if(FileType === 'mp4'){
-                clearTimeout(IntervalDigital);
+                // clearTimeout(IntervalDigital);
 
-                ImageDigital.src = '';
-                ImageDigital.style.display = 'none';
+                // ImageDigital.src = '';
+                // ImageDigital.style.display = 'none';
+                Debug('--> URL  = ' +(DigitalSource+DigitalContent[IndexDigital]));
+
                 
                 PlayDigitalChannel(DigitalSource+DigitalContent[IndexDigital]);
-                Debug( '..................Source'+ DigitalSource+DigitalContent[IndexDigital])
-        
-                Debug('Hasta aqui todo bien FINAL');
-            } else {
+            } 
+            // else {
                 
-                ImageDigital.src = DigitalSource+DigitalContent[IndexDigital];
-                ImageDigital.style.display = 'inline';
+            //     ImageDigital.src = DigitalSource+DigitalContent[IndexDigital];
+            //     ImageDigital.style.display = 'inline';
 
-                IntervalDigital = setInterval(SetDigitalChannel,9000);
-            }
+            //     IntervalDigital = setInterval(SetDigitalChannel,9000);
+            // }
             IndexDigital++;
 
             if(IndexDigital > DigitalContent.length - 1){
@@ -384,6 +395,9 @@ function CloseFrame(){
  *******************************************************************************/  
    
     function ReturnLastChannel(){
+
+        Debug("ReturnLastChannel ======>   "+LastChannelPosition);
+
         if(ActiveEpgContainer === false){
             if(LastChannelPosition !== ChannelPosition){
                 Source = ChannelsJson[LastChannelPosition].SRCE;
@@ -476,7 +490,6 @@ function CloseFrame(){
             CheckChannel     = false,
             IndexB           = 0,
             Position         = 0;
-
         /* Valida en todas las posiciones si encuentra un numero de canal igual al que se recibio */
         while(Index <= ChannelsLength){
             if(NewChannelNumber === parseInt(ChannelsJson[Index].CHNL, 10)){
@@ -632,6 +645,8 @@ function ShowInfo(){
     }
     
     function PlayChannelEpg(){
+        Debug("PlayChannelEpg");
+        LastChannelPosition = ChannelPosition;
         ChannelPosition = FocusChannelPosition;
         CloseEpg();
         var Source = ChannelsJson[ChannelPosition].SRCE,
@@ -671,8 +686,6 @@ function ShowInfo(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
-                    Debug(" ========= >Location ID" + Device['LocationId']);    
-                    Debug(" ========= >Location Name" + Device['LocationName']);                    
                     if (Device['Type'] === 'NONE') {
                         PlayChannelEpg();
                     } else if(Device['LocationName'] == 'DEFAULT'){
@@ -682,7 +695,15 @@ function ShowInfo(){
                         OpenRecordingOptions();
                     }
                 } else if (RecordingOptionsActive === true) {
-                    SelectRecordingsOption();
+                    if(RecorderMessageAddSerieActive != true){
+                        SelectRecordingsOption();
+                    }else{
+                        if(MessageCloseOnlynew.style.background == "rgb(47, 65, 74)"){
+                            AddSerie(0);
+                        }else{
+                            AddSerie(1);
+                        }
+                    }
                 } else if (RecordManualOptionsActive === true) {
                     SelectManualRecordOption();
                 }
@@ -699,11 +720,15 @@ function ShowInfo(){
     function TvClose(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
-                if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
+                if (RecordingOptionsActive === false && RecordManualOptionsActive === false && RecorderMessageAddSerieActive != true) {
                     CloseEpg();
                 } else if (RecordingOptionsActive === true) {
-                    CloseRecordingOptions();
-                } else if (RecordManualOptionsActive === true) {
+                    if(RecorderMessageAddSerieActive != true){
+                        CloseRecordingOptions();
+                    }else{
+                        HideRecorderMessageAddSerie();
+                    }
+                } else if (RecordManualOptionsActive === true && RecorderMessageAddSerieActive != true) {
                     CloseManualRecord();
                 }
             } else if (RecordingPanel === true) {
@@ -713,6 +738,7 @@ function ShowInfo(){
                 Debug('Se cambia de canal');
             }
         } else {
+
             HideRecorderMessage();
         }
     }
@@ -738,6 +764,14 @@ function ShowInfo(){
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
                     ProgramRight();
+                }else if(RecorderMessageAddSerieActive === true){
+                    if(MessageCloseAll.style.background == "rgb(47, 65, 74)"){
+                        MessageCloseAll.style.background = "rgba(223, 190, 94, 0.9)";
+                        MessageCloseOnlynew.style.background = "rgb(47, 65, 74)";
+                    }else{
+                        MessageCloseAll.style.background = "rgb(47, 65, 74)";
+                        MessageCloseOnlynew.style.background = "rgba(223, 190, 94, 0.9)";
+                    }
                 }
                 if (RecordManualOptionsActive === true) {
                     SetFocusManualOption('down');
@@ -755,6 +789,14 @@ function ShowInfo(){
                     },1000);
                 } 
             }
+        }else if(RecorderMessageAddSerieActive === true){
+            if(MessageCloseAll.style.background == "rgb(47, 65, 74)"){
+                MessageCloseAll.style.background = "rgba(223, 190, 94, 0.9)";
+                MessageCloseOnlynew.style.background = "rgb(47, 65, 74)";
+            }else{
+                MessageCloseAll.style.background = "rgb(47, 65, 74)";
+                MessageCloseOnlynew.style.background = "rgba(223, 190, 94, 0.9)";
+            }
         }
     }
     function TvLeft(){
@@ -762,6 +804,14 @@ function ShowInfo(){
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
                     ProgramLeft();
+                }else if(RecorderMessageAddSerieActive === true){
+                    if(MessageCloseAll.style.background == "rgb(47, 65, 74)"){
+                        MessageCloseAll.style.background = "rgba(223, 190, 94, 0.9)";
+                        MessageCloseOnlynew.style.background = "rgb(47, 65, 74)";
+                    }else{
+                        MessageCloseAll.style.background = "rgb(47, 65, 74)";
+                        MessageCloseOnlynew.style.background = "rgba(223, 190, 94, 0.9)";
+                    }
                 }
                 if (RecordManualOptionsActive === true) {
                     SetFocusManualOption('up');
@@ -779,14 +829,22 @@ function ShowInfo(){
                     },1000);
                 }
             }
+        }else if(RecorderMessageAddSerieActive === true){
+            if(MessageCloseAll.style.background == "rgb(47, 65, 74)"){
+                MessageCloseAll.style.background = "rgba(223, 190, 94, 0.9)";
+                MessageCloseOnlynew.style.background = "rgb(47, 65, 74)";
+            }else{
+                MessageCloseAll.style.background = "rgb(47, 65, 74)";
+                MessageCloseOnlynew.style.background = "rgba(223, 190, 94, 0.9)";
+            }
         }
     }
     function TvDown(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
-                if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
+                if (RecordingOptionsActive === false && RecordManualOptionsActive === false && RecorderMessageAddSerieActive != true) {
                     ProgramDown();
-                } else if (RecordingOptionsActive === true) {
+                } else if (RecordingOptionsActive === true && RecorderMessageAddSerieActive != true) {
                     SetFocusOptionRecording('down');
                 } else if (RecordManualOptionsActive === true) {
                     SetManualTime('down');
@@ -803,7 +861,7 @@ function ShowInfo(){
     function TvPageDown(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
-                if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
+                if (RecordingOptionsActive === false && RecordManualOptionsActive === false && RecorderMessageAddSerieActive != true) {
                     PageDown();
                 }
                 clearTimeout(EpgTimer);
@@ -816,7 +874,7 @@ function ShowInfo(){
             if (ActiveEpgContainer === true) {
                 if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
                     ProgramUp();
-                } else if (RecordingOptionsActive === true) {
+                } else if (RecordingOptionsActive === true && RecorderMessageAddSerieActive != true) {
                     SetFocusOptionRecording('up');
                 } else if (RecordManualOptionsActive === true) {
                     SetManualTime('up');
@@ -833,7 +891,7 @@ function ShowInfo(){
     function TvPageUp(){
         if(RecorderMessageActive === false) {
             if (ActiveEpgContainer === true) {
-                if (RecordingOptionsActive === false && RecordManualOptionsActive === false) {
+                if (RecordingOptionsActive === false && RecordManualOptionsActive === false && RecorderMessageAddSerieActive != true) {
                     PageUp();
                 }
                 clearTimeout(EpgTimer);
@@ -972,7 +1030,7 @@ function TvChannelDown(){
     }
 }
 function GetMenuInteractivo(){
-    StopVideo();
+    //StopVideo();
     CurrentModule = "Interactivo";
     if(actualUser ==""){
         currentInteractive = "selectUser";
@@ -1336,7 +1394,6 @@ function OkInteractive(){
                     GetPvrInfo();
                     
                     CurrentModule = 'Tv';
-                    console.log(document.getElementsByClassName("lastRecord"));
                     IndexRecordedFocus  = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[1]);
                     IndexRecordedProgFocus   = parseInt(document.getElementsByClassName("lastRecord")[focusedLastRecord].title.split(',')[2]);
                     if((RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].operacion !=='4') || RecordingsList[IndexRecordedFocus][IndexRecordedProgFocus].active === '1'){
@@ -1500,14 +1557,12 @@ function getPopularChannels(bandera){
             LocationId: Device['LocationId'],
         },
         success: function (response){
-            console.log(response);
             var popular = $.parseJSON(response);
             setPopularChannels(popular);
         }
     });
 }
 function setPopularChannels(popular){
-    console.log(popular.length);
     if(popular.length>4){
         var div, logo, title;
         for(var i=0; i<5; i++){

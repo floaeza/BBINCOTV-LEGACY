@@ -344,6 +344,9 @@ div#InteractiveUsers{
     /* background: #ffffff; */
     position: absolute;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     flex-direction: row;
 }
 div#InteractiveUsersName{
@@ -354,6 +357,9 @@ div#InteractiveUsersName{
     /* background: #ffffff; */
     position: absolute;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
 }
 [id*="User"]{
     /* position: relative;
@@ -381,14 +387,23 @@ div#InteractiveUsersName{
     margin-right: 2%;
     text-align: center;
 }
-img#InteractiveLogo{
+div#InteractiveLogo {
     position: relative;
     width: 18%;
-    font-size: 130%;
+    display: block;
     line-height: 270%;
     margin-left: 2%;
     margin-right: 2%;
-    text-align: center;
+}
+img#InteractiveLogo{
+    position: relative;
+    width: 100%;
+    display: block;
+    object-fit: fill;
+    object-position: center;
+    line-height: 270%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 div#InteractiveText{
     position: relative;
@@ -420,7 +435,7 @@ span#InteractiveHeaderIcon{
     font-size: 400%;
     line-height: 200%;
     right: 5%;
-    width: 6%;
+    width: 5%;
     margin-left: 1%;
     border-radius: 50%;
 }
@@ -488,21 +503,24 @@ div#AddText{
     border: white solid 1px;
     align-items: center;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     justify-content: center;
 }
 div#InteractiveSearchBox{
     position: absolute;
+    z-index: 20;
     top: 10%;
     background: black;
     color: white;
-    width: 0%;
+    width: 100%;
     height: 80%;
     font-size: 150%;
     line-height: 180%;
     border-radius: 10px;
     border: white solid 1px;
     display: none;
-    z-index: 10;
 }
 div#InteractiveChannelMain{
     width: 100%;
@@ -515,7 +533,7 @@ div#InteractiveHeader{
     width: 100%;
     height: 10%;
     position: absolute;
-    background: #161616;
+    background: #132f3a;
     color: white;
     display: -webkit-box;
     display: -webkit-flex;
@@ -579,14 +597,14 @@ div#InteractivePopularChannel{
     top: 11%;
     width: 100%;
     height: 40%;
-    background: #161616;
+    background: #132f3a;
 }
 div#InteractiveLastRecords{
     position: relative;
     top: 12%;
     width: 100%;
     height: 45%;
-    background: #161616;
+    background: #132f3a;
 }
 div#InteractiveLastRecordsTittle{
     position: relative;
@@ -609,7 +627,7 @@ div#InteractivePopularChannelTittle{
 .popularChannel{
     position: relative;
     width: 18%;
-    background: #212121;
+    background: #246681;
     border-radius: 5px;  
     margin-left: 1%;
     margin-right: 1%;
@@ -629,7 +647,7 @@ div#InteractivePopularChannelTittle{
 .lastRecord{
     position: relative;
     width: 18%;
-    background: #212121;
+    background: #246681;
     border-radius: 5px;  
     height: 97%; 
     margin-left: 1%;
@@ -650,7 +668,10 @@ div#showResults{
 }
 .Result{
     position: relative;
-    display: flex;
+    /* display: flex; */
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     height: 10.95%;
     width: 100%;
     border-radius: 10px;
@@ -733,6 +754,9 @@ div#keyboard1{
     width: 100%;
     height: 16%;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     margin-left: 1%;
     vertical-align: middle;
     justify-content: space-around;
@@ -744,6 +768,9 @@ div#keyboard2{
     width: 90%;
     height: 16%;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     justify-content: space-around;
 }
 div#keyboard3{
@@ -753,6 +780,9 @@ div#keyboard3{
     left: 17%;
     height: 16%;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     vertical-align: middle;
     justify-content: space-around;
 }
@@ -763,6 +793,9 @@ div#keyboard4{
     width: 100%;
     height: 15%;
     display: flex;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     vertical-align: middle;
     justify-content: space-around;
 }

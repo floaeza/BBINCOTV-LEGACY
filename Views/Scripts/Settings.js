@@ -14,7 +14,7 @@ if (window.tizen !== undefined) {
     $.ajax({
         cache: false,
         type: 'POST',
-        url: 'http://'+ServerIp+'BBINCO/TV1/Core/Models/Time.php',
+        url: 'http://'+ServerIp+'/Core/Models/Time.php',
         //async : false,
         success: function (response) {
             var Today = $.parseJSON(response),
@@ -79,6 +79,7 @@ if (window.tizen !== undefined) {
             Debug      = ASTB.DebugString;
 
             Debug('~~~~~~~~~~~~~~~~~~~~~~~~~~~~ A M I N O   D E V I C E !!!!')
+            Debug('~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BBINCOTV BETA V1 !!!!')
         } else {
             KamaiDevice();
         }
@@ -133,8 +134,9 @@ if (window.tizen !== undefined) {
 
     function SetData() {
         AminoDevice();
-        //CurrentStbDate = moment().subtract('hours', Offset).format('Y-MM-DD h:mm:ss');
-        CurrentStbDate = 'UPDATED';
+        CurrentStbDate = moment().subtract('hours', Offset).format('Y-MM-DD h:mm:ss');
+        // alert(CurrentStbDate);
+        // CurrentStbDate = 'UPDATED';
     }
 
     $.ajax({

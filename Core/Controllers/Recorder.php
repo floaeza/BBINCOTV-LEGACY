@@ -33,6 +33,7 @@ switch ($Option){
         $TitleSerie = !empty($_POST['TitleSerie']) ? $_POST['TitleSerie'] : '';
         $Channel    = !empty($_POST['Channel']) ? $_POST['Channel'] : '';
         $Position   = !empty($_POST['Position']) ? $_POST['Position'] : '';
+        $New   = !empty($_POST['New']) ? $_POST['New'] : 0;
 
         // Revisa si ya existe una serie igual grabandose en la misma locacion
         $CheckSerie = $SeriesData->getSerieByLocation($LocationId, $TitleSerie);
@@ -41,6 +42,7 @@ switch ($Option){
             $SerieInfo =  array ('id_locacion' => $LocationId,
                 'id_operacion' => $OperationId,
                 'titulo_serie' => $TitleSerie,
+                'only_new' => $New,
                 'canal' => $Channel,
                 'posicion' => intval($Position),
                 'mac_address_pvr' => $MacAddressPvr,
@@ -263,6 +265,7 @@ switch ($Option){
         foreach ($Result as $Row):
             array_push($Records, array('id_serie' => $Row['id_serie'],
                 'titulo' => $Row['titulo_serie'],
+                'onlynew' => $Row['only_new'],
                 'fecha_adicion' => $Row['fecha_adicion'],
                 'canal' => $Row['canal'],
                 'posicion' => $Row['posicion']

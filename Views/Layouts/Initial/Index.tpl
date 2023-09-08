@@ -155,14 +155,24 @@
  ******************************************************************************/
     function KamaiDeviceInitial(){
          if(typeof(ENTONE) !== 'undefined'){
+            // ENTONE.stb.setTimezone("America/Phoenix");
             MacAddress  = ENTONE.stb.getMacAddress();
             IpAddress   = ENTONE.stb.getIPAddress();
             Firmware    = ENTONE.stb.getSoftwareVersion();
             //KamaiModels con valor de ENTONE.stb.getHardwareModel() evita tener que hacer comparaciones y solamente 
             //se tiene que agregar en el JSON los siguientes modelos de Kamai que sean incorporados
+            //if(ENTONE.stb.getHardwareModel() == 49){
+            //    Model = "500x";
+            //}else if(ENTONE.stb.getHardwareModel() == 102{
+            //    Model = "7XM";
+            //}else{
+            //    Model = "Amulet";
+            //}
             Model       = KamaiModels[ENTONE.stb.getHardwareModel()]; // En Integer (49 para Kamai 500x)
             Hdd         = 'N';
             Vendor      = 'Kamai';
+
+
 
             if(Model === '7XM') {
                 Hdd         = 'Y';
@@ -190,7 +200,7 @@
             if (Model == 'MAG424' || Model == 'MAG524' || MacAddress == '00:1a:79:6d:d0:7a' || MacAddress == '00:1a:79:6d:d1:03' || MacAddress == '00:1a:79:6d:d1:a3' || MacAddress == '00:1a:79:6d:c6:ff' || MacAddress == '00:1a:79:6d:d0:7a' || MacAddress == '00:1a:79:72:cb:f7' || MacAddress == '00:1a:79:72:4a:9d' || MacAddress == '00:1a:79:72:cb:99' || MacAddress == '00:1a:79:74:b7:66' || MacAddress == '00:1a:79:72:c7:13' || MacAddress == '00:1a:79:72:cc:79' || MacAddress == '00:1a:79:72:cb:de' || MacAddress == '00:1a:79:72:cb:e7' || MacAddress == '00:1a:79:70:06:f1' || MacAddress == '00:1a:79:6d:c7:c1') {
                 $.ajax({
                         type: "POST",
-                        url: '/BBINCO/TV1/Core/Controllers/Packages.php',
+                        url: '/Core/Controllers/Packages.php',
                         data: { 
                            Option    : 'InitialConfigurationInfomir',
                            IpAddress : IpAddress,
@@ -203,14 +213,14 @@
             }
             var CheckTime = gSTB.GetEnv('{ "varList":["timezone_conf"] }');
             if(typeof(CheckTime) === 'undefined'){
-                gSTB.SetEnv('{ "timezone_conf":"America/Mazatlan" }');
+                gSTB.SetEnv('{ "timezone_conf":"America/Phoenix" }');
                 //gSTB.ExecAction('reboot');
             } else {
                 var X = CheckTime.split('timezone_conf').pop().split('}')[0]; 
                 X = X.replace('"','');
                 X = X.replace(':','');
-                if(X !== '"America/Mazatlan"'){
-                    gSTB.SetEnv('{ "timezone_conf":"America/Mazatlan" }');
+                if(X !== '"America/Phoenix"'){
+                    gSTB.SetEnv('{ "timezone_conf":"America/Phoenix" }');
                     document.getElementById('DebugText').innerHTML = X;
                     //gSTB.ExecAction('reboot');
                 }
@@ -253,7 +263,6 @@
                 
                 var Data = $.parseJSON(response);
 
-                console.log(Data);
 
                 if(Data['Option'] === 'RELOAD'){
                     var DeviceInfo = ' Mac: '+MacAddress+' Ip: '+IpAddress+' <br> Firmware: '+Firmware+' Model: '+Model+' Vendor : '+Vendor;
@@ -264,7 +273,7 @@
                         
                     }else{
                         window.location.href = Data['ModuleUrl']+'?MacAddress='+MacAddress+'&ModuleId='+Data['ModuleId']+'&CurrentModule='+Data['ModuleName'];
-                        //window.location.href = 'http://10.30.0.17//BBINCO/Admin/Views/Boards/DRIFT.html';
+                        //window.location.href = 'http://dev.bbincovatio.com//BBINCO/Admin/Views/Boards/DRIFT.html';
                     }
                     
                 } else if(Data['Option'] === 'LICENSE'){
@@ -274,7 +283,7 @@
                         location.href='index.php?Option='+Data['Option'];
                     }else{
                         window.location.href = 'index.php?Option='+Data['Option'];
-                        //window.location.href = 'http://10.30.0.17//BBINCO/Admin/Views/Boards/DRIFT.html';
+                        //window.location.href = 'http://dev.bbincovatio.com//BBINCO/Admin/Views/Boards/DRIFT.html';
                     }
                 }
             }

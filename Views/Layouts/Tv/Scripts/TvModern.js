@@ -162,7 +162,7 @@ function CloseEpg(){
         LastProgramsPositions   = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6:-1, 7:-1 };
         FirstChannelPosition    = 0;
         CurrentChannelPosition  = 0;
-        LastChannelPosition     = 0;
+        // LastChannelPosition     = 0;
 
         OnLoadHourPosition      = 0;
         CurrentHourPosition     = 0;

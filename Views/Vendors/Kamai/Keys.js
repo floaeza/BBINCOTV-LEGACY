@@ -38,5 +38,5 @@
         REMOTE_BACKWARD              = ENTONE.input.KEY_REWIND, // BACKWARD [57528]
         REMOTE_FORWARD               = ENTONE.input.KEY_FASTFORWARD, // FORWARD
         REMOTE_TELETEXT              = ENTONE.input.KEY_TELETEXT,
-        REMOTE_FAST_BACKWARD         = '',
-        REMOTE_FAST_FORWARD          = '';
+        REMOTE_FAST_BACKWARD         = 57530,
+        REMOTE_FAST_FORWARD          = 57531;

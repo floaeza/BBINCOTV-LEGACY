@@ -6378,7 +6378,7 @@
           "supportsMediaDownload": true
         },
         "upload": {
-          "description": "Uploads media. Upload is supported on the URI `/upload/media/{resource_name=**}?upload_type=media.` **Note**: Upload requests will not be successful without including `upload_type=media` query string.",
+          "description": "Uploads media. Upload is supported on the URI `/upload/Media/{resource_name=**}?upload_type=media.` **Note**: Upload requests will not be successful without including `upload_type=media` query string.",
           "flatPath": "media/{mediaId}",
           "httpMethod": "POST",
           "id": "displayvideo.media.upload",
@@ -6389,7 +6389,7 @@
             "protocols": {
               "simple": {
                 "multipart": true,
-                "path": "/upload/media/{+resourceName}"
+                "path": "/upload/Media/{+resourceName}"
               }
             }
           },
@@ -17619,7 +17619,7 @@
       "id": "SdfDownloadTask",
       "properties": {
         "resourceName": {
-          "description": "A resource name to be used in media.download to Download the prepared files. Resource names have the format `download/sdfdownloadtasks/media/{media_id}`. `media_id` will be made available by the long running operation service once the task status is done.",
+          "description": "A resource name to be used in media.download to Download the prepared files. Resource names have the format `download/sdfdownloadtasks/Media/{media_id}`. `media_id` will be made available by the long running operation service once the task status is done.",
           "type": "string"
         }
       },

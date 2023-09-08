@@ -15,23 +15,24 @@ if($GetJson == true || $GetJson == "true"){
     $ConfigData  = new Config('system','Libraries');
     $Client = $ConfigData->getConfigByName('Identifier').'/';
     $EpgLogo = $ConfigData->getConfigByName('EpgLogo');
-    $JsonLibraries['EpgLogo'] = 'BBINCO/TV1/Media/Logos/'.$Client.$EpgLogo;
+    $JsonLibraries['EpgLogo'] = 'http://storage.bbinco.vdm/Media/Logos/'.$Client.$EpgLogo;
 }
 
-$ServerIp = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+// $ServerIp = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
     
-if(empty($ServerIp)){
-    $ServerIp = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-}
-
+// if(empty($ServerIp)){
+//     $ServerIp = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+// }
+$ServerIp               = 'dev.bbincovatio.com';
+$storage                = 'storage.bbinco.vdm';
 $JsonLibraries['ServerRoot']        = 'http://'.$ServerIp.'/';
-$JsonLibraries['ServerSource']      = 'http://'.$ServerIp.'/BBINCO/TV1/';
-$JsonLibraries['MediaSource']       = 'http://'.$ServerIp.'/BBINCO/';
-$JsonLibraries['MultimediaSource']  = 'http://'.$ServerIp.'/Multimedia/';
+$JsonLibraries['ServerSource']      = 'http://'.$ServerIp.'/';
+$JsonLibraries['MediaSource']       = 'http://'.$storage.'/Media/';
+$JsonLibraries['MultimediaSource']  = 'http://'.$storage.'/Multimedia/';
 $JsonLibraries['MoviesSource']      = 'http://'.$ServerIp.'/vod/mvs/';
 $JsonLibraries['SeriesSource']      = 'http://'.$ServerIp.'/vod/srs/';
 
-$ServerSource = 'http://'.$ServerIp.'/BBINCO/TV1/';
+$ServerSource = 'http://'.$ServerIp.'/';
 
 
 /* Views */
@@ -71,11 +72,11 @@ $Libraries['EpgFilesPath']      = '/var/www/html/mnt/nv/epg/';
 $Libraries['EpgDaysPath']       = $Libraries['ControllersPath'].'Epg/'.$Client;
 $JsonLibraries['EpgDaysPath']   = $Libraries['ControllersPath'].'Epg/'.$Client;
 /* Imagenes */
-    $Libraries['LogosPath']         = '../Media/Logos/'.$Client;
-    $Libraries['LogoPath']          = $JsonLibraries['MediaSource'].'Media/Logos/'.$Client;
-    $Libraries['ChannelsPath']      = '../Media/Channels/'.$Client;
-    $JsonLibraries['ChannelsPath']  = $JsonLibraries['MediaSource'].'Media/Channels/'.$Client;
-    $JsonLibraries['MenuPath']      = $JsonLibraries['MediaSource'].'Media/Menu/'.$Client;
+    $Libraries['LogosPath']         = $JsonLibraries['MediaSource'].'/Logos/'.$Client;
+    $Libraries['LogoPath']          = $JsonLibraries['MediaSource'].'/Logos/'.$Client;
+    $Libraries['ChannelsPath']      = $JsonLibraries['MediaSource'].'/Channels/'.$Client;
+    $JsonLibraries['ChannelsPath']  = $JsonLibraries['MediaSource'].'/Channels/'.$Client;
+    $JsonLibraries['MenuPath']      = $JsonLibraries['MediaSource'].'/Menu/'.$Client;
     
 /* Temas */
      $Libraries['ThemesPath']      = $Libraries['StylesPath'].'Themes/';
@@ -138,7 +139,7 @@ $JsonLibraries['EpgDaysPath']   = $Libraries['ControllersPath'].'Epg/'.$Client;
 //    $Client = $ConfigData->getConfigByName('Identifier').'/';
 //    $EpgLogo = $ConfigData->getConfigByName('EpgLogo');
 //
-//    $JsonLibraries['EpgLogo'] = 'BBINCO/TV1/Media/Logos/'.$Client.$EpgLogo;
+//    $JsonLibraries['EpgLogo'] = '/Media/Logos/'.$Client.$EpgLogo;
 //}
 //
 //$ServerIp = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
@@ -147,7 +148,7 @@ $JsonLibraries['EpgDaysPath']   = $Libraries['ControllersPath'].'Epg/'.$Client;
 //    $ServerIp = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 //}
 //
-//$JsonLibraries['ServerSource']      = 'http://'.$ServerIp.'/BBINCO/TV1/';
+//$JsonLibraries['ServerSource']      = 'http://'.$ServerIp.'/';
 //$JsonLibraries['MultimediaSource']  = 'http://'.$ServerIp.'/Multimedia/';
 //$JsonLibraries['MoviesSource']      = 'http://'.$ServerIp.'/vod/mvs/';
 //$JsonLibraries['SeriesSource']      = 'http://'.$ServerIp.'/vod/srs/';

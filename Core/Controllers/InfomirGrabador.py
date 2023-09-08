@@ -18,15 +18,15 @@ if parametro[1] == 'register':
     client.load_system_host_keys()
     client.connect(hostname=parametro[0], port='22', username='root',password='930920')
     
-    stdin, stdout, stderr = client.exec_command("cd /ram/media/* && mkdir -p records/ && tcpsvd 0 21 ftpd -w /media")
+    stdin, stdout, stderr = client.exec_command("cd /ram/Media/* && mkdir -p records/ && tcpsvd 0 21 ftpd -w /media")
     
-    #stdin, stdout, stderr = client.exec_command("cd /ram/media/* && mkdir -p records/")
+    #stdin, stdout, stderr = client.exec_command("cd /ram/Media/* && mkdir -p records/")
 
     lines = stdout.readlines()
     # stdin, stdout, stderr = client.exec_command('mkdir records/')
     # lines = stdout.readlines()
 
-    #cd /ram/media/* && mkdir -p records/ && 
+    #cd /ram/Media/* && mkdir -p records/ && 
 
     print(lines)
     stdin.close()

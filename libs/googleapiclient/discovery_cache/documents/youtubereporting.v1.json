@@ -339,8 +339,8 @@
     "media": {
       "methods": {
         "download": {
-          "description": "Method for media download. Download is supported on the URI `/v1/media/{+name}?alt=media`.",
-          "flatPath": "v1/media/{mediaId}",
+          "description": "Method for media download. Download is supported on the URI `/v1/Media/{+name}?alt=media`.",
+          "flatPath": "v1/Media/{mediaId}",
           "httpMethod": "GET",
           "id": "youtubereporting.media.download",
           "parameterOrder": [
@@ -355,7 +355,7 @@
               "type": "string"
             }
           },
-          "path": "v1/media/{+resourceName}",
+          "path": "v1/Media/{+resourceName}",
           "response": {
             "$ref": "GdataMedia"
           },

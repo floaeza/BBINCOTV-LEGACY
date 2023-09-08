@@ -178,7 +178,6 @@ window.stbEvent = {
                 if(Executing === false){
                     UpdateQuickInfoDevice();
                 }
-                
                 break;  
 
             case 33:

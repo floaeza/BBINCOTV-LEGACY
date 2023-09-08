@@ -17,7 +17,8 @@ div#PvrProgramDate
 div.HourRow,
 div#Temperatures,
 div#PanelMessage,
-div#PanelMessageConfirm
+div#PanelMessageConfirm,
+div#PanelMessageAddSerie,
 div#TemperatureGroup,
 div#EpgRating,
 div.RecordingOptionsButton,

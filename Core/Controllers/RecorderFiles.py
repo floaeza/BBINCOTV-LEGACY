@@ -32,7 +32,7 @@ for parametro in FilesData:
         DownloadFile(parametro, '/var/www/html/INFOMIR_RECORDINGS/' +downloadFile[4])
     pos += 1
 
-payload = {'Option': 'UpdateProgramOperaPython', 'File': '/media/'+file[3]+"/"+file[4], 'Cantidad':FilesData[0], 'OperationId':'4', 'ActiveRecording': 'false'}
-Devices = requests.post('http://10.30.0.17/BBINCO/TV1/Core/Controllers/Recorder.php', data=payload)
+payload = {'Option': 'UpdateProgramOperaPython', 'File': '/Media/'+file[3]+"/"+file[4], 'Cantidad':FilesData[0], 'OperationId':'4', 'ActiveRecording': 'false'}
+Devices = requests.post('http://dev.bbincovatio.com/Core/Controllers/Recorder.php', data=payload)
 #IDF = json.loads(Devices.content)
 #print(IDF)

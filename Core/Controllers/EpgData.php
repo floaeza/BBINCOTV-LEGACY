@@ -7,7 +7,7 @@
 // Calcula tiempo de ejecucion 
 // $time_start = microtime(true);
 
-    date_default_timezone_set('America/Mazatlan');
+    date_default_timezone_set('America/Phoenix');
 
     require_once '../Models/Database.php';
     require_once '../Models/Libraries.php';

@@ -458,17 +458,11 @@ if(Device['Type'] === 'WHP_HDDY' || Device['Type'] === 'PVR_ONLY'){
 }
 
 function HandlerPvr(){
-
     UpdateAssetsId();
-
     GetProgramsToSchedule();
-
     GetSchedulesToDelete();
-
     //Debug('-------> HandlerPvr');
     
-    GetProgramsSerie();
-
     setTimeout(HandlerPvr,50000);
 }
 
