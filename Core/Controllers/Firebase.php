@@ -20,6 +20,7 @@
     $guest = !empty($_POST['guest']) ? $_POST['guest'] : '';
     $orden = !empty($_POST['orden']) ? $_POST['orden'] : '';
     $status = !empty($_POST['status']) ? $_POST['status'] : '';
+    $executed_time = !empty($_POST['executed_time']) ? $_POST['executed_time'] : '';
 
 
     
@@ -81,9 +82,10 @@
            echo json_encode($NewDevice);
             break;
         case 'UpdateControlByMac':
-            $NewDevice = array('status'  => 'executed');
-           $DevicesData->updateControl($MacAddress, $NewDevice);
-           echo json_encode($NewDevice);
+            $NewDevice = array('status'  => 'executed',
+                                'executed_time' => $executed_time);
+            $DevicesData->updateControl($MacAddress, $NewDevice);
+            echo json_encode($NewDevice);
             break;
         case 'DeleteControlbyMac':
             $DevicesData->deleteControl($MacAddress);

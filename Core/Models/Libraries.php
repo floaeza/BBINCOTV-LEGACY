@@ -15,7 +15,7 @@ if($GetJson == true || $GetJson == "true"){
     $ConfigData  = new Config('system','Libraries');
     $Client = $ConfigData->getConfigByName('Identifier').'/';
     $EpgLogo = $ConfigData->getConfigByName('EpgLogo');
-    $JsonLibraries['EpgLogo'] = 'http://storage.bbinco.vdm/Media/Logos/'.$Client.$EpgLogo;
+    $JsonLibraries['EpgLogo'] = 'http://storage.bbincovatio.com/Media/Logos/'.$Client.$EpgLogo;
 }
 
 // $ServerIp = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
@@ -24,7 +24,7 @@ if($GetJson == true || $GetJson == "true"){
 //     $ServerIp = !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 // }
 $ServerIp               = 'dev.bbincovatio.com';
-$storage                = 'storage.bbinco.vdm';
+$storage                = 'storage.bbincovatio.com';
 $JsonLibraries['ServerRoot']        = 'http://'.$ServerIp.'/';
 $JsonLibraries['ServerSource']      = 'http://'.$ServerIp.'/';
 $JsonLibraries['MediaSource']       = 'http://'.$storage.'/Media/';
