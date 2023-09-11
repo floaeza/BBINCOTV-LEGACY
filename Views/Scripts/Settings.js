@@ -131,13 +131,19 @@ if (window.tizen !== undefined) {
             SamsungDevice();
         }
     }
-
     function SetData() {
         AminoDevice();
-        CurrentStbDate = moment().subtract('hours', Offset).format('Y-MM-DD h:mm:ss');
+        CurrentStbDate = moment().subtract(Offset, 'hours').format('Y-MM-DD h:mm:ss');
         // alert(CurrentStbDate);
         // CurrentStbDate = 'UPDATED';
-    }
+    }    
+
+    // function SetData() {
+    //     AminoDevice();
+    //     CurrentStbDate = moment().subtract('hours', Offset).format('Y-MM-DD h:mm:ss');
+    //     // alert(CurrentStbDate);
+    //     // CurrentStbDate = 'UPDATED';
+    // }
 
     $.ajax({
         cache: false,
