@@ -89,22 +89,22 @@
                 ChannelNum = ChannelsJson[ChannelPosition].CHNL;
                 Debug("========>SetChannelStatistics   3   " + actualUser.id_user);
         
-            $.ajax({
-                cache: false,
-                type: 'POST',
-                url: ServerSource + 'Core/Controllers/Statistics.php',
-                data: {
-                    Option: 'Channels',
-                    idUser: actualUser.id_user,
-                    MacAddress: MacAddress,
-                    ChannelName: ChannelName,
-                    StationNumber: ChannelStation,
-                    ChannelNum: ChannelNum,
-                    LocationId: Device['LocationId'],
-                    StartTime: FormatStartDate,
-                    EndTime: FormatEndDate
-                }
-            });
+            // $.ajax({
+            //     cache: false,
+            //     type: 'POST',
+            //     url: ServerSource + 'Core/Controllers/Statistics.php',
+            //     data: {
+            //         Option: 'Channels',
+            //         idUser: actualUser.id_user,
+            //         MacAddress: MacAddress,
+            //         ChannelName: ChannelName,
+            //         StationNumber: ChannelStation,
+            //         ChannelNum: ChannelNum,
+            //         LocationId: Device['LocationId'],
+            //         StartTime: FormatStartDate,
+            //         EndTime: FormatEndDate
+            //     }
+            // });
             Debug("========>SetChannelStatistics   4");
 
         }

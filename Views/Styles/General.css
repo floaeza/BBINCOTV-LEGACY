@@ -123,8 +123,8 @@ TITULO SIN NUMEROS Y SIMBOLOS
 
 body, html {
     background-color: transparent;
-    background-image:url(tv:);
-    background:url(tv:);
+    /* background-image:url(tv:);
+    background:url(tv:); */
     -webkit-background-composite: clear;
     margin: 0;
     padding: 0;

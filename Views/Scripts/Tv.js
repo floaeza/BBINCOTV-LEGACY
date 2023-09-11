@@ -307,20 +307,20 @@ function GetDigitalChannel(){
     DigitalSource = Libraries['MultimediaSource'] + GetModule + '/';
     DigitalImgSource = '../../Multimedia/' + GetModule + '/';
 
-    $.ajax({
-        type: 'POST',
-        url: ServerSource + 'Core/Controllers/Template.php',
-        async:false,
-        data: {
-            Option : 'getDigitalChannel',
-            ModuleName : GetModule
-        },
-        success: function (response){
-            DigitalContent = $.parseJSON(response);
+    // $.ajax({
+    //     type: 'POST',
+    //     url: ServerSource + 'Core/Controllers/Template.php',
+    //     async:false,
+    //     data: {
+    //         Option : 'getDigitalChannel',
+    //         ModuleName : GetModule
+    //     },
+    //     success: function (response){
+    //         DigitalContent = $.parseJSON(response);
             
-        }
-    });
-    setTimeout( SetDigitalChannel(),1500);
+    //     }
+    // });
+    // setTimeout( SetDigitalChannel(),1500);
     ShowInfo();
 }
 
